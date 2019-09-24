@@ -351,7 +351,7 @@ gapi.analytics.ready(function() {
 	var chartContainerTABLE = 'chart-container-table';
 	var chartContainerGEO = 'chart-container-geo';
 	
-	var chart_StartDate = '7daysAgo';
+	var chart_StartDate = '28daysAgo';
 	var chart_EndDate = 'yesterday';
 	
 	gapi.analytics.auth.authorize({

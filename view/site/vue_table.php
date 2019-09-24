@@ -87,7 +87,7 @@
 					<tr>
 					  <th v-for="value in Object.keys(properties)">{{ value }}</th>
 					  <th v-if="related">related</th>
-					  <th v-if="primaryKey">actions</th>
+					  <th v-if="primaryKey"></th>
 					</tr>
 				  </thead>
 				  <tbody>
@@ -104,9 +104,9 @@
 						</template>
 					  </td>
 					  <td v-if="primaryKey" style="padding: 6px; white-space: nowrap;">
-						<router-link class="btn btn-secondary btn-sm" v-bind:to="{name: 'View', params: {subject: subject, id: record[primaryKey]}}">View</router-link>
-						<router-link class="btn btn-secondary btn-sm" v-bind:to="{name: 'Edit', params: {subject: subject, id: record[primaryKey]}}">Edit</router-link>
-						<router-link class="btn btn-danger btn-sm" v-bind:to="{name: 'Delete', params: {subject: subject, id: record[primaryKey]}}">Delete</router-link>
+						<router-link class="btn btn-default btn-sm" v-bind:to="{name: 'View', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-eye"></i></router-link>
+						<router-link class="btn btn-primary btn-sm" v-bind:to="{name: 'Edit', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-edit"></i></router-link>
+						<router-link class="btn btn-danger btn-sm" v-bind:to="{name: 'Delete', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-times"></i></router-link>
 					  </td>
 					</tr>
 				  </tbody>
@@ -159,7 +159,7 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2><?= $table; ?> <small>Listado</small></h2>
+				<h2>{{ subject }} <small>Viendo</small></h2>
 				<ul class="nav navbar-right panel_toolbox">
 					<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 					<li class="dropdown">
@@ -169,26 +169,24 @@
 							<li><a href="#">Settings 2</a></li>
 						</ul>
 					</li>
-					<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+					<li>
+						<router-link v-bind:to="{name: 'List', params: {subject: subject}}">
+							<i class="fa fa-times"></i>
+						</router-link>
+					</li>
 				</ul>
 				<div class="clearfix"></div>
 			</div>
 			<div class="x_content table-responsive">
-				<table class="table table-striped">
-					<thead></thead>
-					<tbody></tbody>
-				</table>
+				<p v-if="record===null">Loading...</p>
+				<ul v-else>
+					<template v-for="(value, key) in record">
+						<li><b>{{ key }}</b>: {{ value }}</li>
+					</template>
+				</ul>
 			</div>
 		</div>
 	</div>
-    <h2>{{ subject }} - view</h2>
-    <p v-if="record===null">Loading...</p>
-    <dl v-else>
-      <template v-for="(value, key) in record">
-        <dt>{{ key }} </dt>
-        <dd>{{ value }}</dd>
-      </template>
-    </dl>
   </div>
 </template>
 
@@ -207,7 +205,11 @@
 							<li><a href="#">Settings 2</a></li>
 						</ul>
 					</li>
-					<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+					<li>
+						<router-link v-bind:to="{name: 'List', params: {subject: subject}}">
+							<i class="fa fa-times"></i>
+						</router-link>
+					</li>
 				</ul>
 				<div class="clearfix"></div>
 			</div>
@@ -242,7 +244,7 @@
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		<div class="x_panel">
 			<div class="x_title">
-				<h2>{{ subject }} <small>Eliminar #{{ id }}</small></h2>
+				<h2>{{ subject }} <small></small></h2>
 				<ul class="nav navbar-right panel_toolbox">
 					<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 					<li class="dropdown">
@@ -252,13 +254,17 @@
 							<li><a href="#">Settings 2</a></li>
 						</ul>
 					</li>
-					<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+					<li>
+						<router-link v-bind:to="{name: 'List', params: {subject: subject}}">
+							<i class="fa fa-times"></i>
+						</router-link>
+					</li>
 				</ul>
 				<div class="clearfix"></div>
 			</div>
 			<div class="x_content">
 				<form v-on:submit="deleteRecord">
-					<p>The action cannot be undone.</p>
+					<p>Se va a proceder a eliminar el registro con #{{ id }}</p>
 					<button type="submit" class="btn btn-danger">ELIMINAR</button>
 					<router-link class="btn btn-secondary" v-bind:to="{name: 'List', params: {subject: subject}}">Cancelar</router-link>
 			</form>

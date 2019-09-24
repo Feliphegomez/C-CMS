@@ -62,6 +62,5 @@ class Usuario extends EntidadBase{
         //$this->db()->error;
         return $save;
     }
-
 }
 ?>

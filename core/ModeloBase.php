@@ -38,15 +38,18 @@ class ModeloBase extends EntidadBase
         return $this->formulario->isValid();
     }
     
-    public function rules()
-    {
+    public function rules(){
         return [
         ];
     }
 
-    public function attributeLabels()
-    {
+    public function attributeLabels(){
         return [
         ];
     }
+	
+	public function generateFormCreate($Action = "", $Method = "POST", $FormType = 0, $MessageError = "Error.", $MessageSuccess = "Creado con éxito"){
+		$this->formulario = $this->toFormHtml($Action, $Method, $FormType, $MessageError, $MessageSuccess);
+        return $this->formulario;
+	}
 };

@@ -518,6 +518,7 @@ class SiteController extends ControladorBase{
             "subtitle" => "Todo",
         ]);
 	}
+	
 	public function actionTable_Master_Vue(){
 		$error = null;
         if ($this->isGuest){ $this->goHome(); }
@@ -655,6 +656,7 @@ class SiteController extends ControladorBase{
 	}
 	
 	public function addScripts_GA(){
+        if ($this->isGuest){ $this->goHome(); }
 		// https://console.developers.google.com/apis/credentials/oauthclient/507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com?project=gapi-1470725186645
 		// https://console.developers.google.com/apis/credentials/consent?project=gapi-1470725186645&duration=P1D
 		
@@ -667,7 +669,6 @@ class SiteController extends ControladorBase{
 		$this->appendScriptBefore($scriptGA);
 	}
 	
-
 	public function actionAnalytics_basic(){
 		$this->addScripts_GA();
 		$this->render('analytics_basic', [
@@ -689,4 +690,108 @@ class SiteController extends ControladorBase{
 		]);
 	}
 	
+	public function actionUsersMaster(){
+        if ($this->isGuest){ $this->goHome(); }
+        $query = new Usuario($this->adapter);
+        $allusers = $query->getAll();
+		
+		$this->render("admin_usuarios", [
+			"title"   	=> "Usuarios",
+			"subtitle"  => "Master",
+			"allusers"		=> $allusers,
+		]);
+	}
+	
+	// Manejador de Permisos PHP LISTA
+	public function actionAdminPermissionsList(){
+        if ($this->isGuest){ $this->goHome(); }
+        $error = Null;
+        $model = new PermissionsItems($this->adapter);
+        $allpermissions = $model->getAll();
+		$this->render("admin_permissions_list", [
+			"title"          => "Permisos",
+			"subtitle"       => "Master",
+			"allpermissions" => $allpermissions,
+		]);
+	}
+	
+	// Manejador de Permisos PHP CREAR
+	public function actionAdminPermissionsCreate(){
+        if ($this->isGuest){ $this->goHome(); }
+        $error = Null;
+        $model = new PermissionsItems($this->adapter);
+		$model->generateFormCreate();
+		
+		if($model->formulario->isValid()){
+			$tag = $_REQUEST['tag'];
+			$label = $_REQUEST['label'];
+			$description = $_REQUEST['description'];
+			$model->setAll([(object) $_REQUEST]);
+			$new = $model->crear();
+			if($new == true){
+				$this->redirect('site', 'AdminPermissionsList', []);
+			} else {
+				$this->redirect('site', 'AdminPermissionsCreate', [
+					"error" => "El permiso {$_REQUEST['label']} no se pudo crear."
+				]);
+			}
+		}
+		
+		if(isset($_GET['error']) && $_GET['error'] != ""){
+			$error = [
+				"title" => "Ups! Hubo un error",
+				"text" => $_GET['error'],
+				"styling" => "bootstrap3",
+				"type" => "error",
+				"icon" => true,
+				"animation" => "zoom",
+				"hide" => false
+			];
+			
+			$this->errors[] = $error;
+		}
+		
+		$this->render("admin_permissions_add", [
+			"title"          => "Permisos",
+			"subtitle"       => "Master",
+			"model" => $model,
+			"error" => $error,
+		]);
+	}
+	
+	// Manejador de Permisos VUE
+	public function actionAdminPermissionsVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Permisos",
+            "subtitle" => "Master",
+			"table" => "permissions_items"
+        ]);
+	}
+	
+	// Manejador de Permisos VUE
+	public function actionAdminPermissionsGroupVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Grupos de Permisos",
+            "subtitle" => "Master",
+			"table" => "permissions_group"
+        ]);
+	}
+	
+	// Manejador de Usuarios VUE
+	public function actionAdminUsersVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Usuarios",
+            "subtitle" => "Master",
+			"table" => "users"
+        ]);
+	}
 }

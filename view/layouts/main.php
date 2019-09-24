@@ -8,16 +8,6 @@
 $mailBoxes = $this->user->getEmailBoxes();
 $myEmailsPendings = new Email($this->adapter);
 $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
-
-function cortar_string($string, $largo) { 
-   $marca = "<!--corte-->"; 
-   if (strlen($string) > $largo) { 
-       $string = wordwrap($string, $largo, $marca); 
-       $string = explode($marca, $string); 
-       $string = $string[0]; 
-   } 
-   return $string;
-} 
 ?>
 <!DOCTYPE html>
 <html lang="<?= $this->getLang(); ?>">
@@ -163,8 +153,16 @@ function cortar_string($string, $largo) {
                             $menu_section_system = PHPStrap\Util\Html::tag('div', 
                                PHPStrap\Util\Html::tag('h3', 'Sistema') . 
                                 PHPStrap\Util\Html::ul([
-									($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'users']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Tabla") : ""
+									// ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsList'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
 									
+									// MENU NUEVO
+									($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Gestionar Permisos") : ""
+									, ($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsGroupVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Grupos de Permisos") : ""
+									, ($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminUsersVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Gestionar Usuarios") : ""
+									
+									
+									, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/UsersMaster'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Master") : ""
+									, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'users']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Tabla") : ""
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							

@@ -205,23 +205,17 @@ class EntidadBase{
     public function db(){ return $this->db; }
     
     public function getAll(){
-        /*
-        $query=$this->db->query("SELECT * FROM $this->table ORDER BY id DESC");
-        while ($row = $query->fetch_object()) {
-           $resultSet[]=$row;
-        }
-        return $resultSet;*/
-        $sql = "SELECT * FROM $this->table ORDER BY id DESC";
+        $sql = "SELECT * FROM `{$this->table}` ORDER BY id DESC";
         return $this->FetchAllObject($sql, []);
     }
     
     public function getById($id){
-        $sql = "SELECT * FROM $this->table WHERE id=$id ORDER BY id DESC";
+        $sql = "SELECT * FROM `{$this->table}` WHERE `id`={$id} ORDER BY id DESC";
         return $this->FetchAllObject($sql, []);
     }
     
     public function getBy($column,$value){
-        $sql = "SELECT * FROM $this->table WHERE {$column}=? ORDER BY id DESC";
+        $sql = "SELECT * FROM `{$this->table}` WHERE `{$column}`=? ORDER BY id DESC";
         return $this->FetchAllObject($sql, [$value]);
     }
 	
@@ -237,9 +231,8 @@ class EntidadBase{
             return $result;
         }
         catch(Exception $e){
-            echo "<b>Error:</b> ".($e->getMessage());
-            return "<b>Error:</b> ".($e->getMessage());
-            exit();
+            echo "<b>Error:</b> ".($e->getMessage() . " [SQL-FRONT]: $sql");
+            return [];
         }
     }
     
@@ -278,6 +271,19 @@ class EntidadBase{
      * Aqui podemos montarnos un monton de métodos que nos ayuden
      * a hacer operaciones con la base de datos de la entidad
      */
-    
+	
+	public function getInsert($sql = "", $values = []){
+		$query = $this->db()->prepare($sql);
+		try {
+			$success = $query->execute($values);
+			$id = (int) $this->db()->lastInsertId();
+			return ($id > 0) ? $id : 0;
+		}catch (Exception $e){
+			//throw $e;
+			#echo "\n {$sql} \n";
+			echo $e->getMessage();
+			return 0;
+		}
+	}
 }
 ?>

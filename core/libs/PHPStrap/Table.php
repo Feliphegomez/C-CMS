@@ -57,7 +57,6 @@ class Table{
         return new Table($Content, $HeaderRows, $HeaderColumns, $Styles, $Attributes);
     }
     
-    
     public static function hoverTable($Content = array(), $HeaderRows = 0, $HeaderColumns = 0, $Styles = array(), $Attributes = array()){
         return new Table($Content, $HeaderRows, $HeaderColumns, array_merge(array('table', 'table-hover'), $Styles), $Attributes);
     }
@@ -75,4 +74,3 @@ class Table{
     }
 	
 }
-?>

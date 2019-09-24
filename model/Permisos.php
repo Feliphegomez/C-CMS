@@ -5,6 +5,7 @@
  *
  * ******************************/
 
+/*
 class Permisos extends ModeloBase{
 	public $labels_p = '';
 	private $list = [];
@@ -21,9 +22,9 @@ class Permisos extends ModeloBase{
 	public function validatePermission($labelNode = 'none'){
 		$labelNode = strtolower($labelNode);
 		return !isset($this->list['isadmin']) || $this->list['isadmin'] !== true 
-					? isset($this->list[$labelNode]) 
-											? $this->list[$labelNode] 
-											: false 
+					? !isset($this->list[$labelNode]) 
+											? false 
+											: $this->list[$labelNode] 
 					: true;
 	}
     
@@ -75,4 +76,5 @@ class Permisos extends ModeloBase{
 		return $this;
 	}
 }
-?>
+
+*/

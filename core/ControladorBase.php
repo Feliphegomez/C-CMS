@@ -36,8 +36,12 @@ class ControladorBase{
         //$global_session->close();
     }
 	
-	public function checkPermission($node){
-		return $this->user->permissions->validatePermission($node);
+	public function checkPermission($node = 'none'){
+		$r = false;
+		if(isset($this->user) && isset($this->user->permissions) && !is_numeric($this->user->permissions)){
+			$r = (method_exists($this->user->permissions,'validatePermission')) ? $this->user->permissions->validatePermission($node) : false;
+		}
+		return $r;
 	}
   
 	public function getUser() {
