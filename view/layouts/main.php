@@ -161,8 +161,8 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 									, ($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminUsersVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Gestionar Usuarios") : ""
 									
 									
-									, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/UsersMaster'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Master") : ""
-									, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'users']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Tabla") : ""
+									#, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/UsersMaster'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Master") : ""
+									#, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'users']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Tabla") : ""
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							

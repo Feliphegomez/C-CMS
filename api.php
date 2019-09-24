@@ -10519,8 +10519,19 @@ namespace Tqdev\PhpCrudApi {
 		'dbAuth.usernameColumn' => 'username',
 		'dbAuth.passwordColumn' => 'password',
 		'dbAuth.returnedColumns' => '',
-		'authorization.columnHandler' => function ($operation, $tableName, $columnName) {
-			return !($tableName == 'users' && $columnName == 'password');
+		'sanitation.handler' => function ($operation, $tableName, $column, $value) {
+			if ($column['name'] == 'password'){
+				if ($operation == 'create' || $operation == 'update'){
+					return is_string($value) ? password_hash($value, PASSWORD_DEFAULT) : password_hash(strip_tags($value), PASSWORD_DEFAULT);
+				} else {
+					return is_string($value) ? strip_tags($value) : $value;
+				}
+			} else {
+				return is_string($value) ? ($value) : $value;
+			}
+		},
+		'validation.handler' => function ($operation, $tableName, $column, $value) {
+			return ($column['name'] == 'id' && !is_numeric($value)) ? 'must be numeric' : true;
 		},
     ]);
     $request = RequestFactory::fromGlobals();
