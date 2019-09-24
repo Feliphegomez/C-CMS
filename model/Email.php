@@ -158,8 +158,10 @@ class Email extends EntidadBase {
 			$a = is_array($a) ? (object) $a : $a;
 			$list[] = $a->id;
 		}
+		if(count($list) == 0){ return []; }
 		$list = implode(',', $list);
-		$sql = "SELECT EM.* FROM emails AS EM WHERE EM.seen = 0 AND EM.box IN ({$list}) ORDER BY id DESC LIMIT 100";
+		
+		$sql = "SELECT * FROM emails WHERE seen='0' AND box IN ({$list}) ";
         return $this->FetchAllObject($sql);
 	}
 	
