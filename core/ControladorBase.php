@@ -1,0 +1,178 @@
+<?php 
+/* *******************************
+ *
+ * Developer by FelipheGomez
+ *
+ * ******************************/
+
+class ControladorBase{
+    public $conectar;
+	public $adapter;
+	
+	public $theme;
+	public $isGuest;
+    public $session;
+    public $ScriptsBefore = [];
+    public $ScriptsAfter = [];
+    public $errors = [];
+	public $user;
+
+    public function __construct($params = []) {
+        global $global_session;
+        $this->session = $global_session;
+		require_once 'Conectar.php';
+        $this->conectar = new Conectar();
+        $this->adapter = $this->conectar->conexion();
+        require_once 'EntidadBase.php';
+        require_once 'ModeloBase.php';
+        //Incluir todos los modelos
+        foreach(glob("model/*.php") as $file){ require_once $file; }	
+		
+		$params['theme'] = isset($params['theme']) ? $params['theme'] : 'default';
+		$this->setTheme($params['theme']);
+        	
+		$this->isGuest = $global_session->isGuest();
+        $this->user = $this->getUser();
+        //$global_session->close();
+    }
+	
+	public function checkPermission($node){
+		return $this->user->permissions->validatePermission($node);
+	}
+  
+	public function getUser() {
+		$model = new Usuario($this->adapter);
+		$model->getById($this->session->getId());
+		return $model;
+	}
+	
+	private function themeDefault(){
+		return CONFIG_PATH . '/themes/default.php';
+	}
+	
+	private function validateTheme($theme = null){
+		return !is_file(CONFIG_PATH . "/themes/{$theme}.php") ? $this->themeDefault() : CONFIG_PATH . "/themes/{$theme}.php";
+	}
+	
+	public function getTheme(){
+		return $this->theme;
+	}
+	
+	public function setTheme($theme = null){
+		$this->theme = require_once (!isset($theme) || $theme == null) ? ($this->themeDefault()) : ($this->validateTheme($theme));
+	}
+    
+    //Plugins y funcionalidades
+	public function appendScriptBefore($scripts){
+		$this->ScriptsBefore[] = $scripts;
+	}
+	public function appendScriptAfter($scripts){
+		$this->ScriptsAfter[] = $scripts;
+	}
+	
+	public function getController(){
+		return strtolower(str_replace('Controller', '', get_class($this)));
+	}
+	
+    public function render($vista, $datos, $layout=null){
+		$layout = !isset($layout) || $layout == null ? $this->theme['default'] : $layout;
+		$datos["title"] = !isset($datos["title"]) ? "Titulo de la página" : $datos["title"];
+		
+		$this->view("layouts/{$layout}", [
+			"title" => $datos["title"],
+			"description" => [
+				// "vista" => $vista, 
+				"vista" => "{$this->getController()}/{$vista}", 
+				"datos" => $datos
+			]
+		]);
+    }
+	
+	public function view($vista, $datos){
+        foreach ($datos as $id_assoc => $valor) {
+            ${$id_assoc}=$valor; 
+        }
+        
+        require_once 'core/AyudaVistas.php';
+        $helper=new AyudaVistas();
+    
+        //require_once "view/{$vista}.php";
+        require_once "view/{$vista}.php";
+    }
+	
+	public function getView($description){
+		if(is_array($description) && $description['vista']){
+			$description['datos'] = !isset($description['datos']) ? [] : $description['datos'];
+			$this->view($description['vista'], $description['datos']);
+		}
+	}
+    
+    public function redirect($controlador=CONTROLADOR_DEFECTO,$accion=ACCION_DEFECTO,$query=null){
+		$query = $query != null ? '&'.@http_build_query($query) : "";
+        header("Location:index.php?controller=".$controlador."&action=".$accion.$query);
+    }
+    
+	public function goHome(){
+		return $this->redirect();
+	}
+	
+	public static function PowerBy() : string {
+		return "©2019 All Rights Reserved. | Power By <a href=\"https://github.com/Feliphegomez\">FelipheGomez</a>";
+	}
+    //Métodos para los controladores
+	
+	public function getUrlAssets(){
+		return $this->theme['assets']['url'];
+	}
+	
+	public function head(){
+		$r = "";
+		foreach($this->theme['assets']['includes']['head'] as $a){
+			$url = (filter_var($a['file'], FILTER_VALIDATE_URL) === FALSE) ? "{$this->getUrlAssets()}{$a['file']}" : $a['file'];
+				
+			switch($a['type']){
+				case 'meta': $r .= "<meta {$url}>\n"; break;
+				case 'script': $r .= "<script src=\"{$url}\"></script>\n"; break;
+				case 'stylesheet': $r .= "<link href=\"{$url}\" rel=\"stylesheet\">"; break;
+				default: $r .= "<{$a['type']}>{$url}</{$a['type']}>"; break;
+			}
+		}
+		$r .= "<script type=\"text/javascript\">" . implode($this->ScriptsBefore) . "</script>";
+		return $r;
+	}
+	
+	public function footerScripts(){
+		$this->loadErrors();
+		$r = "";
+		foreach($this->theme['assets']['includes']['footer_scripts'] as $a){
+			if($a['type'] == 'script'){
+				$r .= "<script src=\"{$this->getUrlAssets()}{$a['file']}\"></script>\n";
+			}
+		}
+		$r .= "<script type=\"text/javascript\">" . implode($this->ScriptsAfter) . "</script>";
+		return $r;
+	}
+	
+	public function loadErrors(){
+		foreach($this->errors as $error){
+			$error = json_encode($error);
+			$this->ScriptsAfter[] = <<<EOF
+$(function(){
+	new PNotify($error);
+});
+EOF;
+		}		
+	}
+	
+	public function getLang(){
+		return $this->theme['lang'];
+	}
+	
+	public function getCharset(){
+		return $this->theme['charset'];
+	}
+			
+	public function saveFile($file){
+		
+	}
+}
