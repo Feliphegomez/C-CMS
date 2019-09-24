@@ -679,7 +679,7 @@ article.announcement:before{
 											<i class="fa fa-picture-o fa-lg"></i> {{ event.media_events.length }}
 										</div>
 										<div class="col-sm-3 col-xs-3 well">
-											<i class="fa fa-cogs fa-lg"></i> 0
+											<i class="fa fa-cogs fa-lg"></i> {{ event.events_tools.length }}
 										</div>
 									</div>
 								</div>
