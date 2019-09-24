@@ -1,3 +1,6 @@
-## C&CMS
+# C&CMS
 
-# DB
+## CRON
+
+	### Add
+		- curl https://myserver/core/ini/sync_imap.php
