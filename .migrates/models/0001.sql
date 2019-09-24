@@ -137,9 +137,9 @@ CREATE TABLE IF NOT EXISTS `emails_users` (
   KEY `id` (`id`),
   KEY `FK_users_mails_users` (`user`),
   KEY `FK_users_mails_mails` (`email`),
-  CONSTRAINT `FK_users_mails_mails` FOREIGN KEY (`email`) REFERENCES `mails` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_users_mails_mails` FOREIGN KEY (`email`) REFERENCES `emails_boxes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_users_mails_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 

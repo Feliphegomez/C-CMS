@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `emails_boxes` (
 /*!40000 ALTER TABLE `emails_boxes` DISABLE KEYS */;
 INSERT IGNORE INTO `emails_boxes` (`id`, `label`, `host`, `port`, `user`, `pass`, `args_add`, `last_sync`, `created`, `created_by`, `actived`) VALUES
 	(1, 'Andres Gomez', 'mail.monteverdeltda.com', '143', 'andres.gomez@monteverdeltda.com', 'nxZA1Xgc4E', '/tls', '2019-09-15 21:44:45', '2019-09-13 00:13:47', NULL, 0),
-	(2, 'Soporte', 'mail.monteverdeltda.com', '143', 'soporte@monteverdeltda.com', '2gdH2whLlT', '/tls', '2019-09-15 21:44:43', '2019-09-13 00:13:47', NULL, 0),
+	(2, 'Soporte', 'mail.monteverdeltda.com', '143', 'soporte@monteverdeltda.com', '2gdH2whLlT', '/tls', '2019-09-23 23:49:18', '2019-09-13 00:13:47', NULL, 1),
 	(3, 'Leidy Zapata', 'mail.monteverdeltda.com', '143', 'leidy.zapata@monteverdeltda.com', 'fBEodB6rll', '/tls', '2019-09-13 15:33:14', '2019-09-13 00:13:47', NULL, 0),
 	(4, 'SYSO', 'mail.monteverdeltda.com', '143', 'sst@monteverdeltda.com', 'bIhUal54Ll', '/tls', '2019-09-13 15:33:14', '2019-09-13 00:13:47', NULL, 0),
 	(5, 'Maria G', 'mail.monteverdeltda.com', '143', 'maria.gottschalk@monteverdeltda.com', 'V52dATeTLV', '/tls', '2019-09-13 15:33:14', '2019-09-13 00:13:47', NULL, 0),
@@ -193,12 +193,14 @@ CREATE TABLE IF NOT EXISTS `emails_users` (
   KEY `id` (`id`),
   KEY `FK_users_mails_users` (`user`),
   KEY `FK_users_mails_mails` (`email`),
-  CONSTRAINT `FK_users_mails_mails` FOREIGN KEY (`email`) REFERENCES `mails` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_users_mails_mails` FOREIGN KEY (`email`) REFERENCES `emails_boxes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_users_mails_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- Volcando datos para la tabla admin_mv_pro.emails_users: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `emails_users` DISABLE KEYS */;
+INSERT IGNORE INTO `emails_users` (`id`, `user`, `email`) VALUES
+	(2, 1, 2);
 /*!40000 ALTER TABLE `emails_users` ENABLE KEYS */;
 
 -- Volcando estructura para tabla admin_mv_pro.events
