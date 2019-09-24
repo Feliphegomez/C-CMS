@@ -34,7 +34,6 @@ class EmailBox extends ModeloBase{
 				$datetime = new DateTime($box->last_sync);
 				// echo "Fecha 1. xmasDay \n" . strtotime($xmasDay->format('Y-m-d H:i:s')) . " {$xmasDay->format('Y-m-d H:i:s')} \n";
 				// echo "Fecha 2. datetime \n" . strtotime($datetime->format('Y-m-d H:i:s')) . " {$datetime->format('Y-m-d H:i:s')} \n";
-				
 				if(strtotime($xmasDay->format('Y-m-d H:i:s')) > strtotime($datetime->format('Y-m-d H:i:s'))) {
 					$boxes_sync[] = $box;
 				}

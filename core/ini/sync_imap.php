@@ -35,6 +35,9 @@ $mailBoxes = ($boxes->getAllPendingSync());
 $imap = new IMAP($adapter);
 $imap->setBoxes($mailBoxes);
 
+
+# echo json_encode($mailBoxes)."\n";
+
 foreach($mailBoxes as $i => $box){
 	$box = is_array($box) ? (object) $box : $box;
 	echo "[{$i}] \t\t Comenzando a sincronizar buzón \t {$box->label} \n";
@@ -52,7 +55,6 @@ foreach($mailBoxes as $i => $box){
 			#echo "[======---]\t Cuenta Unica [activado].\n";
 			#echo "[======---]\t {$openBox->box[0]->label} - Total:[{$openBox->box[0]->total}]/Mails:[".count($openBox->box[0]->mails)."]\n";		
 		}else{
-			return;
 		}
 	}
 	#echo "[====-----]\t Cargando mensajes.\n";
@@ -61,7 +63,6 @@ foreach($mailBoxes as $i => $box){
 	echo "[======---]\t Ingresando Mensajes: \n";
 	foreach($mails as $mail){
 		// Validar si ya existe el mensaje
-		
 		echo "[=======--]\t [{$mail->uid}] \t [{$mail->message_id}] \n";
 		#echo "[=======--]\t [{$mail->uid}]  [{$mail->message_id}] - {$mail->date} - ({$mail->size} bytes) \n";
 		##echo "[=======--]\t " . implode(',', array_keys((array) $mail)) . " \n";

@@ -52,7 +52,7 @@ foreach($mailBoxes as $i => $box){
 	echo "[===------]\t {$box->host}:{$box->port}{$box->args_add}/INBOX\n";
 	echo "[====-----]\t Abriendo conexión.\n";
 	
-	$openBox = $imap->loadMails($i, null);
+	$openBox = $imap->loadMails($i, 15);
 	echo $openBox->success == false ? "[XXXX-----]\t Error en la conexión.\n" :  "[=====----]\t Conexión establecida.\n";
 	
 	if(count($openBox->box) > 0){
