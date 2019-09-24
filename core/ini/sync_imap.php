@@ -43,17 +43,17 @@ foreach($mailBoxes as $i => $box){
 	echo "[{$i}] \t\t Comenzando a sincronizar buzón \t {$box->label} \n";
 	echo "[=--------]\t Abriendo conexión.\n";
 	$openBox = $imap->loadMails($i, NULL);
-	#echo $openBox->success == false ? "[XXXX-----]\t Error en la conexión.\n" :  "[====-----]\t Conexión establecida.\n";
+	echo $openBox->success == false ? "[XXXX-----]\t Error en la conexión.\n" :  "[====-----]\t Conexión establecida.\n";
 	
 	if(count($openBox->box) > 0){
 		#echo "[=====----]\t Multi Cuenta [activado].\n";
 		foreach($openBox->box as $box){
-			#echo "[=====----]\t {$box->label} - Total:[{$box->total}]/Mails:[".count($box->mails)."]\n";		
+			echo "[=====----]\t {$box->label} - Total:[{$box->total}]/Mails:[".count($box->mails)."]\n";		
 		}
 	}else{
 		if(isset($openBox->box[0])){
 			#echo "[======---]\t Cuenta Unica [activado].\n";
-			#echo "[======---]\t {$openBox->box[0]->label} - Total:[{$openBox->box[0]->total}]/Mails:[".count($openBox->box[0]->mails)."]\n";		
+			echo "[======---]\t {$openBox->box[0]->label} - Total:[{$openBox->box[0]->total}]/Mails:[".count($openBox->box[0]->mails)."]\n";		
 		}else{
 		}
 	}

@@ -10363,6 +10363,7 @@ namespace Tqdev\PhpCrudApi {
             $uniqueTableNames[$tableName] = true;
             if (isset($parameters['join'])) {
                 foreach ($parameters['join'] as $parameter) {
+					$parameter = is_array($parameter) ? implode(',', $parameter) : $parameter;
                     $tableNames = explode(',', trim($parameter));
                     foreach ($tableNames as $tableName) {
                         $uniqueTableNames[$tableName] = true;

@@ -165,7 +165,7 @@ class IMAP extends EntidadBase{
 				
 				if ($curMailBox->enable){
 					// IMAP Open
-					$inbox = $this->open($curMailBox->mailbox, $curMailBox->username, $curMailBox->password); 
+					$objectR->success = $inbox = $this->open($curMailBox->mailbox, $curMailBox->username, $curMailBox->password); 
 					
 					if ( $inbox ) {
 						// Get the last week's emails only
@@ -178,10 +178,8 @@ class IMAP extends EntidadBase{
 						
 						if ($emails == false || !count($emails)) {
 							//print '<p>No E-mails found.</p>';
-							$objectR->success = false;
 							return $objectR;
 						} else {
-							$objectR->success = true;
 							rsort($emails); // Sort
 							$total_search = (int) (count($emails));
 							if($total_search > 0){
