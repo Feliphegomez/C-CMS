@@ -167,13 +167,22 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
                             , ['menu_section']);
 							
 							
+							$sidebarItems = new Menus($this->adapter);
+							$sidebarItems->setPermissions($this->user->permissions->list);
+							$sidebarItems->getBySlug('sidebar');
+                            echo PHPStrap\Util\Html::tag('div', 
+								$sidebarItems->menu
+								. PHPStrap\Util\Html::clearfix(), 
+							['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
+							
                             echo PHPStrap\Util\Html::tag('div', 
 								$menu_section_my
-								.$menu_section_events
-								.$menu_section_accounts
-								.$menu_section_analytics
-								.$menu_section_system
-								.PHPStrap\Util\Html::clearfix(), ['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
+								. $menu_section_events
+								. $menu_section_accounts
+								. $menu_section_analytics
+								. $menu_section_system
+								. PHPStrap\Util\Html::clearfix(), 
+							['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
 							
                         ?>
                         <!-- /sidebar menu -->

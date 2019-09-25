@@ -281,6 +281,10 @@ class Form extends FormElement
     	}
     }
     
+	public function setInvalid(){
+		$this->validForm = FALSE;
+	}
+	
 	private $previous_contents = array();
 	
 	public function addPreviousContent($Content){

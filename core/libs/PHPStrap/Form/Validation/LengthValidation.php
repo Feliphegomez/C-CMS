@@ -6,7 +6,7 @@ class LengthValidation extends BaseValidation implements InputValidation{
     
 	private $Maxlength;
 	
-	public function __construct($Maxlength = 255, $errormessage = "Text exceeds maximum length")
+	public function __construct($Maxlength = 255, $errormessage = "El texto excede la longitud máxima")
     {
         parent::__construct($errormessage);
         $this->Maxlength = $Maxlength;
