@@ -5,9 +5,6 @@
  *
  * ******************************/
 
-$mailBoxes = $this->user->getEmailBoxes();
-$myEmailsPendings = new Email($this->adapter);
-$mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 ?>
 <!DOCTYPE html>
 <html lang="<?= $this->getLang(); ?>">
@@ -47,31 +44,7 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
                         <br />
                         <!-- sidebar menu -->
                         <?php 
-							// Correos - Boxes
-							$boxes_html = [];
-							foreach($mailBoxes as $box){
-								$box = is_array($box) ? (object) $box : $box;
-								$boxes_html[] = PHPStrap\Util\Html::tag('a', $box->label . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-									. PHPStrap\Util\Html::ul([
-										FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'not_seen']], 'Sin Leer', ['sub_menu'])
-										, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'inbox']], 'Bandeja Entrada', ['sub_menu'])
-										, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'seen']], 'Leidos', ['sub_menu'])
-										, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'trash']], 'Papelera', ['sub_menu'])
-										, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'draft']], 'Borradores', ['sub_menu'])
-										, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id]], 'Todo', ['sub_menu'])
-								], ['nav child_menu']);
-							}
-							
-                            $menu_section_my = PHPStrap\Util\Html::tag('div', 
-                                PHPStrap\Util\Html::tag('h3', 'Mi Cuenta')
-                                . PHPStrap\Util\Html::ul([
-                                    PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . "Mis Correos" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-                                        . PHPStrap\Util\Html::ul($boxes_html, ['nav child_menu'])
-									, ($this->checkPermission('my:calendar') == true) ? FelipheGomez\Url::a(['site/my_calendar', ['table' => 'accounts']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-calendar"]) . "Mi Calendario") : ""
-                                ], ['nav side-menu'])
-                            , ['menu_section']);
-							
-							
+							/*
                             $menu_section_events = PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('h3', 'Eventos')
                                 . PHPStrap\Util\Html::ul([
@@ -122,9 +95,6 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							
-							// FelipheGomez\Url::a(['site/accounts_master', ['table' => 'accounts']], 'Cuentas')
-							
-							
                             $menu_section_accounts = PHPStrap\Util\Html::tag('div', 
                                PHPStrap\Util\Html::tag('h3', 'Cuentas y Clientes') . 
                                 PHPStrap\Util\Html::ul([
@@ -140,7 +110,6 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							
-							
                             $menu_section_analytics = PHPStrap\Util\Html::tag('div', 
                                PHPStrap\Util\Html::tag('h3', 'Analytics') . 
                                 PHPStrap\Util\Html::ul([
@@ -149,6 +118,30 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 									, ($this->checkPermission('analytics:interactive') == true) ? FelipheGomez\Url::a(['site/analytics_interactive', []], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-pie-chart"]) . "Interactivo") : ""
                                 ], ['nav side-menu'])
                             , ['menu_section']);
+							*/
+							
+							// Correos - Boxes
+							$mailBoxes = $this->user->getEmailBoxes();
+							$boxes_html = [];
+							if(count($mailBoxes) > 0){
+								foreach($mailBoxes as $box){
+									$box = is_array($box) ? (object) $box : $box;
+									$boxes_html[] = PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
+										. PHPStrap\Util\Html::ul([
+											FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'not_seen']], 'Sin Leer', ['sub_menu'])
+											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'inbox']], 'Bandeja Entrada', ['sub_menu'])
+											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'seen']], 'Leidos', ['sub_menu'])
+											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'trash']], 'Papelera', ['sub_menu'])
+											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'draft']], 'Borradores', ['sub_menu'])
+											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id]], 'Todo', ['sub_menu'])
+									], ['nav child_menu']);
+								}
+							}
+							
+                            $menu_section_emails = ($this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('div', 
+                                PHPStrap\Util\Html::tag('h3', 'Mis correos')
+                                . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
+                            , ['menu_section']) : "";
 							
                             $menu_section_system = PHPStrap\Util\Html::tag('div', 
                                PHPStrap\Util\Html::tag('h3', 'Sistema') . 
@@ -156,31 +149,39 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 									// ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsList'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
 									
 									// MENU NUEVO
-									($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Gestionar Permisos") : ""
-									, ($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsGroupVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Grupos de Permisos") : ""
-									, ($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminUsersVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Gestionar Usuarios") : ""
-									
-									
-									#, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/UsersMaster'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Master") : ""
-									#, ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'users']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios Tabla") : ""
+									($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminMenusVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Menús") : ""
+									, ($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminUsersVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Usuarios") : ""
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							
+							if($this->checkPermission('system:permissions:manage')){
+								$menu_section_roles = PHPStrap\Util\Html::tag('div', 
+								   PHPStrap\Util\Html::tag('h3', 'Roles y Permisos') . 
+									PHPStrap\Util\Html::ul([
+										// ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsList'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
+										
+										// MENU NUEVO
+										($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
+										, ($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsGroupVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Roles") : ""
+										
+									], ['nav side-menu'])
+								, ['menu_section']);
+							} else {
+								$menu_section_roles = "";
+							}
 							
 							$sidebarItems = new Menus($this->adapter);
 							$sidebarItems->setPermissions($this->user->permissions->list);
-							$sidebarItems->getBySlug('sidebar');
-                            echo PHPStrap\Util\Html::tag('div', 
-								$sidebarItems->menu
-								. PHPStrap\Util\Html::clearfix(), 
-							['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
+							$sidebarItems->getBySlug("sidebar");
 							
                             echo PHPStrap\Util\Html::tag('div', 
-								$menu_section_my
-								. $menu_section_events
-								. $menu_section_accounts
-								. $menu_section_analytics
+								#. $menu_section_events
+								#. $menu_section_accounts
+								#. $menu_section_analytics
+								$sidebarItems->menu
+								. $menu_section_emails
 								. $menu_section_system
+								. $menu_section_roles
 								. PHPStrap\Util\Html::clearfix(), 
 							['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
 							
@@ -217,7 +218,9 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
                 <!-- top navigation -->
                 <div class="top_nav">
                     <div class="nav_menu">
-						<?php 							
+						<?php 
+							$myEmailsPendings = new Email($this->adapter);
+							$mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 							$html_mail = "";
 							foreach($mails as $mail){
 								$html_mail .= PHPStrap\Util\Html::tag('li', 
@@ -239,84 +242,87 @@ $mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 						
 						
                         <?php 
-							echo PHPStrap\Util\Html::tag('nav', 
-                                $navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
-                                . PHPStrap\Util\Html::tag('ul', 
-                                    PHPStrap\Util\Html::tag('li', 
-                                        FelipheGomez\Url::a(
-                                                'javascript:void(0)'
-                                                , PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...') . "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
-                                                , ['user-profile dropdown-toggle']
-                                                , ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-                                            )
-                                            . PHPStrap\Util\Html::ul([
-                                                        // FelipheGomez\Url::a('javascript:void(0)', "Perfil ")
-                                                        // , FelipheGomez\Url::a('javascript:void(0)', "Ayuda ")
-                                                        // , FelipheGomez\Url::a('javascript:void(0)', PHPStrap\Util\Html::tag('span', '50%', ["badge bg-red pull-right"]) . PHPStrap\Util\Html::tag('span', 'Configuraciones'))
-                                                        FelipheGomez\Url::a(['site/logout'], PHPStrap\Util\Html::tag('span', '', ["fa fa-sign-out pull-right"]) . "Salir ")
-                                                    ]
-                                                , ['dropdown-menu dropdown-usermenu pull-right']) 
-                                    , [''])
-									/*
-									// Icono 1
-                                    . PHPStrap\Util\Html::tag('li', 
-                                        FelipheGomez\Url::a(
-                                                'javascript:void(0)'
-                                                , PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', '6', ['badge bg-green'])
-                                                , ['dropdown-toggle info-number']
-                                                , ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-                                            )
-                                        . PHPStrap\Util\Html::tag('ul', 
-                                                // Item
-                                                PHPStrap\Util\Html::tag('li', 
-                                                        PHPStrap\Util\Html::tag('a', 
-                                                            PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
-                                                            . PHPStrap\Util\Html::tag('span', 
-                                                                    PHPStrap\Util\Html::tag('span', 'Feliphe Gomez')
-                                                                    . PHPStrap\Util\Html::tag('span', '3 mins ago', ['time'])
-                                                                )
-                                                            . PHPStrap\Util\Html::tag('span', 'Film festivals used to be do-or-die moments for movie makers. They were where...', ['message'])
-                                                            , [], [])
-                                                    , [], [])
-                                                . 
-                                                // Footer
-                                                PHPStrap\Util\Html::tag('li', 
-                                                        PHPStrap\Util\Html::tag('div', 
-                                                            PHPStrap\Util\Html::tag('a', 
-                                                                    PHPStrap\Util\Html::tag('strong', 'Ver todas las alertas')
-                                                                    . PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
-                                                                )
-                                                            , ['text-center'], [])
-                                                    , [], [])
-                                            , ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu1', 'role' => 'menu'])
-                                    , ['dropdown'], ['role' => 'presentation'])
-									*/
-									// Icono 2 - Mails
-                                    . PHPStrap\Util\Html::tag('li', 
-                                        FelipheGomez\Url::a(
-                                                'javascript:void(0)'
-                                                , PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . (count($mails) > 0 ? PHPStrap\Util\Html::tag('span', count($mails)==100 ? "+" . count($mails) : count($mails), ['badge bg-green']) : "")
-                                                , ['dropdown-toggle info-number']
-                                                , ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-                                            )
-                                        . PHPStrap\Util\Html::tag('ul', 
-                                                // Items
-                                                $html_mail
-                                                . 
-                                                // Footer
-                                                PHPStrap\Util\Html::tag('li', 
-                                                        PHPStrap\Util\Html::tag('div', 
-                                                            PHPStrap\Util\Html::tag('a', 
-                                                                    PHPStrap\Util\Html::tag('strong', 'Ver todos los correos')
-                                                                    . PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
-                                                                )
-                                                            , ['text-center'], [])
-                                                    , [], [])
-                                            , ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu2', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;'])
-                                    , ['dropdown'], ['role' => 'presentation'])
-									
-                                , ['nav navbar-nav navbar-right'])
-                            );
+							// if($this->checkPermission('my:account') == true) {
+								
+								echo PHPStrap\Util\Html::tag('nav', 
+									$navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
+									. PHPStrap\Util\Html::tag('ul', 
+										PHPStrap\Util\Html::tag('li', 
+											FelipheGomez\Url::a(
+													'javascript:void(0)'
+													, PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...') . "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
+													, ['user-profile dropdown-toggle']
+													, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+												)
+												. PHPStrap\Util\Html::ul([
+															// FelipheGomez\Url::a('javascript:void(0)', "Perfil ")
+															// , FelipheGomez\Url::a('javascript:void(0)', "Ayuda ")
+															// , FelipheGomez\Url::a('javascript:void(0)', PHPStrap\Util\Html::tag('span', '50%', ["badge bg-red pull-right"]) . PHPStrap\Util\Html::tag('span', 'Configuraciones'))
+															FelipheGomez\Url::a(['site/logout'], PHPStrap\Util\Html::tag('span', '', ["fa fa-sign-out pull-right"]) . "Salir ")
+														]
+													, ['dropdown-menu dropdown-usermenu pull-right']) 
+										, [''])
+										/*
+										// Icono 1
+										. PHPStrap\Util\Html::tag('li', 
+											FelipheGomez\Url::a(
+													'javascript:void(0)'
+													, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', '6', ['badge bg-green'])
+													, ['dropdown-toggle info-number']
+													, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+												)
+											. PHPStrap\Util\Html::tag('ul', 
+													// Item
+													PHPStrap\Util\Html::tag('li', 
+															PHPStrap\Util\Html::tag('a', 
+																PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
+																. PHPStrap\Util\Html::tag('span', 
+																		PHPStrap\Util\Html::tag('span', 'Feliphe Gomez')
+																		. PHPStrap\Util\Html::tag('span', '3 mins ago', ['time'])
+																	)
+																. PHPStrap\Util\Html::tag('span', 'Film festivals used to be do-or-die moments for movie makers. They were where...', ['message'])
+																, [], [])
+														, [], [])
+													. 
+													// Footer
+													PHPStrap\Util\Html::tag('li', 
+															PHPStrap\Util\Html::tag('div', 
+																PHPStrap\Util\Html::tag('a', 
+																		PHPStrap\Util\Html::tag('strong', 'Ver todas las alertas')
+																		. PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
+																	)
+																, ['text-center'], [])
+														, [], [])
+												, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu1', 'role' => 'menu'])
+										, ['dropdown'], ['role' => 'presentation'])
+										*/
+										// Icono 2 - Mails
+										. PHPStrap\Util\Html::tag('li', 
+											FelipheGomez\Url::a(
+													'javascript:void(0)'
+													, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . (count($mails) > 0 ? PHPStrap\Util\Html::tag('span', count($mails)==100 ? "+" . count($mails) : count($mails), ['badge bg-green']) : "")
+													, ['dropdown-toggle info-number']
+													, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+												)
+											. PHPStrap\Util\Html::tag('ul', 
+													// Items
+													$html_mail
+													. 
+													// Footer
+													PHPStrap\Util\Html::tag('li', 
+															PHPStrap\Util\Html::tag('div', 
+																PHPStrap\Util\Html::tag('a', 
+																		PHPStrap\Util\Html::tag('strong', 'Ver todos los correos')
+																		. PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
+																	)
+																, ['text-center'], [])
+														, [], [])
+												, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu2', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;'])
+										, ['dropdown'], ['role' => 'presentation']) 
+										
+									, ['nav navbar-nav navbar-right'])
+								);
+							// }
                         ?>
 						<style>
 							#menu2 {

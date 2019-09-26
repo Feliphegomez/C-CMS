@@ -52,7 +52,8 @@ class Menus extends ModeloBase{
 					LEFT JOIN `menus` AS M
 						ON MT.menu = M.id
 				WHERE M.`slug` LIKE (?)
-				ORDER BY M.`name`, `slug` ASC";
+				ORDER BY M.`order_by`, `name` ASC";
+				// ORDER BY M.`name`, `slug` ASC";
 			
 			$this->setAll(parent::getSQL($sql, ["{$menuSlug}%"]));
 		}
@@ -73,6 +74,7 @@ class Menus extends ModeloBase{
 	
 	public function setList($array = []){
 		if(count($array) > 0){
+			$this->list_a = [];
 			foreach($array as $item){
 				if(!isset($this->list_a[$item->menu_slug])){
 					$this->list_a[$item->menu_slug] = (object) [
@@ -80,38 +82,61 @@ class Menus extends ModeloBase{
 						'name' => $item->menu_name,
 						'slug' => $item->menu_slug,
 						'items' => [],
+						'items_t' => [],
 					];
 				}
-				$this->list_a[$item->menu_slug]->items[] = $item;
+				if(!in_array($item, $this->list_a[$item->menu_slug]->items)){
+					$this->list_a[$item->menu_slug]->items[] = $item;
+					/*
+					$this->items_t[] = FelipheGomez\Url::a(
+						[$subitem->tag_href, $subitem->tag_params], // Tag && Params
+						PHPStrap\Util\Html::tag('i', ' ', ["{$subitem->icon}"]) . "{$subitem->title}", // Content
+						json_decode($subitem->tag_class)
+					);*/
+				};
 			}
 			
-			$items_t = [];
-			foreach($this->list_a as $key => $item){
-				foreach($item->items as $subitem){
-					if ($this->validatePermission($subitem->permission) == true) {
-						$items_t[] = FelipheGomez\Url::a(json_decode($subitem->tag_href), PHPStrap\Util\Html::tag('i', ' ', ["{$subitem->icon}"]) . "{$subitem->title}");
+			
+			
+			$html = "";
+			foreach($this->list_a as $key => $menu){
+				$items_t = [];
+				foreach($menu->items as $item){
+					$item->tag_params = (array) json_decode($item->tag_params);
+					if ($this->validatePermission($item->permission) == true) {
+						$items_t[] = FelipheGomez\Url::a(
+							[$item->tag_href, $item->tag_params], // Tag && Params
+							PHPStrap\Util\Html::tag('i', ' ', ["{$item->icon}"]) . "{$item->title}", // Content
+							json_decode($item->tag_class)
+						);
 					}
-					
 				}
+				/**/
 				if(count($items_t) > 0){
-					$this->menu .= PHPStrap\Util\Html::tag('div', 
-					   PHPStrap\Util\Html::tag('h3', $item->name) . 
+					$html .= PHPStrap\Util\Html::tag('div', 
+					   PHPStrap\Util\Html::tag('h3', $menu->name) . 
 						PHPStrap\Util\Html::ul($items_t, ['nav side-menu'])
 					, ['menu_section']);
 				}
 			}
+			$this->menu = $html;
 			
+			//echo json_encode($this->list_a)."\n";
+			#echo json_encode($html)."\n";
+			#exit();
 		}
-		return $this->list_a;
+		return $this->menu;
 	}
 	
 	public function validatePermission($nameNode = 'none'){
 		$nameNode = strtolower($nameNode);
-		return !isset($this->permissions['isadmin']) || $this->permissions['isadmin'] !== true 
-					? !isset($this->permissions[$nameNode]) 
-											? false 
-											: $this->permissions[$nameNode] 
-					: true;
+		$permisosBase = (array) $this->permissions;
+		$permision = in_array('isadmin', $permisosBase) || in_array($nameNode, $permisosBase) ? true : false;
+		
+		#echo "\n"."\n".json_encode($permisosBase)."\n";
+		#echo json_encode($permision)."\n";
+		
+		return $permision;
 	}
 	
 }

@@ -77,16 +77,13 @@ class Permissions extends ModeloBase{
 			}
 			$this->list = is_array($this->list_t) ? implode(',', array_keys($this->list_t)) : "";
 		}
-		return $this->list_a;
+		return $this->list_t;
 	}
 	
 	public function validatePermission($nameNode = 'none'){
 		$nameNode = strtolower($nameNode);
-		return !isset($this->list_t['isadmin']) || $this->list_t['isadmin'] !== true 
-					? !isset($this->list_t[$nameNode]) 
-											? false 
-											: $this->list_t[$nameNode] 
-					: true;
+		return !isset($this->list_t['isadmin']) || !isset($this->list_t['isadmin']) 
+			? false : true;
 	}
 }
 ?>

@@ -16,8 +16,8 @@ class ControladorBase{
     public $ScriptsAfter = [];
     public $errors = [];
 	public $user;
-
-    public function __construct($params = []) {
+	
+	public function __construct($params = []) {
         global $global_session;
         $this->session = $global_session;
 		require_once 'Conectar.php';
@@ -35,6 +35,10 @@ class ControladorBase{
         $this->user = $this->getUser();
         //$global_session->close();
     }
+	
+	public static function isHTML($string){
+		return preg_match("/<[^<]+>/",$string,$m) != 0;
+	}
 	
 	public function checkPermission($node = 'none'){
 		$r = false;
@@ -70,6 +74,7 @@ class ControladorBase{
 	public function appendScriptBefore($scripts){
 		$this->ScriptsBefore[] = $scripts;
 	}
+	
 	public function appendScriptAfter($scripts){
 		$this->ScriptsAfter[] = $scripts;
 	}

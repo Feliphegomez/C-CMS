@@ -10,10 +10,6 @@ class SiteController extends ControladorBase{
         parent::__construct();
     }
     
-	public static function isHTML($string){
-		return preg_match("/<[^<]+>/",$string,$m) != 0;
-	}
-	
     public function actionIndex(){
 		if (!$this->isGuest){ $this->actionHome_users(); }  
 		else { $this->redirect('site', 'login'); }
@@ -224,8 +220,10 @@ class SiteController extends ControladorBase{
 			// header("text/plain; charset=UTF-8");
 		}
 		$date = new DateText($model->date);
+		// $message = preg_replace("/^http:/i", "https:", $message);
+		$message = htmlspecialchars_decode(preg_replace("/http:/", "/https:/", htmlspecialchars($message)));
 		
-		echo  $message;
+		echo  ($message);
 		return $message;
 	}
 	
@@ -618,27 +616,6 @@ class SiteController extends ControladorBase{
 		$this->appendScriptBefore($scriptGA);
 	}
 	
-	public function actionAnalytics_basic(){
-		$this->addScripts_GA();
-		$this->render('analytics_basic', [
-			"clientid" => "507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com"
-		]);
-	}
-
-	public function actionAnalytics_multiple(){
-		$this->addScripts_GA();
-		$this->render('analytics_multiple', [
-			"clientid" => "507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com"
-		]);
-	}
-
-	public function actionAnalytics_interactive(){
-		$this->addScripts_GA();
-		$this->render('analytics_interactive', [
-			"clientid" => "507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com"
-		]);
-	}
-	
 	public function actionUsersMaster(){
         if ($this->isGuest){ $this->goHome(); }
         $query = new Usuario($this->adapter);
@@ -651,7 +628,7 @@ class SiteController extends ControladorBase{
 		]);
 	}
 	
-	// Login
+	// Formulario de Ingreso y Registro
     public function actionLogin(){
 		$error = null;
         $this->theme['default'] = 'demo-login';
@@ -686,7 +663,6 @@ class SiteController extends ControladorBase{
 			}
 		}
 		else if($register->formulario->isValid()){
-			echo "Revisando datos apra crear usuario.\n";
 			$valuesRegister = $register->formulario->submitedValues();
 			$checkPass = $valuesRegister['register_password'] == $valuesRegister['register_password_validate'] ? true : false;
 			$text = $checkPass == true ? "Espere.." : "Las contraseñas no coinciden.";
@@ -698,12 +674,44 @@ class SiteController extends ControladorBase{
 				]);
 			}
 			
+		
 			
 			$register->setFormRegisterResult($valuesRegister);
 			$newUser = $register->crearMin();
 			if($newUser = true){
 				$searchUser = $model->getById($register->id);
 				$this->session->setAll((array) $searchUser[0]);
+				
+			
+				$file = dirname(dirname(__DIR__) . "/../") . "/templates/mails/register.php";
+				//$file = "templates/mails/register.php";
+				$fileExist = @file_exists($file);
+				$template = @htmlspecialchars(@file_get_contents($file, true));
+				if($fileExist == true){					
+					$template = (preg_replace([
+						'/%username%/i',
+						'/%email%/i',
+						'/%password%/i',
+					], [
+						$valuesRegister['register_username'],
+						$valuesRegister['register_email'],
+						$valuesRegister['register_password'],
+					], $template));
+				}
+				$template = htmlspecialchars_decode(utf8_decode($template));
+				
+				$mail = new MailSend();
+				$mail->setSubject("¡Te damos la bienvenida a Monteverde!");
+				$mail->addTo($valuesRegister['register_email'], $valuesRegister['register_username']);
+				$mail->setHtml(true);
+				$mail->setMessage($template);
+				$sendingMail = $mail->sendMail();
+				if($sendingMail == true){
+					// Enviado con exito
+					// echo json_encode($sendTru);
+				}
+				
+				
 				$this->redirect('site', 'login', [
 					"error" => 'Bienvenid@'
 				]);
@@ -828,4 +836,41 @@ class SiteController extends ControladorBase{
 			"table" => "users"
         ]);
 	}
+
+	// Manejador de Menús
+	public function actionAdminMenusVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Menús",
+            "subtitle" => "Master",
+			"table" => "menus"
+        ]);
+	}
+	
+	// Visualizaciones Google Analytics Basico
+	public function actionAnalytics_basic(){
+		$this->addScripts_GA();
+		$this->render('analytics_basic', [
+			"clientid" => "507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com"
+		]);
+	}
+
+	// Visualizaciones Google Analytics Multiple
+	public function actionAnalytics_multiple(){
+		$this->addScripts_GA();
+		$this->render('analytics_multiple', [
+			"clientid" => "507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com"
+		]);
+	}
+
+	// Visualizaciones Google Analytics Interactivo
+	public function actionAnalytics_interactive(){
+		$this->addScripts_GA();
+		$this->render('analytics_interactive', [
+			"clientid" => "507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com"
+		]);
+	}
+	
 }

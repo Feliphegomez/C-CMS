@@ -276,7 +276,9 @@
 			</template>
 			<div class="view-mail">
 				<br />
-				<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(50vh)" :src="'/index.php?controller=site&action=My_email_body&ref=14&email_id=' + mail.id"></iframe>
+				{{ mail.id }}
+				<br />
+				<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(50vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
 				
 				<!-- // 
 				<template v-if="mail.message !== undefined">
@@ -344,7 +346,7 @@ var View = Vue.extend({
 	computed: {
 		mail(){
 			return this.$root.email_single;
-		}
+		},
 	},
 	methods: {
 		unescape(unsafe){
@@ -373,6 +375,12 @@ app = new Vue({
 			options: {},
 			email_single: {}
 		};
+	},
+	computed: {
+		urlBodyEmail(){
+			var self = this;
+			return '/index.php?controller=site&action=My_email_body&ref=<?= $ref; ?>&email_id=' + self.$route.params.mail_id;
+		}
 	},
 	mounted(){
 		var self = this;
