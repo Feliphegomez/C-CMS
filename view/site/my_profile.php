@@ -13,68 +13,10 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>Imagen de perfil <small>Avatar</small></h2>
+					<!-- // <h2>Imagen de perfil <small>Avatar</small></h2> -->
 					<ul class="nav navbar-right panel_toolbox">
-						<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a data-toggle="modal" data-target=".bs-change-my-avatar-to-media-modal-lg"><i class="fa fa-film"></i> Elegir de la biblioteca </a></li>
-								<li><a data-toggle="modal" data-target=".bs-change-my-avatar-to-upload-modal-lg"><i class="fa fa-image"></i> Subir una imagen </a></li>
-							</ul>
-						</li>
-						
-						
-					
-
-					  <div class="modal fade bs-change-my-avatar-to-upload-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-						<div class="modal-dialog modal-lg">
-						  <div class="modal-content">
-
-							<div class="modal-header">
-							  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-							  </button>
-							  <h4 class="modal-title" id="myModalLabel">Subir avatar</h4>
-							</div>
-							<div class="modal-body">
-							  <h4>Text in a modal</h4>
-							  <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-							  <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-							</div>
-							<div class="modal-footer">
-							  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							  <button type="button" class="btn btn-primary">Save changes</button>
-							</div>
-
-						  </div>
-						</div>
-					  </div>
-						
-					
-
-					  <div class="modal fade bs-change-my-avatar-to-media-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-						<div class="modal-dialog modal-lg">
-						  <div class="modal-content">
-
-							<div class="modal-header">
-							  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-							  </button>
-							  <h4 class="modal-title" id="myModalLabel">Eligir avatar de la biblioteca</h4>
-							</div>
-							<div class="modal-body">
-							  <h4>Text in a modal</h4>
-							  <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-							  <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-							</div>
-							<div class="modal-footer">
-							  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-							  <button type="button" class="btn btn-primary">Save changes</button>
-							</div>
-
-						  </div>
-						</div>
-					  </div>
-					  
+						<!-- // <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li> -->
+						<li><a title="Subir una imagen" data-toggle="modal" data-target=".bs-change-my-avatar-modal-lg"><i class="fa fa-image"></i></a></li>
 					</ul>
 					<div class="clearfix"></div>
 				</div>
@@ -90,45 +32,23 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>Información Básica <small>Info Basic</small></h2>
+					<h2>Información de Acceso <small>Info Access</small></h2>
 					<ul class="nav navbar-right panel_toolbox">
-						<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-						<li><a data-toggle="modal" data-target=".bs-edit-my-modal-lg"><i class="fa fa-pencil"></i></a></li>
-						
-						
-
-						  <div class="modal fade bs-edit-my-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog modal-lg">
-							  <div class="modal-content">
-
-								<div class="modal-header">
-								  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-								  </button>
-								  <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-								</div>
-								<div class="modal-body">
-								  <h4>Text in a modal</h4>
-								  <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-								  <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-								</div>
-								<div class="modal-footer">
-								  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								  <button type="button" class="btn btn-primary">Save changes</button>
-								</div>
-
-							  </div>
-							</div>
-						  </div>
-
+						<li><a data-toggle="modal" data-target=".bs-my-profile-editor-fast-info-basic-modal-lg">
+							<i class="fa fa-pencil"></i></a>
+						</li>
+						<li><a data-toggle="modal" data-target=".bs-my-profile-editor-fast-access-modal-lg">
+							<i class="fa fa-key"></i></a>
+						</li>
 					</ul>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
-				  <h3>Samuel Doe</h3>
+				  <h3><?= "{$this->user->username}"; ?></h3>
 
 				  <ul class="list-unstyled user_data">
-					<li><i class="fa fa-map-marker user-profile-icon"></i> San Francisco, California, USA
-					</li>
+					<li><i class="fa fa-user user-profile-icon"></i> <?= "{$this->user->names} {$this->user->surname}"; ?></li>
+					<li><i class="fa fa-map-marker user-profile-icon"></i> San Francisco, California, USA</li>
 
 					<li>
 					  <i class="fa fa-briefcase user-profile-icon"></i> Software Engineer

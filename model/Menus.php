@@ -30,7 +30,6 @@ class Menus extends ModeloBase{
         return ['id', 'name', 'slug', 'menu'];
     }
 	
-	
     public function setPermissions($permissions = null){
 		$this->permissions = [];
 		if($permissions !== null){
@@ -72,7 +71,7 @@ class Menus extends ModeloBase{
 		return $this;
 	}
 	
-	public function setList($array = []){
+	public function setList($array = [], $tree = false){
 		if(count($array) > 0){
 			$this->list_a = [];
 			foreach($array as $item){
@@ -95,35 +94,42 @@ class Menus extends ModeloBase{
 					);*/
 				};
 			}
-			
-			
-			
 			$html = "";
-			foreach($this->list_a as $key => $menu){
-				$items_t = [];
-				foreach($menu->items as $item){
-					$item->tag_params = (array) json_decode($item->tag_params);
-					if ($this->validatePermission($item->permission) == true) {
-						$items_t[] = FelipheGomez\Url::a(
-							[$item->tag_href, $item->tag_params], // Tag && Params
-							PHPStrap\Util\Html::tag('i', ' ', ["{$item->icon}"]) . "{$item->title}", // Content
-							json_decode($item->tag_class)
-						);
+			
+			if($tree == false){
+				foreach($this->list_a as $key => $menu){
+					$items_t = [];
+					foreach($menu->items as $item){
+						$item->tag_href = json_decode($item->tag_href) !== null ? json_decode($item->tag_href) : (string) $item->tag_href;
+						$url = is_array($item->tag_href) ? $item->tag_href[0] : $item->tag_href;
+						$item->tag_class = (array) json_decode($item->tag_class);
+						$item->tag_params = (array) json_decode($item->tag_params);
+						$item->tag_href_parms = (array) json_decode($item->tag_href_parms);
+						$item->tag_id = $item->tag_id !== null ? $item->tag_id : "";
+						$url_array = is_array($item->tag_href) ? [$url, $item->tag_href_parms] : $url;
+						$item->tag_params['id'] = $item->tag_id;						
+						if ($this->validatePermission($item->permission) == true) {
+							$items_t[] = FelipheGomez\Url::a(
+								$url_array, // Tag && Params
+								PHPStrap\Util\Html::tag('i', ' ', ["{$item->icon}"]) . "{$item->title}", // Content
+								($item->tag_class),
+								$item->tag_params
+							);
+						}
+						/*
+						*/
+					}
+					/**/
+					if(count($items_t) > 0){
+						$html .= PHPStrap\Util\Html::tag('div', 
+						   PHPStrap\Util\Html::tag('h3', $menu->name) . 
+							PHPStrap\Util\Html::ul($items_t, ['nav side-menu'])
+						, ['menu_section']);
 					}
 				}
-				/**/
-				if(count($items_t) > 0){
-					$html .= PHPStrap\Util\Html::tag('div', 
-					   PHPStrap\Util\Html::tag('h3', $menu->name) . 
-						PHPStrap\Util\Html::ul($items_t, ['nav side-menu'])
-					, ['menu_section']);
-				}
 			}
-			$this->menu = $html;
 			
-			//echo json_encode($this->list_a)."\n";
-			#echo json_encode($html)."\n";
-			#exit();
+			$this->menu = $html;
 		}
 		return $this->menu;
 	}

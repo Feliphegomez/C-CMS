@@ -12,6 +12,29 @@ class Usuario extends ModeloBase{
         $table="users";
         parent::__construct($table, $adapter);
     }
+
+    public function attributeLabels(){
+        return [
+			'id' => "ID", 
+			'username' => "Usuario", 
+			'password' => "Contraseña", 
+			'identification_type' => "Tipo Documento identidad", 
+			'identification_number' => "# Documento Identidad", 
+			'names' => "Nombre(s)", 
+			'surname' => "Apellido(s)", 
+			'phone' => "Teléfono Fijo", 
+			'mobile' => "Teléfono Móvil", 
+			'address' => "Dirección", 
+			'department' => "Departamento", 
+			'city' => "Ciudad", 
+			'email' => "Correo Electronico", 
+			'avatar' => "Avatar", 
+			'permissions' => "Permisos", 
+			'registered' => "Fecha de registro", 
+			'updated' => "Ultima actualizacion", 
+			'last_connection' => "Ultima conexion"
+        ];
+    }
 	
 	public function __sleep(){
 		return [
@@ -39,22 +62,91 @@ class Usuario extends ModeloBase{
     public function rules()
     {
         return [
-            new PHPStrap\Form\Text([
-                    "name" => "username", 
+            // Datos de acceso
+            ["username" => new PHPStrap\Form\Text([
+                    "name" => "register_username", 
                     "placeholder" => "Usuario"
                 ], [
-                    //new PHPStrap\Form\Validation\EmailValidation('Ingrese un email.')
                     new PHPStrap\Form\Validation\RequiredValidation('Ingresa tu usuario.')
-                ])
-            # ['email', 'unique', 'message' => Yii::t('yii2mod.user', 'This email address has already been taken.')],
-            # ['username', 'unique', 'message' => Yii::t('yii2mod.user', 'This username has already been taken.')],
-            # [['username'], 'min' => 2, 'max' => 255],
-            # ['email', 'email'],
-            # ['email', 'string', 'max' => 255],
-            # ['plainPassword', 'string', 'min' => 6],
-            # ['plainPassword', 'required', 'on' => 'create'],
-            # ['status', 'default', 'value' => UserStatus::ACTIVE],
-            # ['status', 'in', 'range' => UserStatus::getConstantsByName()],
+                    , new PHPStrap\Form\Validation\LengthValidation(32)
+					, new PHPStrap\Form\Validation\LambdaValidation("El usuario ya existe", function($value){
+						$model = new Usuario($this->adapter);
+						$exist = $model->getBy('username', $value);
+						return (isset($exist[0]) && isset($exist[0]->id) && $exist[0]->id > 0) ? false : true;
+					})
+                ])]
+            , ["email" => new PHPStrap\Form\Text([
+                    "name" => "register_email", 
+                    "placeholder" => "Correo Electronico"
+                ], [
+                    new PHPStrap\Form\Validation\EmailValidation('Ingrese un email.')
+					, new PHPStrap\Form\Validation\LambdaValidation("El correo ya existe", function($value){
+						$model = new Usuario($this->adapter);
+						$exist = $model->getBy('email', $value);
+						return (isset($exist[0]) && isset($exist[0]->id) && $exist[0]->id > 0) ? false : true;
+					})
+                ])]
+            , ["password" => new PHPStrap\Form\Password([
+                    "name" => "register_password", 
+                    "placeholder" => "Contraseña"
+                ], [
+                    new PHPStrap\Form\Validation\RequiredValidation('Ingresa tu Contraseña')
+					, new PHPStrap\Form\Validation\MinLengthValidation(5)
+                ])]
+            , ["password_validate" => new PHPStrap\Form\Password([
+                    "name" => "register_password_validate", 
+                    "placeholder" => "Confirmar Contraseña"
+                ], [
+                    new PHPStrap\Form\Validation\RequiredValidation('Ingresa tu Contraseña')
+					, new PHPStrap\Form\Validation\MinLengthValidation(5)
+                ]),]
+			// Información Básica
+			, ["identification_number" => new PHPStrap\Form\Text([
+					"name" => "identification_number", 
+					"placeholder" => "# Documento de identificación"
+				], [
+			])]
+			, ["identification_type" => new PHPStrap\Form\Select(Types::OptionsForm($this->adapter, "identifications_types", [
+					"key" => "id"
+				]), [], [
+					"name" => "identification_type", 
+					"placeholder" => "Tipo de documento de identificación"
+				], [
+				new PHPStrap\Form\Validation\RequiredValidation('Requerido.')
+			])]
+			, ["names" => new PHPStrap\Form\Text([
+					"name" => "names", 
+					"placeholder" => "Nombre(s)"
+				], [])]
+			, ["surname" => new PHPStrap\Form\Text([
+					"name" => "surname", 
+					"placeholder" => "Apellido(s)"
+				], [])]
+			, ["phone" => new PHPStrap\Form\Text([
+					"name" => "phone", 
+					"placeholder" => "Teléfono Fijo"
+				], [])]
+			, ["phone" => new PHPStrap\Form\Text([
+					"name" => "phone", 
+					"placeholder" => "Teléfono Móvil"
+				], [])]
+			, ["address" => new PHPStrap\Form\Textarea("", [
+					"name" => "address", 
+					"placeholder" => "Dirección"
+				], [])]
+			, ["department" => new PHPStrap\Form\Select(Types::OptionsForm($this->adapter, "geo_departments", [
+					"key" => "id",
+					"label" => "name"
+				]), [], [
+					"name" => "department", 
+					"placeholder" => "Departamento"
+				], [])]
+			, ["city" => new PHPStrap\Form\Select(Types::OptionsForm($this->adapter, "geo_citys", [
+					"key" => "id"
+				]), [], [
+					"name" => "city", 
+					"placeholder" => "Ciudad"
+				], [])]
         ];
     }
 	

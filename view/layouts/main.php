@@ -45,6 +45,10 @@
                         <!-- sidebar menu -->
                         <?php 
 							
+							$sidebarItems = new Menus($this->adapter);
+							$sidebarItems->setPermissions($this->user->permissions->list);
+							$sidebarItems->getBySlug("sidebar");
+							
 							// Correos - Boxes
 							$mailBoxes = $this->user->getEmailBoxes();
 							$boxes_html = [];
@@ -63,15 +67,16 @@
 								}
 							}
 							
+							// Mis correos
                             $menu_section_emails = ($this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('h3', 'Mis correos')
                                 . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
                             , ['menu_section']) : "";
 							
-							
+							// Sistema
                             $menu_section_system = PHPStrap\Util\Html::tag('div', 
-                               PHPStrap\Util\Html::tag('h3', 'Sistema') . 
-                                PHPStrap\Util\Html::ul([
+								(($this->checkPermission('system:users:manage') == true) ? PHPStrap\Util\Html::tag('h3', 'Sistema') : "")
+                                . PHPStrap\Util\Html::ul([
 									// ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsList'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
 									
 									// MENU NUEVO
@@ -95,6 +100,7 @@
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							
+							// Roles y permisos
 							if($this->checkPermission('system:permissions:manage')){
 								$menu_section_roles = PHPStrap\Util\Html::tag('div', 
 								   PHPStrap\Util\Html::tag('h3', 'Roles y Permisos') . 
@@ -109,14 +115,7 @@
 								$menu_section_roles = "";
 							}
 							
-							$sidebarItems = new Menus($this->adapter);
-							$sidebarItems->setPermissions($this->user->permissions->list);
-							$sidebarItems->getBySlug("sidebar");
-							
                             echo PHPStrap\Util\Html::tag('div', 
-								#. $menu_section_events
-								#. $menu_section_accounts
-								#. $menu_section_analytics
 								$sidebarItems->menu
 								. $menu_section_emails
 								. $menu_section_system
@@ -278,11 +277,12 @@
                     </div>
                 </div>
                 <!-- /page content -->
-                <!-- footer content -->
+				<!-- footer content -->
                 <?= PHPStrap\Util\Html::tag('footer', PHPStrap\Util\Html::tag('div', ControladorBase::PowerBy(), ['pull-right']) . PHPStrap\Util\Html::clearfix(), []); ?>
                 <!-- /footer content -->
+				<?= $this->getModals(); ?>
             </div>
         </div>
         <?= $this->footerScripts(); ?>
-    </body>
+	</body>
 </html>

@@ -49,7 +49,7 @@ class ControladorBase{
 	}
   
 	public function getUser() {
-		$model = new Usuario($this->adapter);
+		$model = new Me($this->adapter);
 		$model->getById($this->session->getId());
 		return $model;
 	}
@@ -183,5 +183,9 @@ EOF;
 			
 	public function saveFile($file){
 		
+	}
+
+	public function getModals(){
+		foreach(glob("view/modals/*.php") as $file){ require_once $file; }
 	}
 }

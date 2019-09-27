@@ -26,7 +26,7 @@ class Media extends ModeloBase{
 		}
 	}
 	
-    public function save(){
+    public function save($columns = null){
 		if($this->create_by > 0){} else { return 0; }
 		$sql = "INSERT INTO {$this->getTableUse()} (name, type, size, path_full, path_short, create_by) VALUES (?, ?, ?, ?, ?, ?)";
 		$query = $this->db()->prepare($sql);

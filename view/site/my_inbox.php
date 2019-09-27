@@ -1,187 +1,94 @@
 <div id="app">
-<div class="page-title">
-	<div class="title_left">
-		<h3>Correo Electronico 
-			<template v-if="folder != undefined">
-				<small>{{ folder }}</small>
-			</template>
-		</h3>
-	</div>
-	
-	<!-- //
-	<div class="title_right">
-		<div class="col-sm-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-			<div class="input-group">
-				<input type="text" class="form-control" placeholder="Search for...">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="button">Go!</button>
-				</span>
+	<div class="page-title">
+		<div class="title_left">
+			<h3>Correo Electronico 
+				<template v-if="folder != undefined">
+					<small>{{ folder }}</small>
+				</template>
+			</h3>
+		</div>
+		
+		<!-- //
+		<div class="title_right">
+			<div class="col-sm-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search for...">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button">Go!</button>
+					</span>
+				</div>
 			</div>
 		</div>
+		-->
 	</div>
-	-->
-</div>
-<div class="clearfix"></div>
+	<div class="clearfix"></div>
 
-<div class="row">
-	<div class="col-sm-12">
-		<div class="x_panel">
-			<div class="x_title">
-				<h2><?= $MailerBox->label; ?><small><?= $MailerBox->username; ?></small></h2>
-				<!--
-				<ul class="nav navbar-right panel_toolbox">
-					<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">Settings 1</a></li>
-							<li><a href="#">Settings 2</a></li>
-						</ul>
-					</li>
-					<li><a class="close-link"><i class="fa fa-close"></i></a></li>
-				</ul>
-				-->
-				<div class="clearfix"></div>
-			</div>
-			<div class="x_content">
-				<div class="row">
-					<div class="col-sm-3 mail_list_column" style="overflow-y:auto; max-height:calc(80vh);min-height: calc(80vh);zoom: 0.8;">
-						<button id="compose" class="btn btn-sm btn-success btn-block" type="button"> Redactar </button>
-						<router-link v-for="(mail, index_mail) in list_mails" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }" tag="a" class="mail_list" :key="mail.id">
-							<div class="left">
-								<template v-if="mail.answered !== undefined && mail.answered === 1">
-									<i class="fa fa-share"></i> 
-								</template>
-								<template v-if="mail.recent !== undefined && mail.recent === 1">
-									<i class="fa fa-asterisk"></i>
-								</template>
-								
-								<template v-if="mail.seen !== undefined && mail.seen === 0">
-									<i class="fa fa-circle"></i>
-								</template>
-								<template v-else>
-									<i class="fa fa-circle-o"></i>
-								</template>
-								
-								<template v-if="mail.draft !== undefined && mail.draft === 1">
-									<i class="fa fa-edit"></i> 
-								</template>
-								<template v-if="mail.deleted !== undefined && mail.deleted === 1">
-									<i class="fa fa-trash"></i> 
-								</template>
-								<template v-if="mail.attachments !== undefined && mail.attachments.length > 0">
-									<i class="fa fa-paperclip"></i> 
-								</template>
-							</div>
-							<div class="right">
-								<template v-if="mail.from !== undefined && mail.subject !== undefined">
-									<h3>{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,22) }}{{ (mail.from.length > 23) ? "..." : "" }}<small> {{ mail.date }}</small></h3>
-									<p>{{ mail.subject.replace(/<\/?[^>]+(>|$)/g, '').slice(0,17) }} - Leer Más</p>
-								</template>
-							</div>
-						</router-link>
-					</div>
-					<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-9 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
-						<router-view :key="$route.fullPath"></router-view>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2><?= $MailerBox->label; ?><small><?= $MailerBox->username; ?></small></h2>
+					<!--
+					<ul class="nav navbar-right panel_toolbox">
+						<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#">Settings 1</a></li>
+								<li><a href="#">Settings 2</a></li>
+							</ul>
+						</li>
+						<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+					</ul>
+					-->
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<div class="row">
+						<div class="col-sm-3 mail_list_column" style="overflow-y:auto; max-height:calc(80vh);min-height: calc(80vh);zoom: 0.8;">
+							<button id="compose" class="btn btn-sm btn-success btn-block" type="button"> Redactar </button>
+							<router-link v-for="(mail, index_mail) in list_mails" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }" tag="a" class="mail_list" :key="mail.id">
+								<div class="left">
+									<template v-if="mail.answered !== undefined && mail.answered === 1">
+										<i class="fa fa-share"></i> 
+									</template>
+									<template v-if="mail.recent !== undefined && mail.recent === 1">
+										<i class="fa fa-asterisk"></i>
+									</template>
+									
+									<template v-if="mail.seen !== undefined && mail.seen === 0">
+										<i class="fa fa-circle"></i>
+									</template>
+									<template v-else>
+										<i class="fa fa-circle-o"></i>
+									</template>
+									
+									<template v-if="mail.draft !== undefined && mail.draft === 1">
+										<i class="fa fa-edit"></i> 
+									</template>
+									<template v-if="mail.deleted !== undefined && mail.deleted === 1">
+										<i class="fa fa-trash"></i> 
+									</template>
+									<template v-if="mail.attachments !== undefined && mail.attachments.length > 0">
+										<i class="fa fa-paperclip"></i> 
+									</template>
+								</div>
+								<div class="right">
+									<template v-if="mail.from !== undefined && mail.subject !== undefined">
+										<h3>{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,22) }}{{ (mail.from.length > 23) ? "..." : "" }}<small> {{ mail.date }}</small></h3>
+										<p>{{ mail.subject.replace(/<\/?[^>]+(>|$)/g, '').slice(0,17) }} - Leer Más</p>
+									</template>
+								</div>
+							</router-link>
+						</div>
+						<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-9 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
+							<router-view :key="$route.fullPath"></router-view>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
-<!-- compose -->
-<div class="compose col-sm-6 col-xs-12">
-  <div class="compose-header">
-	New Message
-	<button type="button" class="close compose-close">
-	  <span>×</span>
-	</button>
-  </div>
-
-  <div class="compose-body">
-	<div id="alerts"></div>
-
-	<div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
-	  <div class="btn-group">
-		<a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><b class="caret"></b></a>
-		<ul class="dropdown-menu">
-		</ul>
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size">
-			<i class="fa fa-text-height"></i>&nbsp;
-			<b class="caret"></b>
-		</a>
-		<ul class="dropdown-menu">
-		  <li>
-			<a data-edit="fontSize 5">
-			  <p style="font-size:17px">Huge</p>
-			</a>
-		  </li>
-		  <li>
-			<a data-edit="fontSize 3">
-			  <p style="font-size:14px">Normal</p>
-			</a>
-		  </li>
-		  <li>
-			<a data-edit="fontSize 1">
-			  <p style="font-size:11px">Small</p>
-			</a>
-		  </li>
-		</ul>
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
-		<a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
-		<a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
-		<a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list-ul"></i></a>
-		<a class="btn" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
-		<a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-dedent"></i></a>
-		<a class="btn" data-edit="indent" title="Indent (Tab)"><i class="fa fa-indent"></i></a>
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
-		<a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
-		<a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
-		<a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i class="fa fa-link"></i></a>
-		<div class="dropdown-menu input-append">
-		  <input class="span2" placeholder="URL" type="text" data-edit="createLink" />
-		  <button class="btn" type="button">Add</button>
-		</div>
-		<a class="btn" data-edit="unlink" title="Remove Hyperlink"><i class="fa fa-cut"></i></a>
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
-		<input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
-	  </div>
-
-	  <div class="btn-group">
-		<a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
-		<a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
-	  </div>
-	</div>
-
-	<div id="editor" class="editor-wrapper"></div>
-  </div>
-
-  <div class="compose-footer">
-	<button id="send" class="btn btn-sm btn-success" type="button">Send</button>
-  </div>
-</div>
-<!-- /compose -->
 </div>
 
 
@@ -214,7 +121,14 @@
 						<button class="btn btn-sm btn-dark" type="button" onclick="window.print();" title="Imprimir">
 							<i class="fa fa-print"></i> 
 						</button>
-						<button @click="$root.changeFolder(mail.id, $root.ref, 'trash')" class="btn btn-sm btn-danger" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Eliminar" v-if="mail.deleted == 0" >
+
+
+						<button @click="$root.changeFolder(mail.id, $root.ref, 'not_seen')" class="btn btn-sm btn-default" data-original-title="Marcar como no leído" v-if="mail.deleted == 1" type="button" data-placement="top" data-toggle="tooltip" type="button">
+							<i class="fa fa-inbox"></i> Sacar de la papelera
+						</button>
+						
+
+						<button @click="$root.changeFolder(mail.id, $root.ref, 'trash')" class="btn btn-sm btn-warning" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Eliminar" v-if="mail.deleted == 0" >
 							<i class="fa fa-trash-o"></i>
 						</button>
 					</div>

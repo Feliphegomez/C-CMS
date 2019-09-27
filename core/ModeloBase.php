@@ -18,7 +18,7 @@ class ModeloBase extends EntidadBase
         $this->table = (string) $table;
 		$this->db = $adapter;
         parent::__construct($table, $adapter);
-        $this->formulario = $this->toFormHtml();
+        // $this->formulario = $this->toFormHtml();
     }
 
     public function toFormHtml($Action = "", $Method = "GET", $FormType = 0, $MessageError = "Datos invalidos.", $MessageSuccess = "OK."){
@@ -52,4 +52,37 @@ class ModeloBase extends EntidadBase
 		$this->formulario = $this->toFormHtml($Action, $Method, $FormType, $MessageError, $MessageSuccess);
         return $this->formulario;
 	}
+
+    public function save($columns = null){
+		$columns = $columns !== null ? $columns : $this->__sleep();
+		$key = [];
+		$values = [];
+		$sqlKey = [];
+		foreach($columns as $key){
+			if($key !== 'id' && $key !== 'created' && $key !== 'updated'){
+				$sqlKey[] = "`{$key}`=:{$key}";
+				//$sqlKey[] = "`{$key}`=?";
+
+
+				$keys[] = ":{$key}";
+				$values[$key] = !isset($this->{$key}) ? null : $this->{$key};
+				#$values[] = !isset($this->{$key}) ? null : $this->{$key};
+			}
+		}
+		
+		#$sql = "UPDATE {$this->getTableUse()} SET ".implode(',', $sqlKey)." WHERE id='{$this->id}'";
+		$sql = "UPDATE {$this->getTableUse()} SET ".implode(',', $sqlKey)." WHERE id='{$this->id}'";
+		$query = $this->db()->prepare($sql);
+		
+		try {
+			$success = $query->execute($values);
+			return true;
+		}catch (Exception $e){
+			//throw $e;
+			#echo "\n {$sql} \n";
+			echo $e->getMessage();
+			return false;
+		}
+    }
+
 };
