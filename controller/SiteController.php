@@ -81,10 +81,26 @@ class SiteController extends ControladorBase{
 		$mail = new Email($this->adapter);
         if (isset($box) && $box > 0){ $list = $mail->getByEmailFromBox($box, $email_id); }
 		else { $this->goHome(); }
-		
 		$date = new DateText($mail->date);
+		
+		
+		$isHtml = SiteController::isHTML((htmlspecialchars_decode($mail->message)));
+		if($isHtml == false){ $mail->message = nl2br($mail->message, false); } 
+		else {
+			$mail->message = htmlspecialchars($mail->message);
+			$arr1 = ["/href=\"http:/"];
+			$arr2 = ["href=\"https:"];
+			$mail->message = preg_replace($arr1, $arr2, $mail->message);
+			$arr1 = ["/href=\"http:/"];
+			$arr2 = ["href=\"https:"];
+			$mail->message = preg_replace($arr1, $arr2, $mail->message);
+			$mail->message = htmlspecialchars_decode($mail->message);
+		}
+		
 		$entrega = (object) [
 			"id" => $mail->id,
+			"box" => $mail->box,
+			"isHtml" => $isHtml,
 			"message_id" => $mail->message_id,
 			"uid" => $mail->uid,
 			"status" => $mail->status,
@@ -126,7 +142,7 @@ class SiteController extends ControladorBase{
         if ($this->isGuest){ $this->goHome(); }
 		$mailBoxes = ($this->user->getEmailBoxes());
 		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]; break; } }
-		$box = !isset($_GET['ref']) ? isset($mailBoxes) ? $mailBoxes['id'] : false : $_GET['ref'];
+		$box = !isset($_GET['ref']) ? 0 : $_GET['ref'];
         if (!isset($box) || $box < 0){ $this->goHome(); }
 		$typeList = !isset($_GET['type_list']) ? "simple" : $_GET['type_list'];
 		$filter = !isset($_GET['folder']) ? 'default' : $_GET['folder'];
@@ -159,6 +175,8 @@ class SiteController extends ControladorBase{
 			],
 		];
 		$filters = isset($folders[$filter]) ? $folders[$filter] : $folders['default'];
+		$filters['box'] = [ (int) $box ];
+		
 		$model = new Email($this->adapter);
 		$model->getByFilter($filters);
 		if($typeList == 'complete'){
@@ -169,8 +187,23 @@ class SiteController extends ControladorBase{
 				$mail = is_array($mail) ? (object) $mail : $mail;
 				$date = new DateText($mail->date);
 				
+				$isHtml = SiteController::isHTML((htmlspecialchars_decode($mail->message)));
+				if($isHtml == false){ $mail->message = nl2br($mail->message, false); } 
+				else {
+					$mail->message = htmlspecialchars($mail->message);
+					$arr1 = ["/href=\"http:/"];
+					$arr2 = ["href=\"https:"];
+					$mail->message = preg_replace($arr1, $arr2, $mail->message);
+					$arr1 = ["/href=\"http:/"];
+					$arr2 = ["href=\"https:"];
+					$mail->message = preg_replace($arr1, $arr2, $mail->message);
+					$mail->message = htmlspecialchars_decode($mail->message);
+				}
+				
 				$list[] = (object) [
 					"id" => $mail->id,
+					"box" => $mail->box,
+					"isHtml" => $isHtml,
 					"message_id" => $mail->message_id,
 					"uid" => $mail->uid,
 					"status" => $mail->status,
@@ -212,16 +245,30 @@ class SiteController extends ControladorBase{
 		$model = new Email($this->adapter);
         if (!isset($box) || $box < 0){ $this->goHome(); }
 		$model->getById($email_id);
+		$date = new DateText($model->date);
 		$message = html_entity_decode($model->message);
 		if(SiteController::isHTML($message) == true){
 			header("text/html; charset=UTF-8");
+			echo "<style>"
+				."html { zoom: 0.8 !important; }"
+			."</style>";
 		} else {
 			header("Content-Type: text/plain; charset=UTF-8");
 			// header("text/plain; charset=UTF-8");
 		}
-		$date = new DateText($model->date);
 		// $message = preg_replace("/^http:/i", "https:", $message);
-		$message = htmlspecialchars_decode(preg_replace("/http:/", "/https:/", htmlspecialchars($message)));
+		#$arr1 = ["/href=\"http:/", "/target=(.*)/"];
+		#$arr2 = ["href=\"https:", "target=\"_blancko\""];
+		
+		$message = htmlspecialchars($message);
+		$arr1 = ["/href=\"http:/"];
+		$arr2 = ["href=\"https:"];
+		$message = preg_replace($arr1, $arr2, $message);
+		$arr1 = ["/href=\"http:/"];
+		$arr2 = ["href=\"https:"];
+		$message = preg_replace($arr1, $arr2, $message);
+		$message = htmlspecialchars_decode($message);
+		
 		
 		echo  ($message);
 		return $message;
@@ -477,22 +524,6 @@ class SiteController extends ControladorBase{
             "subtitle" => "Master",
 			"table" => $table
         ]);
-	}
-
-	public function actionMy_calendar(){
-		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
-		$this->render("my_calendar", [
-            "title" => "Mi Calendario",
-            "subtitle" => "Mi Calendario",
-        ]);
-		
-		/*
-		$this->render("vue_master", [
-            "title" => "Cuentas",
-            "subtitle" => "Todas las cuentas",
-			"table" => $table
-        ]);*/
 	}
 
 	public function actionUploadFile(){
@@ -873,4 +904,86 @@ class SiteController extends ControladorBase{
 		]);
 	}
 	
+	// Manejador de cuentas de correo electronico (boxes)
+	public function actionAdminEmailsBoxesVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Cuentas de correo",
+            "subtitle" => "Master",
+			"table" => "emails_boxes"
+        ]);
+	}
+	
+	// Manejador de cuentas de correo electronico (attachments)
+	public function actionAdminEmailsAttachmentsVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Usuarios",
+            "subtitle" => "Master",
+			"table" => "emails_attachments"
+        ]);
+	}
+	
+	// Manejador de cuentas de correo electronico (emails in user)
+	public function actionAdminEmailsBoxesInUserVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Usuarios",
+            "subtitle" => "Master",
+			"table" => "emails_users"
+        ]);
+	}
+	
+	// Manejador de Multimedia
+	public function actionAdminMediaVue(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		
+		$this->render("vue_table", [
+            "title" => "Usuarios",
+            "subtitle" => "Master",
+			"table" => "media"
+        ]);
+	}
+
+	public function actionMy_profile(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		$this->render("my_profile", [
+            "title" => "Mi Perfil",
+            "subtitle" => "",
+        ]);
+	}
+	
+	public function actionMy_accounts(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		$this->render("my_accounts", [
+            "title" => "Mis Cuentas",
+            "subtitle" => "",
+        ]);
+	}
+	
+	public function actionMy_calendar(){
+		$error = null;
+        if ($this->isGuest){ $this->goHome(); }
+		$this->render("my_calendar", [
+            "title" => "Mi Calendario",
+            "subtitle" => "Mi Calendario",
+        ]);
+		
+		/*
+		$this->render("vue_master", [
+            "title" => "Cuentas",
+            "subtitle" => "Todas las cuentas",
+			"table" => $table
+        ]);*/
+	}
+
 }

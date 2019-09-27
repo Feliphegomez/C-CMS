@@ -44,81 +44,6 @@
                         <br />
                         <!-- sidebar menu -->
                         <?php 
-							/*
-                            $menu_section_events = PHPStrap\Util\Html::tag('div', 
-                                PHPStrap\Util\Html::tag('h3', 'Eventos')
-                                . PHPStrap\Util\Html::ul([
-									($this->checkPermission('calendar:admin:master') == true) ? FelipheGomez\Url::a(['site/calendar_master'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-calendar"]) . "Calendario Master") : ""
-									, ($this->checkPermission('calendar:admin:table') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'events']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-calendar-o"]) . "Calendario Master Tabla") : ""
-									, ($this->checkPermission('calendar:admin:types') == true) ? FelipheGomez\Url::a(['site/Table_Master_Vue', ['table' => 'events_types']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-calendar-o"]) . "Tipos de Eventos Tabla") : ""
-                                ], ['nav side-menu'])
-                            , ['menu_section']);
-							
-                            $menu_section_2 = PHPStrap\Util\Html::tag('div', 
-                                PHPStrap\Util\Html::tag('h3', 'Live On')
-                                . PHPStrap\Util\Html::ul([
-                                    FelipheGomez\Url::a('javascript:void(0)', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-bug"]) . "Páginas adicionales" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-                                        . PHPStrap\Util\Html::ul([
-                                            FelipheGomez\Url::a(['demo/e_commerce'], 'Comercio electrónico')
-                                            , FelipheGomez\Url::a(['demo/projects'], 'Proyectos')
-                                            , FelipheGomez\Url::a(['demo/project_detail'], 'Detalle del proyecto')
-                                            , FelipheGomez\Url::a(['demo/contacts'], 'Contactos')
-                                            , FelipheGomez\Url::a(['demo/profile'], 'Perfil')
-                                        ], ['nav child_menu'])
-                                    , FelipheGomez\Url::a('javascript:void(0)', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-windows"]) . "Extras" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-                                        . PHPStrap\Util\Html::ul([
-                                            FelipheGomez\Url::a(['demo/page_403'], 'Error 403')
-                                            , FelipheGomez\Url::a(['demo/page_404'], 'Error 404')
-                                            , FelipheGomez\Url::a(['demo/page_500'], 'Error 500')
-                                            , FelipheGomez\Url::a(['demo/plain_page'], 'Página simple')
-                                            , FelipheGomez\Url::a(['demo/login'], 'Página de inicio de sesión')
-                                            , FelipheGomez\Url::a(['demo/pricing_tables'], 'Tablas de precios')
-                                        ], ['nav child_menu'])
-                                    , 
-                                    FelipheGomez\Url::a('javascript:void(0)', 
-                                        PHPStrap\Util\Html::tag('i', ' ', ["fa fa-windows"])
-                                        . 'Landing Page'
-                                        . PHPStrap\Util\Html::tag('span', 'Próximamente', ["label label-success pull-right"]))
-                                    , PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-sitemap"]) . "Menú multinivel" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-                                        . PHPStrap\Util\Html::ul([
-                                            FelipheGomez\Url::a('#level1_1', 'Nivel uno')
-                                            , PHPStrap\Util\Html::tag('a', "Nivel uno" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-                                                . PHPStrap\Util\Html::ul([
-                                                    FelipheGomez\Url::a('#level2_1', 'Nivel dos', ['sub_menu'])
-                                                    , FelipheGomez\Url::a('#level2_2', 'Nivel dos')
-                                                    , FelipheGomez\Url::a('#level3_1', "Nivel tres" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-                                                        . PHPStrap\Util\Html::ul([
-                                                            FelipheGomez\Url::a('#level3_1', 'Nivel tres')
-                                                        ], ['nav child_menu'])
-                                            ], ['nav child_menu'])
-                                        ], ['nav child_menu'])
-                                ], ['nav side-menu'])
-                            , ['menu_section']);
-							
-                            $menu_section_accounts = PHPStrap\Util\Html::tag('div', 
-                               PHPStrap\Util\Html::tag('h3', 'Cuentas y Clientes') . 
-                                PHPStrap\Util\Html::ul([
-									PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-building"]) . "Cuentas" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-									. PHPStrap\Util\Html::ul(
-											 [
-												FelipheGomez\Url::a(['site/accounts_list'], 'Todas las cuentas'),
-												FelipheGomez\Url::a(['site/accounts_create'], 'Crear Cuenta'),
-												FelipheGomez\Url::a(['site/accounts_search'], 'Buscar Cuenta'),
-												FelipheGomez\Url::a(['site/accounts_master', ['table' => 'accounts']], 'Master')
-											 ]
-										, ['nav child_menu'])
-                                ], ['nav side-menu'])
-                            , ['menu_section']);
-							
-                            $menu_section_analytics = PHPStrap\Util\Html::tag('div', 
-                               PHPStrap\Util\Html::tag('h3', 'Analytics') . 
-                                PHPStrap\Util\Html::ul([
-									($this->checkPermission('analytics:basic') == true) ? FelipheGomez\Url::a(['site/analytics_basic', []], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-pie-chart"]) . "Básico") : ""
-									, ($this->checkPermission('analytics:multiple') == true) ? FelipheGomez\Url::a(['site/analytics_multiple', []], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-pie-chart"]) . "Multiple") : ""
-									, ($this->checkPermission('analytics:interactive') == true) ? FelipheGomez\Url::a(['site/analytics_interactive', []], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-pie-chart"]) . "Interactivo") : ""
-                                ], ['nav side-menu'])
-                            , ['menu_section']);
-							*/
 							
 							// Correos - Boxes
 							$mailBoxes = $this->user->getEmailBoxes();
@@ -143,26 +68,40 @@
                                 . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
                             , ['menu_section']) : "";
 							
+							
                             $menu_section_system = PHPStrap\Util\Html::tag('div', 
                                PHPStrap\Util\Html::tag('h3', 'Sistema') . 
                                 PHPStrap\Util\Html::ul([
 									// ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsList'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
 									
 									// MENU NUEVO
-									($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminMenusVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Menús") : ""
-									, ($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminUsersVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Usuarios") : ""
+									($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminMenusVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-sitemap"]) . "Menús") : ""
+									// Usuarios
+									, ($this->checkPermission('system:users:manage') == true) ? FelipheGomez\Url::a(['site/AdminUsersVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Usuarios") : ""
+									// Emails
+									, ($this->checkPermission('system:emails:manage') == true) ? 
+										PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . "Correos Electronicos" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
+										. PHPStrap\Util\Html::ul([
+											($this->checkPermission('emails:accounts:manage') == true) ? FelipheGomez\Url::a(['site/AdminEmailsBoxesVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-at"]) . "Cuentas") : ""
+											, ($this->checkPermission('emails:accounts_in_users:manage') == true) ? FelipheGomez\Url::a(['site/AdminEmailsBoxesInUserVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-paperclip"]) . "Relacion usuarios") : ""
+											, ($this->checkPermission('emails:attachments:manage') == true) ? FelipheGomez\Url::a(['site/AdminEmailsAttachmentsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-paperclip"]) . "Admin. Adjuntos") : ""
+										], ['nav child_menu']) : ""
+									// Media
+									, ($this->checkPermission('system:media:manage') == true) ? 
+										PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-film"]) . "Multimedia" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
+										. PHPStrap\Util\Html::ul([
+											($this->checkPermission('system:media:manage') == true) ? FelipheGomez\Url::a(['site/AdminMediaVue '], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-file"]) . "Gestionar Archivos") : ""
+									], ['nav child_menu']) : ""
                                 ], ['nav side-menu'])
                             , ['menu_section']);
 							
 							if($this->checkPermission('system:permissions:manage')){
 								$menu_section_roles = PHPStrap\Util\Html::tag('div', 
 								   PHPStrap\Util\Html::tag('h3', 'Roles y Permisos') . 
-									PHPStrap\Util\Html::ul([
-										// ($this->checkPermission('usuarios:admin') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsList'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
-										
+									PHPStrap\Util\Html::ul([										
 										// MENU NUEVO
-										($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-users"]) . "Permisos") : ""
-										, ($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsGroupVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Roles") : ""
+										($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-lock"]) . "Permisos") : ""
+										, ($this->checkPermission('system:permissions:manage') == true) ? FelipheGomez\Url::a(['site/AdminPermissionsGroupVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-unlock"]) . "Roles") : ""
 										
 									], ['nav side-menu'])
 								, ['menu_section']);
@@ -242,25 +181,46 @@
 						
 						
                         <?php 
-							// if($this->checkPermission('my:account') == true) {
+							$inboxSuccess = ($this->checkPermission('my:account') == true) ? PHPStrap\Util\Html::tag('li', 
+								FelipheGomez\Url::a(
+										'javascript:void(0)'
+										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . (count($mails) > 0 ? PHPStrap\Util\Html::tag('span', count($mails)==100 ? "+" . count($mails) : count($mails), ['badge bg-green']) : "")
+										, ['dropdown-toggle info-number']
+										, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+									)
+								. PHPStrap\Util\Html::tag('ul', 
+										// Items
+										$html_mail
+										. 
+										// Footer
+										PHPStrap\Util\Html::tag('li', 
+												PHPStrap\Util\Html::tag('div', 
+													PHPStrap\Util\Html::tag('a', 
+															PHPStrap\Util\Html::tag('strong', 'Ver todos los correos')
+															. PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
+														)
+													, ['text-center'], [])
+											, [], [])
+									, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu2', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;'])
+							, ['dropdown'], ['role' => 'presentation']) : "";
 								
 								echo PHPStrap\Util\Html::tag('nav', 
 									$navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
 									. PHPStrap\Util\Html::tag('ul', 
 										PHPStrap\Util\Html::tag('li', 
 											FelipheGomez\Url::a(
-													'javascript:void(0)'
-													, PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...') . "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
-													, ['user-profile dropdown-toggle']
-													, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-												)
-												. PHPStrap\Util\Html::ul([
-															// FelipheGomez\Url::a('javascript:void(0)', "Perfil ")
-															// , FelipheGomez\Url::a('javascript:void(0)', "Ayuda ")
-															// , FelipheGomez\Url::a('javascript:void(0)', PHPStrap\Util\Html::tag('span', '50%', ["badge bg-red pull-right"]) . PHPStrap\Util\Html::tag('span', 'Configuraciones'))
-															FelipheGomez\Url::a(['site/logout'], PHPStrap\Util\Html::tag('span', '', ["fa fa-sign-out pull-right"]) . "Salir ")
-														]
-													, ['dropdown-menu dropdown-usermenu pull-right']) 
+												'javascript:void(0)'
+												, PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...') . "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
+												, ['user-profile dropdown-toggle']
+												, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+											)
+											. PHPStrap\Util\Html::ul([
+													FelipheGomez\Url::a(['site/My_profile'], "Perfil ")
+													// , FelipheGomez\Url::a('javascript:void(0)', "Ayuda ")
+													// , FelipheGomez\Url::a('javascript:void(0)', PHPStrap\Util\Html::tag('span', '50%', ["badge bg-red pull-right"]) . PHPStrap\Util\Html::tag('span', 'Configuraciones'))
+													. FelipheGomez\Url::a(['site/logout'], PHPStrap\Util\Html::tag('span', '', ["fa fa-sign-out pull-right"]) . "Salir ")
+												]
+											, ['dropdown-menu dropdown-usermenu pull-right']) 
 										, [''])
 										/*
 										// Icono 1
@@ -297,28 +257,7 @@
 										, ['dropdown'], ['role' => 'presentation'])
 										*/
 										// Icono 2 - Mails
-										. PHPStrap\Util\Html::tag('li', 
-											FelipheGomez\Url::a(
-													'javascript:void(0)'
-													, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . (count($mails) > 0 ? PHPStrap\Util\Html::tag('span', count($mails)==100 ? "+" . count($mails) : count($mails), ['badge bg-green']) : "")
-													, ['dropdown-toggle info-number']
-													, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-												)
-											. PHPStrap\Util\Html::tag('ul', 
-													// Items
-													$html_mail
-													. 
-													// Footer
-													PHPStrap\Util\Html::tag('li', 
-															PHPStrap\Util\Html::tag('div', 
-																PHPStrap\Util\Html::tag('a', 
-																		PHPStrap\Util\Html::tag('strong', 'Ver todos los correos')
-																		. PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
-																	)
-																, ['text-center'], [])
-														, [], [])
-												, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu2', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;'])
-										, ['dropdown'], ['role' => 'presentation']) 
+										. $inboxSuccess
 										
 									, ['nav navbar-nav navbar-right'])
 								);

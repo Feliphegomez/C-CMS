@@ -59,62 +59,67 @@
 </template>
 
 <template id="list">
-  <div>
-	<div class="col-md-12 col-sm-12 col-xs-12">
-		<div class="x_panel">
-			<div class="x_title">
-				<h2><?= $table; ?> <small>Listado</small></h2>
-				<ul class="nav navbar-right panel_toolbox">
-					<li>
-						<router-link  v-bind:to="{name: 'Add', params: {subject: subject}}">
-							<i class="fa fa-plus"></i>
-						</router-link>
-					</li>
-				</ul>
-				<div class="clearfix"></div>
-			</div>
-			
-			<div class="card bg-light" v-if="field"><div class="card-body">
-				<div style="float:right;"><router-link v-bind:to="{name: 'List', params: {subject: subject}}">Clear filter</router-link></div>
-					<p class="card-text">Filtered by: {{ field }} = {{ id }}</p>
+	<div>
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2><?= $table; ?> <small>Listado</small></h2>
+					<ul class="nav navbar-right panel_toolbox">
+						<li>
+							<router-link  v-bind:to="{name: 'Add', params: {subject: subject}}">
+								<i class="fa fa-plus"></i>
+							</router-link>
+						</li>
+					</ul>
+					<div class="clearfix"></div>
 				</div>
-			</div>
-			
-			<div class="x_content table-responsive">
-				<p v-if="records===null">Loading...</p>
-				<table v-else class="table">
-					<thead>
-					<tr>
-					  <th v-for="value in Object.keys(properties)">{{ value }}</th>
-					  <th v-if="related">related</th>
-					  <th v-if="primaryKey"></th>
-					</tr>
-				  </thead>
-				  <tbody>
-					<tr v-for="record in records">
-					  <template v-for="(value, key) in record">
-						<td v-if="references[key] !== false">
-						  <router-link v-bind:to="{name: 'View', params: {subject: references[key], id: referenceId(references[key], record[key])}}">{{ referenceText(references[key], record[key]) }}</router-link>
-						</td>
-						<td v-else>{{ value }}</td>
-					  </template>
-					  <td v-if="related">
-						<template v-for="(relation, i) in referenced">
-						  <router-link v-bind:to="{name: 'Filter', params: {subject: relation[0], field: relation[1], id: record[primaryKey]}}">{{ relation[0] }}</router-link>&nbsp;
-						</template>
-					  </td>
-					  <td v-if="primaryKey" style="padding: 6px; white-space: nowrap;">
-						<router-link class="btn btn-default btn-sm" v-bind:to="{name: 'View', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-eye"></i></router-link>
-						<router-link class="btn btn-primary btn-sm" v-bind:to="{name: 'Edit', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-edit"></i></router-link>
-						<router-link class="btn btn-danger btn-sm" v-bind:to="{name: 'Delete', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-times"></i></router-link>
-					  </td>
-					</tr>
-				  </tbody>
-				</table>
+				
+				<div class="card bg-light" v-if="field"><div class="card-body">
+					<div style="float:right;"><router-link v-bind:to="{name: 'List', params: {subject: subject}}">Clear filter</router-link></div>
+						<p class="card-text">Filtered by: {{ field }} = {{ id }}</p>
+					</div>
+				</div>
+				
+				<div class="x_content table-responsive">
+					<p v-if="records===null">Loading...</p>
+					<table v-else class="table">
+						<thead>
+						<tr>
+						  <th v-for="value in Object.keys(properties)">{{ value }}</th>
+						  <th v-if="related">related</th>
+						  <th v-if="primaryKey"></th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr v-for="record in records">
+						  <template v-for="(value, key) in record">
+							<td v-if="references[key] !== false">
+							  <router-link v-bind:to="{name: 'View', params: {subject: references[key], id: referenceId(references[key], record[key])}}">
+								{{ referenceText(references[key], record[key]) }}
+							  </router-link>
+							</td>
+							<td v-else>{{ value }}</td>
+						  </template>
+						  <td v-if="related">
+							<template v-for="(relation, i) in referenced">
+							  <router-link v-bind:to="{name: 'Filter', params: {subject: relation[0], field: relation[1], id: record[primaryKey]}}">{{ relation[0] }}</router-link>&nbsp;
+							</template>
+						  </td>
+						  <td v-if="primaryKey" style="padding: 6px; white-space: nowrap;">
+							<template v-if="record.path_short !== undefined">
+								<a target="_blank" :href="record.path_short" class="btn btn-sm btn-info	"><i class="fa fa-link"></i></a>
+							</template>
+							<router-link class="btn btn-default btn-sm" v-bind:to="{name: 'View', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-eye"></i></router-link>
+							<router-link class="btn btn-primary btn-sm" v-bind:to="{name: 'Edit', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-edit"></i></router-link>
+							<router-link class="btn btn-danger btn-sm" v-bind:to="{name: 'Delete', params: {subject: subject, id: record[primaryKey]}}"><i class="fa fa-times"></i></router-link>
+						  </td>
+						</tr>
+					  </tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-  </div>
 </template>
 
 <template id="create">
@@ -182,6 +187,9 @@
 				<ul v-else>
 					<template v-for="(value, key) in record">
 						<li><b>{{ key }}</b>: {{ value }}</li>
+					</template>
+					<template v-if="record.path_short !== undefined">
+						<li><a target="_blank" :href="record.path_short" class="btn btn-sm btn-info	"><i class="fa fa-link"></i></a></li>
 					</template>
 				</ul>
 			</div>
@@ -460,7 +468,10 @@ var List = Vue.extend({
   },
   props: ['definition'],
   created: function () {
-    this.readRecords();
+    var self = this;
+	self.readRecords();
+	
+	
   },
   computed: {
     related: function () {

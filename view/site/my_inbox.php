@@ -7,6 +7,8 @@
 			</template>
 		</h3>
 	</div>
+	
+	<!-- //
 	<div class="title_right">
 		<div class="col-sm-5 col-sm-5 col-xs-12 form-group pull-right top_search">
 			<div class="input-group">
@@ -17,6 +19,7 @@
 			</div>
 		</div>
 	</div>
+	-->
 </div>
 <div class="clearfix"></div>
 
@@ -44,7 +47,7 @@
 				<div class="row">
 					<div class="col-sm-3 mail_list_column" style="overflow-y:auto; max-height:calc(80vh);min-height: calc(80vh);zoom: 0.8;">
 						<button id="compose" class="btn btn-sm btn-success btn-block" type="button"> Redactar </button>
-						<router-link v-for="(mail, index_mail) in list_mails" v-bind:to="{ name: 'View', params: { index: index_mail, mail_id: mail.id } }" tag="a" class="mail_list" :key="mail.id">
+						<router-link v-for="(mail, index_mail) in list_mails" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }" tag="a" class="mail_list" :key="mail.id">
 							<div class="left">
 								<template v-if="mail.answered !== undefined && mail.answered === 1">
 									<i class="fa fa-share"></i> 
@@ -72,8 +75,8 @@
 							</div>
 							<div class="right">
 								<template v-if="mail.from !== undefined && mail.subject !== undefined">
-									<h3>{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,23) }} {{ (mail.from.length > 23) ? "..." : "" }} <small> {{ mail.date }}</small></h3>
-									<p>{{ mail.subject.replace(/<\/?[^>]+(>|$)/g, '').slice(0,25) }} - Leer Más</p>
+									<h3>{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,22) }}{{ (mail.from.length > 23) ? "..." : "" }}<small> {{ mail.date }}</small></h3>
+									<p>{{ mail.subject.replace(/<\/?[^>]+(>|$)/g, '').slice(0,17) }} - Leer Más</p>
 								</template>
 							</div>
 						</router-link>
@@ -192,7 +195,7 @@
 	<div>
 		<div class="inbox-body">
 			<div class="mail_heading row">
-				<div class="col-sm-8" style="zoom: 0.9;">
+				<div class="col-sm-7" style="zoom: 0.9;">
 					<div class="btn-group">
 						<!-- // <button class="btn btn-sm btn-primary" type="button" v-if="mail.draft == 0 && mail.deleted == 0"><i class="fa fa-reply"></i> Responder</button> -->
 						
@@ -216,11 +219,20 @@
 						</button>
 					</div>
 				</div>
-				<div class="col-sm-4 text-right">
+				<div class="col-sm-5 text-right">
 					<template v-if="mail.date !== undefined">
-						<p class="date"> {{ mail.date }}</p>
+						<a :href="$root.urlBodyEmail" class="btn btn-xs btn-default pull-right" target="_blank" v-if="mail.draft == 0 && mail.deleted == 0">
+							<i class="fa fa-external-link"></i> 
+						</a>
 					</template>
 				</div>
+				
+				<div class="col-sm-7" style="zoom: 0.9;"></div>
+				<div class="col-sm-5 text-right">
+					<template v-if="mail.date !== undefined"><p class="date"> {{ mail.date }} .</p> </template>
+				</div>
+				
+				
 				<div class="col-sm-12">
 					<template v-if="mail.subject !== undefined">
 						<h4>{{ mail.subject }}</h4>
@@ -248,43 +260,45 @@
 			
 			
 			<template v-if="mail.attachments !== undefined">
-					<br />
 				<div class="attachment" v-if="mail.attachments.length > 0">
-					<p>
-						<span><i class="fa fa-paperclip"></i> {{ mail.attachments.length }} Ajuntos — </span>
-						<!-- // <a href="#">Download all attachments</a> | <a href="#">View all images</a> -->						
-					</p>
-					<ul>
-						<li v-for="attachment, index) in (mail.attachments)">
-							<!--// 
-							<a href="#" class="atch-thumb">
-								<img src="/public/assets/images/inbox.png" alt="img" />
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">
+								<i class="fa fa-paperclip"></i> Archivos Adjuntos ({{ mail.attachments.length }})
+							</h3>
+						</div>
+						<ul class="list-group" style="zoom:0.8">
+							
+							<a :href="attachment.path_short" download class="list-group-item " v-for="attachment, index) in (mail.attachments)">
+							{{ attachment.name.replace(/<\/?[^>]+(>|$)/g, '').slice(0,25) }} - <b>Clic para descargar</b>
 							</a>
-							-->
-							<!-- // <div class="file-name">{{ attachment.name.replace(/<\/?[^>]+(>|$)/g, '').slice(0,25) }}</div> -->
-							<!-- <span>12KB</span> -->
-							<div class="links">
-								<a target="_blank" :href="attachment.path_short" download>
-									<b>{{ attachment.name.replace(/<\/?[^>]+(>|$)/g, '').slice(0,25) }}</b>
-									<br />Descargar
-								</a>
-							</div>
-						</li>
-					</ul>
+							
+						</ul>
+					</div>
+				</div>
+				<div v-else>
+				<br />
 				</div>
 				<div class="clearfix"></div>
 			</template>
 			<div class="view-mail">
-				<br />
-				{{ mail.id }}
-				<br />
-				<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(50vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
-				
 				<!-- // 
-				<template v-if="mail.message !== undefined">
-					<div v-html="mail.message"></div>
-				</template>
 				-->
+				<template v-if="mail.message !== undefined">
+					<template v-if="mail.isHtml == true">
+						<div style="border: #666 0.25px dashed; zoom:0.8;padding:24px;">
+							<!-- //  -->
+							<!-- // <div v-html="mail.message"></div> -->
+							<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(50vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
+						</div>
+					</template>
+					<template v-else>
+						<div style="border: #666 0.25px dashed; zoom:0.8;padding:24px;">
+							<pre v-html="mail.message"></pre>
+						</div>
+					</template>
+				</template>
+				<br />				
 			</div>
 			
 			
@@ -362,6 +376,7 @@ var router = new VueRouter({
 	routes:[
 		{ path: '/', component: Home, name: 'Home' },
 		{ path: '/view/:mail_id-:index', component: View, name: 'View' },
+		{ path: '/view/:box_id/:mail_id-:index', component: View, name: 'View-Single' },
 	]
 });
 
@@ -392,17 +407,20 @@ app = new Vue({
 	methods: {
 		loadMail(){
 			var self = this;
-			console.log('loadMail', self.$route.params.mail_id);
+			console.log('index', self.$route.params.index);
+			console.log('mail_id', self.$route.params.mail_id);
+			console.log('box_id', self.$route.params.box_id);
 			// $root.changeFolder(mail.id, $root.ref, 'seen')
 			api.get('/index.php', {
 				params: {
 					"controller": "site",
 					"action": "my_email_id",
-					"ref": <?= $ref; ?>,
+					"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : <?= $ref; ?>,
 					"message_id": self.$route.params.mail_id
 				}
 			})
 			.then(function (r) {
+				console.log('r', r);
 				if(r.data !== undefined){
 					if(r.data.error !== undefined && r.data.error == false){
 						self.email_single = r.data.record;
@@ -422,7 +440,7 @@ app = new Vue({
 			var query = {
 				"controller": "site",
 				"action": "my_email_list",
-				"ref": <?= $ref; ?>,
+				"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : <?= $ref; ?>,
 				"folder": "<?= $filter; ?>",
 			};
 			
@@ -431,6 +449,9 @@ app = new Vue({
 				if(r.data !== undefined){
 					if(r.data.error !== undefined && r.data.error == false){
 						self.list_mails = r.data.records;
+						if(self.$route.params.mail_id != undefined){
+							self.loadMail();
+						}
 					}
 				}else{
 					console.error('error');

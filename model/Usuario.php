@@ -12,10 +12,29 @@ class Usuario extends ModeloBase{
         $table="users";
         parent::__construct($table, $adapter);
     }
-	/*
+	
 	public function __sleep(){
-		return ['id', 'username', ];
-	}*/
+		return [
+			'id', 
+			'username', 
+			'password', 
+			'identification_type', 
+			'identification_number', 
+			'names', 
+			'surname', 
+			'phone', 
+			'mobile', 
+			'address', 
+			'department', 
+			'city', 
+			'email', 
+			'avatar', 
+			'permissions', 
+			'registered', 
+			'updated', 
+			'last_connection', 
+		];
+	}
 
     public function rules()
     {
@@ -54,7 +73,6 @@ class Usuario extends ModeloBase{
 		return $this;
 	}
 
-	
 	public function getById($id){
 		return $this->setAll(parent::getById($id));
 	}
