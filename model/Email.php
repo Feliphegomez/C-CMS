@@ -73,10 +73,10 @@ class Email extends EntidadBase {
 							$post[$key] = ($post[$key]);
 						}
 						$keys1[] = "`{$key}`";
-						#$keys2[] = ":{$key}";
-						$keys2[] = "?";
+						$keys2[] = ":{$key}";
+						#$keys2[] = "?";
 						
-						$values[] = !is_array($post[$key]) && !is_object($post[$key]) ? $post[$key] : json_encode($post[$key]);
+						$values[$key] = !is_array($post[$key]) && !is_object($post[$key]) ? ($post[$key]) : json_encode($post[$key]);
 					}
 				}
 				
@@ -94,7 +94,7 @@ class Email extends EntidadBase {
 					return $this->db()->lastInsertId();
 				}catch (Exception $e){
 					//throw $e;
-					#echo "\n {$sql} \n";
+					echo "\n {$sql} \n";
 					echo $e->getMessage();
 					return 0;
 				}

@@ -37,6 +37,12 @@ class MailSend {
 		}
 	}
 	
+	public function set($key = null, $value){
+		if($key !== null && $value !== null){
+			$this->{$key} = utf8_decode($value);
+		}
+	}
+	
 	public function addTo($email = null, $name = null){
 		if($email !== null){
 			$name = ($name !== null) ? $name : $email;

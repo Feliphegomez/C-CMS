@@ -113,8 +113,8 @@ class Me extends Usuario{
 						"placeholder" => "Teléfono Fijo",
 						"value" => $this->phone
 					], [])]
-				, ["phone" => new PHPStrap\Form\Text([
-						"name" => "phone", 
+				, ["mobile" => new PHPStrap\Form\Text([
+						"name" => "mobile", 
 						"placeholder" => "Teléfono Móvil",
 						"value" => $this->mobile
 					], [])]

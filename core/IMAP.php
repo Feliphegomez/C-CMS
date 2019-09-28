@@ -49,7 +49,7 @@ class IMAP extends EntidadBase{
 	
 	public function __construct($adapter) {
 		$this->adapter = $adapter;
-        $table = "media";
+        $table = "emails";
         parent::__construct($table, $adapter);
 	}
 	
@@ -174,7 +174,8 @@ class IMAP extends EntidadBase{
 						# $emails = @imap_search($inbox, 'SINCE '. date('d-M-Y',strtotime("-1 hour")));
 						# $emails = @imap_search($inbox, 'SINCE '. date('d-M-Y',strtotime("-1 week")));
 						# $emails = @imap_search($inbox, 'ALL');
-						$emails = @imap_search($inbox, 'UNSEEN');
+						// $emails = @imap_search($inbox, 'UNSEEN');
+						$emails = @imap_search($inbox, 'SINCE '. date('d-M-Y',strtotime("-1 hour")));
 						
 						if ($emails == false || !count($emails)) {
 							//print '<p>No E-mails found.</p>';
@@ -222,7 +223,6 @@ class IMAP extends EntidadBase{
 											$message = imap_fetchbody($inbox,$email,'1.2');
 											if ( trim($message) == '' ){ $message = imap_fetchbody($inbox,$email,2); $message = quoted_printable_decode($message); }
 											if ( trim($message) == '' ){ $message = imap_fetchbody($inbox,$email,1); }
-											
 										}
 										
 										
@@ -316,13 +316,13 @@ class IMAP extends EntidadBase{
 											"message_id" => !isset($mId[0]) ? $overview[0]->message_id : $mId[0],
 											"uid" => !isset($overview[0]->uid) ? 0 : $overview[0]->uid,
 											"status" => $overview[0]->seen?'read':'unread',
-											"subject" => htmlspecialchars_decode(IMAP::decodeIMAPText($overview[0]->subject)),
+											"subject" => htmlspecialchars_decode(utf8_encode(IMAP::decodeIMAPText($overview[0]->subject))),
 											"from" => htmlspecialchars_decode(IMAP::decodeIMAPText($overview[0]->from)),
 											"from_email" => !isset($mFrom[0]) ? htmlspecialchars_decode(IMAP::decodeIMAPText($overview[0]->from)) : $mFrom[0],
 											"to" => htmlspecialchars_decode(IMAP::decodeIMAPText($overview[0]->to)),
 											"to_email" => !isset($mTo[0]) ? htmlspecialchars_decode(IMAP::decodeIMAPText($overview[0]->to)) : $mTo[0],
 											"date" => $overview[0]->date,
-											"message" => htmlspecialchars($message),
+											"message" => htmlspecialchars(utf8_encode($message)),
 											"size" => IMAP::decodeIMAPText($overview[0]->size),
 											// "references" => IMAP::decodeIMAPText($overview[0]->references),
 											"msgno" => IMAP::decodeIMAPText($overview[0]->msgno),

@@ -53,6 +53,7 @@
 							$mailBoxes = $this->user->getEmailBoxes();
 							$boxes_html = [];
 							if(count($mailBoxes) > 0){
+								
 								foreach($mailBoxes as $box){
 									$box = is_array($box) ? (object) $box : $box;
 									$boxes_html[] = PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
@@ -66,13 +67,6 @@
 									], ['nav child_menu']);
 								}
 							}
-							
-							// Mis correos
-                            $menu_section_emails = ($this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('div', 
-                                PHPStrap\Util\Html::tag('h3', 'Mis correos')
-                                . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
-                            , ['menu_section']) : "";
-							
 							// Sistema
                             $menu_section_system = PHPStrap\Util\Html::tag('div', 
 								(($this->checkPermission('system:users:manage') == true) ? PHPStrap\Util\Html::tag('h3', 'Sistema') : "")
@@ -114,6 +108,13 @@
 							} else {
 								$menu_section_roles = "";
 							}
+							
+							
+							// Mis correos
+                            $menu_section_emails = ($this->checkPermission('my:emails') == true) ? (PHPStrap\Util\Html::tag('div', 
+                                PHPStrap\Util\Html::tag('h3', 'Mis correos')
+                                . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
+                            , ['menu_section'])) : "";
 							
                             echo PHPStrap\Util\Html::tag('div', 
 								$sidebarItems->menu

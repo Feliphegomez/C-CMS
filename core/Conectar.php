@@ -48,13 +48,11 @@ class Conectar{
 					$this->driver.":host={$this->host};dbname={$this->database};charset=utf8mb4",
 					"{$this->user}",
 					"{$this->pass}",
-					array
-						(
-							# PDO:: ATTR_PERSISTENT => true,
-							PDO::MYSQL_ATTR_INIT_COMMAND
-							=> 
-							"SET lc_time_names='es_CO',NAMES '{$this->charset}'"
-						)
+					[
+						# PDO:: ATTR_PERSISTENT => true,
+						#PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names='es_CO',NAMES '{$this->charset}'"
+						PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->charset}, lc_time_names='es_CO'"
+					]
 					);
 				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

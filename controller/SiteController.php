@@ -247,21 +247,21 @@ class SiteController extends ControladorBase{
         if (!isset($box) || $box < 0){ $this->goHome(); }
 		$model->getById($email_id);
 		$date = new DateText($model->date);
-		$message = html_entity_decode($model->message);
+		$message = ($model->message);
 		if(SiteController::isHTML($message) == true){
-			header("text/html; charset=UTF-8");
+			#header("text/html; charset=UTF-8");
 			echo "<style>"
 				."html { zoom: 0.8 !important; }"
 			."</style>";
 		} else {
-			header("Content-Type: text/plain; charset=UTF-8");
+			#header("Content-Type: text/plain; charset=UTF-8");
 			// header("text/plain; charset=UTF-8");
 		}
 		// $message = preg_replace("/^http:/i", "https:", $message);
 		#$arr1 = ["/href=\"http:/", "/target=(.*)/"];
 		#$arr2 = ["href=\"https:", "target=\"_blancko\""];
 		
-		$message = htmlspecialchars($message);
+		$message = ($message);
 		$arr1 = ["/href=\"http:/"];
 		$arr2 = ["href=\"https:"];
 		$message = preg_replace($arr1, $arr2, $message);

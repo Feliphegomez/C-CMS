@@ -16,7 +16,8 @@ class ControladorBase{
     public $ScriptsAfter = [];
     public $errors = [];
 	public $user;
-	
+	private $permissions = [];
+
 	public function __construct($params = []) {
         global $global_session;
         $this->session = $global_session;
@@ -34,18 +35,31 @@ class ControladorBase{
 		$this->isGuest = $global_session->isGuest();
         $this->user = $this->getUser();
         //$global_session->close();
+		
+		if(isset($this->user->permissions->list)){
+			$this->setPermissions($this->user->permissions->list);
+		}
+    }
+
+    public function setPermissions($permissions = null){
+		$this->permissions = [];
+		if($permissions !== null && !is_object($permissions)){
+			foreach(explode(',', $permissions) as $permiso){
+				$this->permissions[] = strtolower($permiso);
+			}
+		}
     }
 	
 	public static function isHTML($string){
 		return preg_match("/<[^<]+>/",$string,$m) != 0;
 	}
 	
-	public function checkPermission($node = 'none'){
-		$r = false;
-		if(isset($this->user) && isset($this->user->permissions) && !is_numeric($this->user->permissions)){
-			$r = (method_exists($this->user->permissions,'validatePermission')) ? $this->user->permissions->validatePermission($node) : false;
-		}
-		return $r;
+	public function checkPermission($nameNode = 'guest'){
+		$nameNode = strtolower($nameNode);
+		$permisosBase = (array) $this->permissions;
+		
+		$permision = in_array('isadmin', $permisosBase) || in_array($nameNode, $permisosBase) ? true : false;
+		return $permision;
 	}
   
 	public function getUser() {

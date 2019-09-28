@@ -203,12 +203,13 @@
 						<div style="border: #666 0.25px dashed; zoom:0.8;padding:24px;">
 							<!-- //  -->
 							<!-- // <div v-html="mail.message"></div> -->
-							<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(50vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
+							<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(68vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
 						</div>
 					</template>
 					<template v-else>
 						<div style="border: #666 0.25px dashed; zoom:0.8;padding:24px;">
 							<pre v-html="mail.message"></pre>
+							<!-- // <iframe frameborder="0" width="100%" style="height:auto;min-height:calc(50vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe> -->
 						</div>
 					</template>
 				</template>

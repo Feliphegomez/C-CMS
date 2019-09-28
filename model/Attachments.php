@@ -15,6 +15,10 @@ class Attachments extends EntidadBase {
         parent::__construct($table, $adapter);
     }
 	
+	public function __sleep(){
+		return ["id", "name", "filename", "targetPath", "targetFile", "path_short", "filesize", "filetype"];
+	}
+	
 	public function getById($id){
 		$id = (isset($id) && $id > 0) ? $id : 0;
 		$items = parent::getById($id);
