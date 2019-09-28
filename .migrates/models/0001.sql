@@ -53,9 +53,11 @@ CREATE TABLE IF NOT EXISTS `attachments` (
   `targetPath` varchar(250) NOT NULL,
   `targetFile` varchar(250) NOT NULL,
   `path_short` varchar(250) NOT NULL,
+  `filesize` int(11) DEFAULT NULL,
+  `filetype` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2542 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -82,7 +84,6 @@ CREATE TABLE IF NOT EXISTS `emails` (
   `seen` int(1) DEFAULT NULL,
   `draft` int(1) DEFAULT NULL,
   `attachments` mediumtext,
-  `overview` mediumtext,
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `new` int(1) DEFAULT '1',
@@ -90,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `emails` (
   `responsed` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1015 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -105,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `emails_attachments` (
   KEY `FK_emails_attachments_attachments` (`attachment`),
   CONSTRAINT `FK_emails_attachments_attachments` FOREIGN KEY (`attachment`) REFERENCES `attachments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_emails_attachments_emails` FOREIGN KEY (`email`) REFERENCES `emails` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=603 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -139,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `emails_users` (
   KEY `FK_users_mails_mails` (`email`),
   CONSTRAINT `FK_users_mails_mails` FOREIGN KEY (`email`) REFERENCES `emails_boxes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_users_mails_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -172,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   CONSTRAINT `FK_events_events_types` FOREIGN KEY (`type`) REFERENCES `events_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_events_users` FOREIGN KEY (`create_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_events_users_2` FOREIGN KEY (`last_update_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -191,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `events_activity` (
   KEY `FK_events_activity_users` (`user`),
   CONSTRAINT `FK_events_activity_events` FOREIGN KEY (`event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_events_activity_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -213,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `events_tools` (
   CONSTRAINT `FK_events_tools_events` FOREIGN KEY (`event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_events_tools_users` FOREIGN KEY (`create_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_events_tools_users_2` FOREIGN KEY (`update_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -224,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `events_types` (
   `color_background` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -236,8 +237,8 @@ CREATE TABLE IF NOT EXISTS `geo_citys` (
   PRIMARY KEY (`id`),
   KEY `departamento_id` (`department`),
   KEY `id` (`id`),
-  CONSTRAINT `FK_geo_citys_geo_departments` FOREIGN KEY (`department`) REFERENCES `geo_departments` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1101 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+  CONSTRAINT `FK_geo_citys_geo_departments` FOREIGN KEY (`department`) REFERENCES `geo_departments` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1101 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -280,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   KEY `id` (`id`),
   KEY `FK_media_users` (`create_by`),
   CONSTRAINT `FK_media_users` FOREIGN KEY (`create_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -295,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `media_events` (
   KEY `FK_media_users_users` (`event`),
   CONSTRAINT `FK_media_events_events` FOREIGN KEY (`event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_media_events_media` FOREIGN KEY (`media`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -310,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `media_users` (
   KEY `FK_media_users_users` (`user`),
   CONSTRAINT `FK_media_users_media` FOREIGN KEY (`media`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_media_users_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -319,6 +320,7 @@ CREATE TABLE IF NOT EXISTS `menus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `slug` varchar(50) NOT NULL,
+  `order_by` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `slug` (`slug`),
   KEY `id` (`id`)
@@ -333,37 +335,69 @@ CREATE TABLE IF NOT EXISTS `menus_items` (
   `title` varchar(150) DEFAULT '',
   `parent` int(11) DEFAULT '0',
   `tag_id` varchar(150) DEFAULT NULL,
-  `tag_class` varchar(50) DEFAULT '',
-  `tag_href` varchar(250) DEFAULT '#',
+  `tag_class` json DEFAULT NULL,
+  `tag_href` varchar(250) DEFAULT NULL,
+  `tag_href_parms` json DEFAULT NULL,
+  `tag_params` json DEFAULT NULL,
   `icon` varchar(50) DEFAULT '',
   `public` int(1) DEFAULT '0',
   `alls` int(1) DEFAULT '0',
   `guest` int(1) DEFAULT '0',
-  `permision_controller` varchar(50) DEFAULT 'Usuarios',
-  `permission_action` varchar(50) DEFAULT 'index',
+  `permission` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `FK_nodes_items_menus` (`menu`),
+  KEY `permission` (`permission`),
+  KEY `tag_href` (`tag_href`),
   CONSTRAINT `menus_items_ibfk_1` FOREIGN KEY (`menu`) REFERENCES `menus` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10043 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=10051 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.permissions
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `data` json NOT NULL,
+  `group` int(11) NOT NULL,
+  `permission` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`),
+  KEY `FK_permissions_permissions_group` (`group`),
+  KEY `FK_permissions_permissions` (`permission`),
+  CONSTRAINT `FK_permissions_permissions` FOREIGN KEY (`permission`) REFERENCES `permissions_items` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_permissions_permissions_group` FOREIGN KEY (`group`) REFERENCES `permissions_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla admin_mv_pro.permissions_group
+CREATE TABLE IF NOT EXISTS `permissions_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla admin_mv_pro.permissions_items
+CREATE TABLE IF NOT EXISTS `permissions_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tag` varchar(50) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tag` (`tag`),
+  KEY `id` (`id`),
+  KEY `tag KEY` (`tag`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
+  `username` varchar(32) NOT NULL,
   `password` longtext NOT NULL,
   `identification_type` int(11) DEFAULT NULL,
   `identification_number` varchar(50) DEFAULT NULL,
@@ -375,8 +409,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `department` int(11) DEFAULT NULL,
   `city` int(11) DEFAULT NULL,
   `email` varchar(150) NOT NULL,
-  `permissions` int(11) DEFAULT '4',
   `avatar` int(11) DEFAULT NULL,
+  `permissions` int(11) DEFAULT NULL,
   `registered` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `last_connection` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -385,18 +419,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `email` (`email`),
   KEY `id` (`id`),
   KEY `FK_username` (`username`),
-  KEY `FK_users_login_permissions` (`permissions`),
   KEY `email_key` (`email`),
   KEY `FK_users_pictures` (`avatar`),
   KEY `FK_users_identifications_types` (`identification_type`),
   KEY `FK_users_geo_departments` (`department`),
   KEY `FK_users_geo_citys` (`city`),
+  KEY `FK_users_permissions_group` (`permissions`),
   CONSTRAINT `FK_users_geo_citys` FOREIGN KEY (`city`) REFERENCES `geo_citys` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_users_geo_departments` FOREIGN KEY (`department`) REFERENCES `geo_departments` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_users_identifications_types` FOREIGN KEY (`identification_type`) REFERENCES `identifications_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `FK_users_login_permissions` FOREIGN KEY (`permissions`) REFERENCES `permissions` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_users_permissions_group` FOREIGN KEY (`permissions`) REFERENCES `permissions_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_users_pictures` FOREIGN KEY (`avatar`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
@@ -411,7 +445,7 @@ CREATE TABLE IF NOT EXISTS `users_events` (
   KEY `FK_users_events_events` (`event`),
   CONSTRAINT `FK_users_events_events` FOREIGN KEY (`event`) REFERENCES `events` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_users_events_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
