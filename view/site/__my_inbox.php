@@ -369,63 +369,38 @@ ul {
 <div id="app">
 	<div class="mail-box">
 		<aside class="sm-side">
+			<!-- //
 			<div class="user-head">
-				<!-- //
 				<a class="inbox-avatar" href="javascript:;">
 					<img  width="64" hieght="60" src="http://bootsnipp.com/img/avatars/ebeb306fd7ec11ab68cbcaa34282158bd80361a7.jpg">
 				</a>
-				-->
 				<div class="user-name">
-					<h5><a href="#"><?= $MailerBox->label; ?></a></h5>
-					<span><a href="#"><?= $MailerBox->username; ?></a></span>
+					<h5><a href="#">Alireza Zare</a></h5>
+					<span><a href="#">Info.Ali.Pci@Gmail.com</a></span>
 				</div>
 				<a class="mail-dropdown pull-right" href="javascript:;">
 					<i class="fa fa-chevron-down"></i>
 				</a>
 			</div>
+			-->
 			<div class="inbox-body">
+				<!-- // <a href="#myModal" data-toggle="modal"  title="Compose"    class="btn btn-compose">Compose</a> -->
 				<router-link v-bind:to="{ name: 'Compose', params: { box_id: <?= $ref; ?> } }" tag="a" class="btn btn-compose">
 					Redactar
 				</router-link>
+		
+				<!-- // <a href="#myModal" data-toggle="modal"  title="Compose"    class="btn btn-compose">Compose</a> -->
 			</div>
-			<ul class="inbox-nav inbox-divider">
-				<router-link :to="{ name: 'Folder', params: { folder: 'inbox' } }" tag="li">
-					<a>
-						<i class="fa fa-inbox"></i>
-						Bandeja Entrada
-					</a>
-				</router-link>
-				<router-link :to="{ name: 'Folder', params: { folder: 'not_seen' } }" tag="li">
-					<a>
-						<i class="fa fa-envelope-o"></i>
-						Sin Leer
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'seen' } }" tag="li">
-					<a>
-						<i class="fa fa-envelope"></i>
-						Leidos
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'trash' } }" tag="li">
-					<a>
-						<i class="fa fa-trash-o"></i>
-						Papelera
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'draft' } }" tag="li">
-					<a>
-						<i class="fa fa-Borradores"></i>
-						Borradores
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'default' } }" tag="li">
-					<a>
-						<i class="fa fa-inbox"></i>
-						Todos
-					</a>
-				</router-link>
-			</ul>
+			<?php 
+				echo PHPStrap\Util\Html::ul([
+						FelipheGomez\Url::a(['site/my_email', ['ref' => $ref, 'folder' => 'inbox']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-inbox"]) . 'Bandeja Entrada', ['sub_menu'])
+						, FelipheGomez\Url::a(['site/my_email', ['ref' => $ref, 'folder' => 'not_seen']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope-o"]) . 'Sin Leer', ['sub_menu'])
+						, FelipheGomez\Url::a(['site/my_email', ['ref' => $ref, 'folder' => 'seen']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . 'Leidos', ['sub_menu'])
+						, FelipheGomez\Url::a(['site/my_email', ['ref' => $ref, 'folder' => 'trash']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-trash-o"]) . 'Papelera', ['sub_menu'])
+						, FelipheGomez\Url::a(['site/my_email', ['ref' => $ref, 'folder' => 'draft']], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-external-link"]) . 'Borradores', ['sub_menu'])
+						, FelipheGomez\Url::a(['site/my_email', ['ref' => $ref]], 'Todo', ['sub_menu'])
+				], ['inbox-nav inbox-divider']);
+			?>
 			<!-- // 
 			<ul class="inbox-nav inbox-divider">
 				<li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-danger pull-right">2</span></a></li>
@@ -435,7 +410,22 @@ ul {
 				<li><a href="#"><i class=" fa fa-trash-o"></i> Trash</a></li>
 			</ul>
 			-->
-			
+			<ul class="nav nav-pills nav-stacked labels-info inbox-divider">
+				<li> <h4>Labels</h4> </li>
+				<li> <a href="#"> <i class=" fa fa-sign-blank text-danger"></i> Work </a> </li>
+				<li> <a href="#"> <i class=" fa fa-sign-blank text-success"></i> Design </a> </li>
+				<li> <a href="#"> <i class=" fa fa-sign-blank text-info "></i> Family </a></li>
+				<li> <a href="#"> <i class=" fa fa-sign-blank text-warning "></i> Friends </a></li>
+				<li> <a href="#"> <i class=" fa fa-sign-blank text-primary "></i> Office </a></li>
+			</ul>
+			<ul class="nav nav-pills nav-stacked labels-info ">
+				<li> <h4>Buddy online</h4> </li>
+				<li> <a href="#"> <i class=" fa fa-circle text-success"></i>Alireza Zare <p>I do not think</p></a>  </li>
+				<li> <a href="#"> <i class=" fa fa-circle text-danger"></i>Dark Coders<p>Busy with coding</p></a> </li>
+				<li> <a href="#"> <i class=" fa fa-circle text-muted "></i>Mentaalist <p>I out of control</p></a></li>
+				<li> <a href="#"> <i class=" fa fa-circle text-muted "></i>H3s4m<p>I am not here</p></a></li>
+				<li> <a href="#"> <i class=" fa fa-circle text-muted "></i>Dead man<p>I do not think</p></a></li>
+			</ul>
 			<div class="inbox-body text-center">
 				<div class="btn-group">
 					<a class="btn mini btn-primary" href="javascript:;">
@@ -744,14 +734,116 @@ ul {
 				 -->
 		</aside>
 	</div>
+	
+		<div class="page-title">
+			<div class="title_left">
+				<h3>Correo Electronico 
+					<template v-if="folder != undefined">
+						<small>{{ folder }}</small>
+					</template>
+				</h3>
+			</div>
+			
+			<!-- //
+			<div class="title_right">
+				<div class="col-sm-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search for...">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">Go!</button>
+						</span>
+					</div>
+				</div>
+			</div>
+			-->
+		</div>
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2><?= $MailerBox->label; ?><small><?= $MailerBox->username; ?></small></h2>
+						<!--
+						<ul class="nav navbar-right panel_toolbox">
+							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="#">Settings 1</a></li>
+									<li><a href="#">Settings 2</a></li>
+								</ul>
+							</li>
+							<li><a class="close-link"><i class="fa fa-close"></i></a></li>
+						</ul>
+						-->
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+						<div class="row">
+							<div class="col-sm-3 mail_list_column">
+								
+								<!-- // <button id="compose" class="btn btn-sm btn-success btn-block" type="button"> Redactar </button> -->
+								
+								<!--//
+								<router-link v-bind:to="{ name: 'Compose', params: { box_id: <?= $ref; ?> } }" tag="button" class="btn btn-sm btn-success btn-block" type="button">
+									Redactar
+								</router-link>
+								
+								-->
+								<!-- //
+								<router-link v-for="(mail, index_mail) in list_mails" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }" tag="a" class="mail_list" :key="mail.id">
+									<div class="left">
+										<template v-if="mail.answered !== undefined && mail.answered === 1">
+											<i class="fa fa-share"></i> 
+										</template>
+										<template v-if="mail.recent !== undefined && mail.recent === 1">
+											<i class="fa fa-asterisk"></i>
+										</template>
+										
+										<template v-if="mail.seen !== undefined && mail.seen === 0">
+											<i class="fa fa-circle"></i>
+										</template>
+										<template v-else>
+											<i class="fa fa-circle-o"></i>
+										</template>
+										
+										<template v-if="mail.draft !== undefined && mail.draft === 1">
+											<i class="fa fa-edit"></i> 
+										</template>
+										<template v-if="mail.deleted !== undefined && mail.deleted === 1">
+											<i class="fa fa-trash"></i> 
+										</template>
+										<template v-if="mail.attachments !== undefined && mail.attachments.length > 0">
+											<i class="fa fa-paperclip"></i> 
+										</template>
+									</div>
+									<div class="right">
+										<template v-if="mail.from !== undefined && mail.subject !== undefined">
+											<h3>{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,22) }}{{ (mail.from.length > 23) ? "..." : "" }}<small> {{ mail.date }}</small></h3>
+											<p>{{ mail.subject.replace(/<\/?[^>]+(>|$)/g, '').slice(0,17) }} - Leer Más</p>
+										</template>
+									</div>
+								</router-link>
+								-->
+							</div>
+							<!--
+							<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-9 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
+								<router-view :key="$route.fullPath"></router-view>
+							</div>
+							-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 	
 <template id="home">
   <div>
 	<div class="inbox-head">
-		<h3>
-			<template v-if="$root.folder != undefined">{{ $root.folder }}</template>
-		</h3>
+		<h3>Inbox</h3>
 		<form action="#" class="pull-right position">
 			<div class="input-append">
 				<input type="text" class="sr-input" placeholder="Search Mail">
@@ -817,62 +909,61 @@ ul {
 		</div>
 		<table class="table table-inbox table-hover">
 			<tbody>
-				<tr v-if="mails.length == null || mails.length <= 0" >
-					<td colspan="6">
-						No hay mensajes
-					</td>
-				<tr>
-				<tr v-for="(mail, index_mail) in mails" :class="mail.status" :key="mail.id">
+				<tr v-for="(mail, index_mail) in $root.list_mails" :class="mail.status" :key="mail.id">
 					<template v-if="mail.id !== undefined && mail.id > 0">
 						<td class="inbox-small-cells">
 							<input type="checkbox" class="mail-checkbox">
 						</td>
-						<td class="inbox-small-cells">
-							<template v-if="mail.recent !== undefined && mail.recent === 1">
-								<i class="fa fa-asterisk"></i>
-							</template>
-							
-							<template v-if="mail.answered !== undefined && mail.answered === 1">
-								<i class="fa fa-share"></i> 
-							</template>
-							
-							<template v-if="mail.draft !== undefined && mail.draft === 1">
-								<i class="fa fa-edit"></i> 
-							</template>
-							<template v-if="mail.deleted !== undefined && mail.deleted === 1">
-								<i class="fa fa-trash"></i> 
-							</template>
-						</td>
-						<td class="view-message dont-show">
-							<template v-if="mail.from !== undefined && mail.subject !== undefined">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-									{{ mail.from.slice(0,22) }}
-								</router-link>
-							</template>
-						</td>
-						<td class="view-message">
-							<template v-if="mail.subject !== undefined">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-									{{ mail.subject.slice(0,28) }}
-								</router-link>
-							</template>
-						</td>
-						<td class="view-message inbox-small-cells">
-							<template v-if="mail.attachments !== undefined && mail.attachments.length > 0">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
+						<template v-if="mail !== undefined">
+							<td class="inbox-small-cells">
+								<template v-if="mail.recent !== undefined && mail.recent === 1">
+									<i class="fa fa-asterisk"></i>
+								</template>
+							</td>
+							<td class="view-message dont-show">
+								<template v-if="mail.from !== undefined && mail.subject !== undefined">
+									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
+										{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,22) }}
+									</router-link>
+								</template>
+							</td>
+							<td class="view-message">
+								<template v-if="mail.subject !== undefined">
+									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
+										{{ mail.subject.replace(/<\/?[^>]+(>|$)/g, '').slice(0,28) }}
+									</router-link>
+								</template>
+							</td>
+							<td class="view-message inbox-small-cells">
+								<template v-if="mail.attachments !== undefined && mail.attachments.length > 0">
 									<i class="fa fa-paperclip"></i>
-								</router-link>
-							</template>
-						</td>
-						<td class="view-message text-right">
-							<template v-if="mail.from !== undefined && mail.subject !== undefined">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
+								</template>
+							</td>
+							<td class="view-message text-right">
+								<template v-if="mail.from !== undefined && mail.subject !== undefined">
 									{{ mail.date }}
-								</router-link>
-							</template>
-						</td>
+								</template>
+							</td>
+						</template>
 					</template>
+					<!-- //
+					<template v-if="mail.answered !== undefined && mail.answered === 1">
+						<i class="fa fa-share"></i> 
+					</template>
+					
+					<template v-if="mail.draft !== undefined && mail.draft === 1">
+						<i class="fa fa-edit"></i> 
+					</template>
+					<template v-if="mail.deleted !== undefined && mail.deleted === 1">
+						<i class="fa fa-trash"></i> 
+					</template>
+					<template v-if="mail.from !== undefined && mail.subject !== undefined">{{ mail.date }}
+						<h3>{{ mail.from.replace(/<\/?[^>]+(>|$)/g, '').slice(0,22) }}{{ (mail.from.length > 23) ? "..." : "" }}<small> {{ mail.date }}</small></h3>
+						<p> - Leer Más</p>
+					</template>
+					-->
 				</tr>
+			
 				<!-- //
 				<tr class="unread">
 					<td class="inbox-small-cells">
@@ -895,7 +986,7 @@ ul {
 					  <td class="view-message text-right">April 01</td>
 				  </tr>
 				  -->
-			</tbody>
+				</tbody>
 		  </table>
 	  </div>
   </div>
@@ -1009,8 +1100,6 @@ ul {
 					<template v-if="mail.isHtml == true">
 						<div style="border: #666 0.25px dashed; zoom:0.8;padding:24px;">
 							<!-- // <div v-html="mail.message"></div> -->
-							<!-- <div v-html="mail.message" width="100%" style="height:auto;min-height:calc(100vh)"></div> -->
-							<hr />
 							<iframe frameborder="0" width="100%" style="height:auto;min-height:calc(100vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
 						</div>
 					</template>
@@ -1078,56 +1167,6 @@ ul {
 	</div>
 </template>
 
-<!-- Modal -->
-<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade" style="display: none;">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-				<h4 class="modal-title">Compose</h4>
-			</div>
-			<div class="modal-body">
-				<form role="form" class="form-horizontal">
-					<div class="form-group">
-						<label class="col-lg-2 control-label">To</label>
-						<div class="col-lg-10">
-							<input type="text" placeholder="" id="inputEmail1" class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-lg-2 control-label">Cc / Bcc</label>
-						<div class="col-lg-10">
-							<input type="text" placeholder="" id="cc" class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-lg-2 control-label">Subject</label>
-						<div class="col-lg-10">
-							<input type="text" placeholder="" id="inputPassword1" class="form-control">
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-lg-2 control-label">Message</label>
-						<div class="col-lg-10">
-							<textarea rows="10" cols="30" class="form-control" id="" name=""></textarea>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-lg-offset-2 col-lg-10">
-							<span class="btn green fileinput-button">
-								<i class="fa fa-plus fa fa-white"></i>
-								<span>Attachment</span>
-								<input type="file" name="files[]" multiple="">
-							</span>
-							<button class="btn btn-send" type="submit">Send</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 <script>
 const api = axios.create({
   baseURL: '/',
@@ -1145,44 +1184,14 @@ var Home = Vue.extend({
 	template: '#home',
 	data() {
 		return {
-			box_id: this.$route.params.box_id,
-			folder: this.$route.params.folder,
-			mails: [],
+			mails: this.$root.list_mails
 		};
-	},
-	mounted() {
-		var self = this;
-		self.loadList();
-		console.log(self.folder);
 	},
 	created() {
 		
 	},
 	methods: {
-		loadList(){
-			var self = this;
-			var query = {
-				"controller": "site",
-				"action": "my_email_list",
-				"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : <?= $ref; ?>,
-				"folder": self.$route.params.folder !== undefined ? self.$route.params.folder : 'inbox'
-			};
-			console.log(query);
-			
-			api.get('/index.php', { params: query })
-			.then(function (r) {
-				if(r.data !== undefined){
-					if(r.data.error !== undefined && r.data.error == false){
-						self.mails = r.data.records;
-					}
-				}else{
-					console.error('error');
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-		},
+		
 	}
 });
 
@@ -1239,7 +1248,6 @@ var Compose = Vue.extend({
 var router = new VueRouter({
 	routes:[
 		{ path: '/', component: Home, name: 'Home' },
-		{ path: '/folder/:folder/', component: Home, name: 'Folder' },
 		{ path: '/:box_id/compose', component: Compose, name: 'Compose', params: { mail_id: null } },
 		{ path: '/:box_id/compose/:mail_id', component: Compose, name: 'Edit' },
 		{ path: '/view/:mail_id-:index', component: View, name: 'View' },
@@ -1251,8 +1259,8 @@ app = new Vue({
 	router: router,
 	data: function () {
 		return {
-			ref: 0,
-			folder: 'inbox',
+			ref: <?= $ref; ?>,
+			folder: '<?= $filter; ?>',
 			list_mails: [],
 			options: {},
 			email_single: {}
@@ -1269,11 +1277,15 @@ app = new Vue({
 	},
 	created() {
 		var self = this;
-		//self.loadList();
+		self.loadList();
 	},
 	methods: {
 		loadMail(){
 			var self = this;
+			console.log('index', self.$route.params.index);
+			console.log('mail_id', self.$route.params.mail_id);
+			console.log('box_id', self.$route.params.box_id);
+			// $root.changeFolder(mail.id, $root.ref, 'seen')
 			api.get('/index.php', {
 				params: {
 					"controller": "site",
@@ -1361,3 +1373,52 @@ app = new Vue({
 
 	
 	
+<!-- Modal -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+				<h4 class="modal-title">Compose</h4>
+			</div>
+			<div class="modal-body">
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-lg-2 control-label">To</label>
+						<div class="col-lg-10">
+							<input type="text" placeholder="" id="inputEmail1" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">Cc / Bcc</label>
+						<div class="col-lg-10">
+							<input type="text" placeholder="" id="cc" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">Subject</label>
+						<div class="col-lg-10">
+							<input type="text" placeholder="" id="inputPassword1" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 control-label">Message</label>
+						<div class="col-lg-10">
+							<textarea rows="10" cols="30" class="form-control" id="" name=""></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-offset-2 col-lg-10">
+							<span class="btn green fileinput-button">
+								<i class="fa fa-plus fa fa-white"></i>
+								<span>Attachment</span>
+								<input type="file" name="files[]" multiple="">
+							</span>
+							<button class="btn btn-send" type="submit">Send</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

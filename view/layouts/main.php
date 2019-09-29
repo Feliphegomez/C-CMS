@@ -53,7 +53,6 @@
 							$mailBoxes = $this->user->getEmailBoxes();
 							$boxes_html = [];
 							if(count($mailBoxes) > 0){
-								
 								foreach($mailBoxes as $box){
 									$box = is_array($box) ? (object) $box : $box;
 									$boxes_html[] = PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))

@@ -249,26 +249,27 @@ class SiteController extends ControladorBase{
 		$date = new DateText($model->date);
 		$message = ($model->message);
 		if(SiteController::isHTML($message) == true){
-			#header("text/html; charset=UTF-8");
+			header("text/html; charset=UTF-8");
 			echo "<style>"
-				."html { zoom: 0.8 !important; }"
+				."html { zoom: 0.85 !important;overflow: auto; }\n"
 			."</style>";
 		} else {
-			#header("Content-Type: text/plain; charset=UTF-8");
+			header("Content-Type: text/plain; charset=UTF-8");
 			// header("text/plain; charset=UTF-8");
+			$message = str_replace(["\n"], ['<br />'], $message);
 		}
 		// $message = preg_replace("/^http:/i", "https:", $message);
 		#$arr1 = ["/href=\"http:/", "/target=(.*)/"];
 		#$arr2 = ["href=\"https:", "target=\"_blancko\""];
 		
-		$message = ($message);
 		$arr1 = ["/href=\"http:/"];
 		$arr2 = ["href=\"https:"];
 		$message = preg_replace($arr1, $arr2, $message);
 		$arr1 = ["/href=\"http:/"];
 		$arr2 = ["href=\"https:"];
 		$message = preg_replace($arr1, $arr2, $message);
-		$message = htmlspecialchars_decode($message);
+		
+		$message = utf8_decode(utf8_encode($message));
 		
 		
 		echo  ($message);
