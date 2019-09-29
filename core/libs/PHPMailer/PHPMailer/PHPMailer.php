@@ -2433,7 +2433,7 @@ class PHPMailer
         if ('' === $this->XMailer) {
             $result .= $this->headerLine(
                 'X-Mailer',
-                'PHPMailer ' . self::VERSION . ' (https://github.com/PHPMailer/PHPMailer)'
+                'PHPMailer ' . self::VERSION . ' (https://github.com/feliphegomez/)'. ' Software Oficial Monteverde - Powered By FelipheGomez'
             );
         } else {
             $myXmailer = trim($this->XMailer);

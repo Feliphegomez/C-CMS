@@ -80,6 +80,10 @@ class MailSend {
 			$this->mail->Password    = smtp_Password;      // SMTP password
 			$this->mail->SMTPSecure  = smtp_SMTPSecure;    // Enable TLS encryption, `ssl` also accepted
 			$this->mail->Port        = smtp_Port;          // TCP port to connect to
+			$this->mail->AddCustomHeader(
+				"List-Unsubscribe:", 
+				"<mailto:unsubscribe@micuenta.monteverdeltda.com?subject=Unsubscribe>, <https://micuenta.monteverdeltda.com/index.php?controller?site&action=unsubscribe>"
+			);
 			
 			//Recipients
 			$this->mail->setFrom($this->from_mail, $this->from_name);

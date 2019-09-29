@@ -688,6 +688,8 @@ class SiteController extends ControladorBase{
 						"error" => 'Contraseña incorrecta.'
 					]);
 				}
+				
+				
 			}else{
 				$this->redirect('site', 'login', [
 					"error" => "El usuario {$_REQUEST['username']} no existe."
