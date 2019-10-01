@@ -27,14 +27,17 @@ class UsuarioMails extends ModeloBase{
 				$email = new EmailBox($this->adapter);
 				$email->getById($item->email);
 				if(isset($email->id)){
-					$this->boxes[] = [
+					/*$this->boxes[] = [
 						'id' 	=> $email->id,
 						'label' 	=> $email->label,
-						'enable'	=> $email->actived == 1 ? true : false,
-						'mailbox' 	=> "{{$email->host}:{$email->port}{$email->args_add}}INBOX",
+						'port'	=> $email->actived == 1 ? true : false,
+						'enable'	=> $email->port,
+						'args_add'	=> $email->args_add,
+						// 'mailbox' 	=> "{{$email->host}:{$email->port}{$email->args_add}}INBOX",
 						'username' 	=> "{$email->user}",
 						'password' 	=> "{$email->pass}"
-					];
+					];*/
+					$this->boxes[] = $email;
 				}
 			}
 		}
@@ -48,6 +51,7 @@ class UsuarioMails extends ModeloBase{
 				$email = new EmailBox($this->adapter);
 				$email->getById($item->email);
 				if(isset($email->id)){
+					/*
 					$this->boxes[] = [
 						'label' 	=> $email->label,
 						'enable'	=> $email->actived == 1 ? true : false,
@@ -55,6 +59,8 @@ class UsuarioMails extends ModeloBase{
 						'username' 	=> "{$email->user}",
 						'password' 	=> "{$email->pass}"
 					];
+					*/
+					$this->boxes[] = $email;
 				}
 			}
 		}

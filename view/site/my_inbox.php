@@ -366,6 +366,7 @@ ul {
 }
  
 </style>
+
 <div id="app">
 	<div class="mail-box">
 		<aside class="sm-side">
@@ -375,16 +376,33 @@ ul {
 					<img  width="64" hieght="60" src="http://bootsnipp.com/img/avatars/ebeb306fd7ec11ab68cbcaa34282158bd80361a7.jpg">
 				</a>
 				-->
-				<div class="user-name">
-					<h5><a href="#"><?= $MailerBox->label; ?></a></h5>
-					<span><a href="#"><?= $MailerBox->username; ?></a></span>
+				<!-- Default dropright button -->
+				<div class="row">
+					<div class="col-sm-10" style="overflow:hidden;">
+						<div class="user-name">
+							<h5><a href="#">{{ myBox.label }}</a></h5>
+							<span><a href="#">{{ myBox.username }}</a></span>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="btn-group dropright mail-dropdown pull-right">
+							<a class="mail-dropdown pull-right dropdown-toggle" href="javascript:;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-chevron-down"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li v-for="(box, index_box) in boxes" :key="box.id" class="dropdown-item">
+									<router-link :to="{ name: 'Home', params: { box_id: box.id } }" tag="a">
+										{{ box.label }}
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</div>
 				</div>
-				<a class="mail-dropdown pull-right" href="javascript:;">
-					<i class="fa fa-chevron-down"></i>
-				</a>
+				
 			</div>
 			<div class="inbox-body">
-				<router-link v-bind:to="{ name: 'Compose', params: { box_id: <?= $ref; ?> } }" tag="a" class="btn btn-compose">
+				<router-link v-bind:to="{ name: 'Compose', params: { box_id: 0 } }" tag="a" class="btn btn-compose">
 					Redactar
 				</router-link>
 			</div>
@@ -405,6 +423,12 @@ ul {
 					<a>
 						<i class="fa fa-envelope"></i>
 						Leidos
+					</a>
+				</router-link>
+				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'send' } }" tag="li">
+					<a>
+						<i class="fa fa-send"></i>
+						Enviados
 					</a>
 				</router-link>
 				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'trash' } }" tag="li">
@@ -456,7 +480,7 @@ ul {
 		</aside>
 		<aside class="lg-side" style="overflow-y:auto; max-height:calc(80vh);min-height: calc(80vh);zoom: 0.8;">
 			<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-12 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
-				<router-view :key="$route.fullPath"></router-view>
+				<router-view :key="$route.fullPath"></router-view><!-- //  :change="currentBox()" -->
 			</div>
 			
 			<!-- //
@@ -743,12 +767,13 @@ ul {
 				  </div>
 				 -->
 		</aside>
+		
 	</div>
 </div>
 	
 <template id="home">
-  <div>
-	<div class="inbox-head">
+	<div>
+		<div class="inbox-head">
 		<h3>
 			<template v-if="$root.folder != undefined">{{ $root.folder }}</template>
 		</h3>
@@ -759,146 +784,131 @@ ul {
 			</div>
 		</form>
 	</div>
-	<div class="inbox-body">
-		<div class="mail-option">
-			<div class="chk-all">
-				<input type="checkbox" class="mail-checkbox mail-group-checkbox">
+		<div class="inbox-body">
+			<div class="mail-option">
+				<!-- // 
+				<div class="chk-all">
+					<input type="checkbox" class="mail-checkbox mail-group-checkbox">
+					<div class="btn-group">
+						<a data-toggle="dropdown" href="#" class="btn mini all" aria-expanded="false">
+							All
+							<i class="fa fa-angle-down "></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#"> None</a></li>
+							<li><a href="#"> Read</a></li>
+							<li><a href="#"> Unread</a></li>
+						</ul>
+					</div>
+				</div>
+				-->
 				<div class="btn-group">
-					<a data-toggle="dropdown" href="#" class="btn mini all" aria-expanded="false">
-						All
+					<a data-original-title="Refresh" data-placement="top" data-toggle="dropdown" href="#" class="btn mini tooltips">
+						<i class=" fa fa-refresh"></i>
+					</a>
+				</div>
+				<div class="btn-group hidden-phone">
+					<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
+						More
 						<i class="fa fa-angle-down "></i>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="#"> None</a></li>
-						<li><a href="#"> Read</a></li>
-						<li><a href="#"> Unread</a></li>
-					</ul>
+						<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
+						<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
+						<li class="divider"></li>
+						<li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
+					 </ul>
 				</div>
-			</div>
-			<div class="btn-group">
-				<a data-original-title="Refresh" data-placement="top" data-toggle="dropdown" href="#" class="btn mini tooltips">
-					<i class=" fa fa-refresh"></i>
-				</a>
-			</div>
-			<div class="btn-group hidden-phone">
-				<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
-					More
-					<i class="fa fa-angle-down "></i>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-					<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-					<li class="divider"></li>
-					<li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-				 </ul>
-			</div>
-			<div class="btn-group">
-				 <a data-toggle="dropdown" href="#" class="btn mini blue">
-					 Move to
-					 <i class="fa fa-angle-down "></i>
-				 </a>
-				 <ul class="dropdown-menu">
-					 <li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-					 <li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-					 <li class="divider"></li>
-					 <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-				 </ul>
-			</div>
-
-			<ul class="unstyled inbox-pagination">
-				 <li><span>1-50 of 234</span></li>
-				 <li>
-					 <a class="np-btn" href="#"><i class="fa fa-angle-left  pagination-left"></i></a>
-				 </li>
-				 <li>
-					 <a class="np-btn" href="#"><i class="fa fa-angle-right pagination-right"></i></a>
-				 </li>
-			</ul>
-		</div>
-		<table class="table table-inbox table-hover">
-			<tbody>
-				<tr v-if="mails.length == null || mails.length <= 0" >
-					<td colspan="6">
-						No hay mensajes
-					</td>
-				<tr>
-				<tr v-for="(mail, index_mail) in mails" :class="mail.status" :key="mail.id">
-					<template v-if="mail.id !== undefined && mail.id > 0">
-						<td class="inbox-small-cells">
-							<input type="checkbox" class="mail-checkbox">
-						</td>
-						<td class="inbox-small-cells">
-							<template v-if="mail.recent !== undefined && mail.recent === 1">
-								<i class="fa fa-asterisk"></i>
-							</template>
-							
-							<template v-if="mail.answered !== undefined && mail.answered === 1">
-								<i class="fa fa-share"></i> 
-							</template>
-							
-							<template v-if="mail.draft !== undefined && mail.draft === 1">
-								<i class="fa fa-edit"></i> 
-							</template>
-							<template v-if="mail.deleted !== undefined && mail.deleted === 1">
-								<i class="fa fa-trash"></i> 
-							</template>
-						</td>
-						<td class="view-message dont-show">
-							<template v-if="mail.from !== undefined && mail.subject !== undefined">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-									{{ mail.from.slice(0,22) }}
-								</router-link>
-							</template>
-						</td>
-						<td class="view-message">
-							<template v-if="mail.subject !== undefined">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-									{{ mail.subject.slice(0,28) }}
-								</router-link>
-							</template>
-						</td>
-						<td class="view-message inbox-small-cells">
-							<template v-if="mail.attachments !== undefined && mail.attachments.length > 0">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-									<i class="fa fa-paperclip"></i>
-								</router-link>
-							</template>
-						</td>
-						<td class="view-message text-right">
-							<template v-if="mail.from !== undefined && mail.subject !== undefined">
-								<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-									{{ mail.date }}
-								</router-link>
-							</template>
-						</td>
-					</template>
-				</tr>
+				<div class="btn-group">
+					 <a data-toggle="dropdown" href="#" class="btn mini blue">
+						 Move to
+						 <i class="fa fa-angle-down "></i>
+					 </a>
+					 <ul class="dropdown-menu">
+						 <li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
+						 <li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
+						 <li class="divider"></li>
+						 <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
+					 </ul>
+				</div>
+				
+				
 				<!-- //
-				<tr class="unread">
-					<td class="inbox-small-cells">
-						<input type="checkbox" class="mail-checkbox">
-					</td>
-					<td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-					<td class="view-message dont-show">Google Webmaster </td>
-					<td class="view-message">Improve the search presence of WebSite</td>
-					<td class="view-message inbox-small-cells"></td>
-					<td class="view-message text-right">March 15</td>
-				</tr>
-				  <tr class="">
-					  <td class="inbox-small-cells">
-						  <input type="checkbox" class="mail-checkbox">
-					  </td>
-					  <td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-					  <td class="view-message dont-show">Tim Reid, S P N</td>
-					  <td class="view-message">Boost Your Website Traffic</td>
-					  <td class="view-message inbox-small-cells"></td>
-					  <td class="view-message text-right">April 01</td>
-				  </tr>
-				  -->
-			</tbody>
-		  </table>
-	  </div>
-  </div>
+				<ul class="unstyled inbox-pagination">
+					 <li><span>1-50 of 234</span></li>
+					 <li>
+						 <a class="np-btn" href="#"><i class="fa fa-angle-left  pagination-left"></i></a>
+					 </li>
+					 <li>
+						 <a class="np-btn" href="#"><i class="fa fa-angle-right pagination-right"></i></a>
+					 </li>
+				</ul>
+				-->
+				<ul class="unstyled inbox-pagination">
+					 <li><span> {{ mails.length }}</span></li>
+				</ul>
+			</div>
+			<table class="table table-inbox table-hover">
+				<tbody>
+					<tr v-if="mails.length == null || mails.length <= 0"><td colspan="6">No hay mensajes</td></tr>
+					<tr v-for="(mail, index_mail) in mails" :class="mail.status" :key="mail.id">
+						<template v-if="mail.id !== undefined && mail.id > 0">
+							<td class="inbox-small-cells">
+								<!-- // <input type="checkbox" class="mail-checkbox" /> -->
+							</td>
+							<td class="inbox-small-cells">
+								<template v-if="mail.recent !== undefined && mail.recent === 1">
+									<i class="fa fa-asterisk"></i>
+								</template>
+								
+								<template v-if="mail.answered !== undefined && mail.answered === 1">
+									<i class="fa fa-share"></i> 
+								</template>
+								
+								<template v-if="mail.draft !== undefined && mail.draft === 1">
+									<i class="fa fa-edit"></i> 
+								</template>
+								<template v-if="mail.deleted !== undefined && mail.deleted === 1">
+									<i class="fa fa-trash"></i> 
+								</template>
+							</td>
+							<td class="view-message dont-show">
+								<template v-if="mail.from !== undefined && mail.from !== undefined">
+									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
+										{{ mail.from.slice(0,22) }}
+									</router-link>
+								</template>
+							</td>
+							<td class="view-message">
+								<template v-if="mail.subject !== undefined">
+									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
+										{{ mail.subject.slice(0,28) }}
+									</router-link>
+								</template>
+							</td>
+							<td class="view-message inbox-small-cells">
+									<router-link 
+										:key="index_mail" 
+										v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }"
+										v-if=mail.attachments.length > 0"
+									>
+										<i class="fa fa-paperclip"></i>
+									</router-link>
+								{{ mail.attachments }}
+							</td>
+							<td class="view-message text-right">
+								<template v-if="mail.date !== undefined && mail.date !== undefined">
+									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
+										{{ mail.date }}
+									</router-link>
+								</template>
+							</td>
+						</template>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </template>
 
 <template id="view">
@@ -954,10 +964,12 @@ ul {
 					<template v-if="mail.date !== undefined"><p class="date"> {{ mail.date }} .</p> </template>
 				</div>
 				
+			</div>
+			<div class="mail_heading row">
 				
 				<div class="col-sm-12">
 					<template v-if="mail.subject !== undefined">
-						<h4>{{ mail.subject }}</h4>
+						<h4>Asunto: {{ mail.subject }}</h4>
 					</template>
 				</div>
 			</div>
@@ -1129,235 +1141,306 @@ ul {
 </div><!-- /.modal -->
 
 <script>
-const api = axios.create({
-  baseURL: '/',
-  timeout: 60000,
-  headers: {'X-Custom-Header': 'foobar'}
-});
-api.interceptors.response.use(function (response) {
-  if (response.headers['x-xsrf-token']) {
-	document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
-  }
-  return response;
-});
+	const api = axios.create({
+	  baseURL: '/',
+	  timeout: 60000,
+	  headers: {'X-Custom-Header': 'foobar'}
+	});
+	api.interceptors.response.use(function (response) {
+	  if (response.headers['x-xsrf-token']) {
+		document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
+	  }
+	  return response;
+	});
 
-var Home = Vue.extend({
-	template: '#home',
-	data() {
-		return {
-			box_id: this.$route.params.box_id,
-			folder: this.$route.params.folder,
-			mails: [],
-		};
-	},
-	mounted() {
-		var self = this;
-		self.loadList();
-		console.log(self.folder);
-	},
-	created() {
-		
-	},
-	methods: {
-		loadList(){
-			var self = this;
-			var query = {
-				"controller": "site",
-				"action": "my_email_list",
-				"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : <?= $ref; ?>,
-				"folder": self.$route.params.folder !== undefined ? self.$route.params.folder : 'inbox'
+	var Home = Vue.extend({
+		template: '#home',
+		data() {
+			return {
+				box_id: this.$route.params.box_id,
+				folder: this.$route.params.folder,
+				mails: [],
 			};
-			console.log(query);
-			
-			api.get('/index.php', { params: query })
-			.then(function (r) {
-				if(r.data !== undefined){
-					if(r.data.error !== undefined && r.data.error == false){
-						self.mails = r.data.records;
-					}
-				}else{
-					console.error('error');
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
 		},
-	}
-});
-
-var View = Vue.extend({
-	template: '#view',
-	data() {
-		return {
-			
-		};
-	},
-	created() {
-		var self = this;
-	},
-	mounted() {
-		var self = this;
-		self.$root.loadMail();
-	},
-	computed: {
-		mail(){
-			return this.$root.email_single;
-		},
-	},
-	methods: {
-		unescape(unsafe){
-			return window.unescape(unsafe);
-		},
-		translateAttachments(attachments){
-			return JSON.parse(attachments);
-		},
-	}
-});
-
-var Compose = Vue.extend({
-	template: '#compose-edit',
-	data() {
-		return {
-			mail_id: this.$route.params.mail_id
-		};
-	},
-	mounted() {
-		var self = this;
-		if(self.mail_id == null || self.mail_id == 0){
-			console.log('no hay email.');
-		}
-	},
-	created() {
-		
-	},
-	methods: {
-		
-	}
-});
-
-var router = new VueRouter({
-	routes:[
-		{ path: '/', component: Home, name: 'Home' },
-		{ path: '/folder/:folder/', component: Home, name: 'Folder' },
-		{ path: '/:box_id/compose', component: Compose, name: 'Compose', params: { mail_id: null } },
-		{ path: '/:box_id/compose/:mail_id', component: Compose, name: 'Edit' },
-		{ path: '/view/:mail_id-:index', component: View, name: 'View' },
-		{ path: '/view/:box_id/:mail_id-:index', component: View, name: 'View-Single' },
-	]
-});
-
-app = new Vue({
-	router: router,
-	data: function () {
-		return {
-			ref: 0,
-			folder: 'inbox',
-			list_mails: [],
-			options: {},
-			email_single: {}
-		};
-	},
-	computed: {
-		urlBodyEmail(){
+		mounted() {
 			var self = this;
-			return '/index.php?controller=site&action=My_email_body&ref=<?= $ref; ?>&email_id=' + self.$route.params.mail_id;
-		}
-	},
-	mounted(){
-		var self = this;
-	},
-	created() {
-		var self = this;
-		//self.loadList();
-	},
-	methods: {
-		loadMail(){
-			var self = this;
-			api.get('/index.php', {
-				params: {
-					"controller": "site",
-					"action": "my_email_id",
-					"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : <?= $ref; ?>,
-					"message_id": self.$route.params.mail_id
-				}
-			})
-			.then(function (r) {
-				console.log('r', r);
-				if(r.data !== undefined){
-					if(r.data.error !== undefined && r.data.error == false){
-						self.email_single = r.data.record;
-						console.log(self.email_single);
-					}
-				}else{
-					console.log('error');
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+			self.$root.currentBox();
+			self.loadList();
+			// console.log(self.box_id + ' - ' + self.folder);
 		},
-		loadList(){
-			var self = this;
-			console.log('solicitando datos');
-			var query = {
-				"controller": "site",
-				"action": "my_email_list",
-				"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : <?= $ref; ?>,
-				"folder": "<?= $filter; ?>",
-			};
+		created() {
 			
-			api.get('/index.php', { params: query })
-			.then(function (r) {
-				if(r.data !== undefined){
-					if(r.data.error !== undefined && r.data.error == false){
-						self.list_mails = r.data.records;
-						if(self.$route.params.mail_id != undefined){
-							self.loadMail();
+		},
+		methods: {
+			loadList(){
+				var self = this;
+				var folders = {
+					'inbox': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,0',
+						'seen,in,0,1',
+						'draft,eq,0',
+						'send,eq,0'
+					],
+					'seen': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,0',
+						'seen,eq,1',
+						'draft,eq,0',
+						'send,eq,0'
+					],
+					'not_seen': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,0',
+						'seen,eq,0',
+						'draft,eq,0',
+						'send,eq,0'
+					],
+					'trash': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,1',
+						'seen,eq,0',
+						'draft,eq,0',
+						'send,eq,0'
+					],
+					'draft': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,0',
+						'seen,eq,0',
+						'draft,eq,1',
+						'send,eq,0'
+					],
+					'send': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,0',
+						'seen,eq,0',
+						'draft,eq,0',
+						'send,eq,1'
+					],
+					'default': [
+						'box,eq,' + self.$route.params.box_id,
+						'deleted,eq,0',
+						'seen,in,0,1',
+						'draft,eq,0',
+						'send,eq,0'
+					],
+				};
+				
+				console.log('folder filter', folders[self.folder]);
+				
+				api.get('/api.php/records/emails', { params: {
+					filter: folders[self.folder],
+					order: 'id,desc',
+				} })
+				.then(function (r) {
+					console.log(r);
+					if(r.data !== undefined){
+						if (r.data.records){
+							self.mails = r.data.records;
 						}
+					}else{
+						console.error('error');
 					}
-				}else{
-					console.error('error');
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+				
+				/*
+				var query = {
+					"controller": "site",
+					"action": "my_email_list",
+					"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : 0,
+					"folder": self.$route.params.folder !== undefined ? self.$route.params.folder : 'inbox'
+				};
+				console.log(query);
+				
+				api.get('/index.php', { params: query })
+				.then(function (r) {
+					if(r.data !== undefined){
+						if(r.data.error !== undefined && r.data.error == false){
+							self.mails = r.data.records;
+						}
+					}else{
+						console.error('error');
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+				*/
+			},
+		}
+	});
+
+	var View = Vue.extend({
+		template: '#view',
+		data() {
+			return {
+				email_single: {}
+			};
 		},
-		changeFolder(mail_id, box_id, folder){
+		created() {
 			var self = this;
-			api.get('/index.php', { 
-				params: {
-					controller: 'site',
-					action: 'my_email_change_status',
-					id: mail_id,
-					ref: box_id,
-					folder: folder
-				}
-			})
-			.then(function (r) {
-				if(r.data !== undefined){
-					if(r.data.error !== undefined && r.data.error == false){
-						self.loadMail();
-						self.loadList();
-						return true;
+		},
+		mounted() {
+			var self = this;
+			self.loadMail();
+		},
+		computed: {
+			mail(){
+				return this.email_single;
+			},
+		},
+		methods: {
+			unescape(unsafe){
+				return window.unescape(unsafe);
+			},
+			translateAttachments(attachments){
+				return JSON.parse(attachments);
+			},
+			loadMail(){
+				var self = this;
+				api.get('/index.php', {
+					params: {
+						"controller": "site",
+						"action": "my_email_id",
+						"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : 0,
+						"message_id": self.$route.params.mail_id
+					}
+				})
+				.then(function (r) {
+					console.log('r', r);
+					if(r.data !== undefined){
+						if(r.data.error !== undefined && r.data.error == false){
+							self.email_single = r.data.record;
+							console.log(self.email_single);
+						}
+					}else{
+						console.log('error');
+					}
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+			},
+		}
+	});
+
+	var Compose = Vue.extend({
+		template: '#compose-edit',
+		data() {
+			return {
+				mail_id: this.$route.params.mail_id
+			};
+		},
+		mounted() {
+			var self = this;
+			if(self.mail_id == null || self.mail_id == 0){
+				console.log('no hay email.');
+			}
+		},
+		created() {
+			
+		},
+		methods: {
+			
+		}
+	});
+
+	var router = new VueRouter({
+		routes:[
+			{ path: '/:box_id/:folder', component: Home, name: 'Home', params: { folder: 'inbox' } },
+			{ path: '/:box_id/:folder/', component: Home, name: 'Folder' },
+			{ path: '/:box_id/compose', component: Compose, name: 'Compose', params: { mail_id: null } },
+			{ path: '/:box_id/compose/:mail_id', component: Compose, name: 'Edit' },
+			{ path: '/view/:box_id/view/:mail_id-:index', component: View, name: 'View' },
+			{ path: '/:box_id/:folder/view/:mail_id-:index', component: View, name: 'View-Single' },
+			/*
+			{ path: '/', component: Home, name: 'Home' },
+			{ path: '/folder/:folder/', component: Home, name: 'Folder' },
+			{ path: '/:box_id/compose', component: Compose, name: 'Compose', params: { mail_id: null } },
+			{ path: '/:box_id/compose/:mail_id', component: Compose, name: 'Edit' },
+			{ path: '/view/:mail_id-:index', component: View, name: 'View' },
+			{ path: '/view/:box_id/:mail_id-:index', component: View, name: 'View-Single' },*/
+		]
+	});
+
+	app = new Vue({
+		router: router,
+		data: function () {
+			return {
+				box_id: this.$route.params.box_id,
+				boxes: <?php echo json_encode($AllBoxes); ?>,
+				myBox: {
+					"id": 0,
+					"label": "",
+					"enable": false,
+					"mailbox": "{:/}",
+					"username": "",
+					"password": ""
+				},
+				ref: 0,
+				folder: 'inbox',
+				list_mails: [],
+				options: {},
+				email_single: {}
+			};
+		},
+		computed: {
+			urlBodyEmail(){
+				var self = this;
+				return '/index.php?controller=site&action=My_email_body&ref=0&email_id=' + self.$route.params.mail_id;
+			},
+		},
+		mounted(){
+			var self = this;
+			self.currentBox();
+		},
+		created() {
+			var self = this;
+			//self.loadList();
+		},
+		methods: {
+			currentBox(){
+				var self = this;
+				self.boxes.find(function(box) {
+					if(box['id'] == self.$route.params.box_id){
+						self.myBox = box;
+					}
+				});
+			},
+			changeFolder(mail_id, box_id, folder){
+				var self = this;
+				api.get('/index.php', { 
+					params: {
+						controller: 'site',
+						action: 'my_email_change_status',
+						id: mail_id,
+						ref: box_id,
+						folder: folder
+					}
+				})
+				.then(function (r) {
+					if(r.data !== undefined){
+						if(r.data.error !== undefined && r.data.error == false){
+							self.loadMail();
+							self.loadList();
+							return true;
+						}else{
+							// console.error('error');
+							return false;
+						}
 					}else{
 						// console.error('error');
 						return false;
 					}
-				}else{
-					// console.error('error');
+				})
+				.catch(function (error) {
+					console.log(error);
 					return false;
-				}
-			})
-			.catch(function (error) {
-				console.log(error);
-				return false;
-			});
+				});
+			}
 		}
-	}
-}).$mount('#app');
+	}).$mount('#app');
 </script>
-
-	
-	

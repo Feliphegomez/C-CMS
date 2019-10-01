@@ -55,6 +55,11 @@
 							if(count($mailBoxes) > 0){
 								foreach($mailBoxes as $box){
 									$box = is_array($box) ? (object) $box : $box;
+									
+									$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/inbox"]], 
+										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label
+									, ['sub_menu']);
+									/*
 									$boxes_html[] = PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
 										. PHPStrap\Util\Html::ul([
 											FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'not_seen']], 'Sin Leer', ['sub_menu'])
@@ -64,6 +69,7 @@
 											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'draft']], 'Borradores', ['sub_menu'])
 											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id]], 'Todo', ['sub_menu'])
 									], ['nav child_menu']);
+									*/
 								}
 							}
 							// Sistema
@@ -162,9 +168,11 @@
 							$html_mail = "";
 							foreach($mails as $mail){
 								$html_mail .= PHPStrap\Util\Html::tag('li', 
+									
+								
 									FelipheGomez\Url::a(
-											"/index.php?controller=site&action=my_email&ref={$mail->box}&folder=not_seen#/view/{$mail->id}-0"
-											, # PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
+										['site/my_email', ["V" => "#/{$mail->box}/not_seen/view/{$mail->id}-0"]]
+										, # PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
 												PHPStrap\Util\Html::tag('span', 
 														#PHPStrap\Util\Html::tag('span', $mail->from)
 														PHPStrap\Util\Html::tag('span', "<b>{$mail->from}</b>")

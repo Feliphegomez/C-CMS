@@ -47,235 +47,6 @@ class SiteController extends ControladorBase{
 		]);
 	}
 	
-	public function actionLogout(){
-        $this->theme['default'] = 'demo-login';
-        global $global_session;
-        $global_session->close();
-        return $this->goHome();
-    }
-	
-	public function actionMy_email(){
-        if ($this->isGuest){ $this->goHome(); }
-		$mailBoxes = ($this->user->getEmailBoxes());
-		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]; break; } }
-		$box = !isset($_GET['ref']) ? isset($mailBoxes) ? $mailBoxes['id'] : false : $_GET['ref'];
-        if (!isset($box) || $box < 0){ $this->goHome(); }
-		$mailBoxes = is_array($mailBoxes) ? (object) $mailBoxes : $mailBoxes;
-		$filter = !isset($_GET['folder']) ? 'default' : $_GET['folder'];
-		$this->render("my_inbox", [
-			"title"    =>"Correos electronico",
-			"ref" => $box,
-			"MailerBox" => $mailBoxes,
-			"filter" => $filter,
-		]);
-	}
-	
-	public function actionMy_email_id(){
-        if ($this->isGuest){ $this->goHome(); }
-		$mailBoxes = ($this->user->getEmailBoxes());
-		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]['id']; break; } }
-		$box = !isset($_GET['ref']) ? isset($mailBoxes) ? $mailBoxes : 0 : $_GET['ref'];
-		$email_id = !isset($_GET['message_id']) ? 0 : $_GET['message_id'];
-        if (!isset($box) || $box < 0){ $this->goHome(); }
-        if (!isset($email_id) || $email_id < 0){ $this->goHome(); }
-		
-		$mail = new Email($this->adapter);
-        if (isset($box) && $box > 0){ $list = $mail->getByEmailFromBox($box, $email_id); }
-		else { $this->goHome(); }
-		$date = new DateText($mail->date);
-		
-		
-		$isHtml = SiteController::isHTML((htmlspecialchars_decode($mail->message)));
-		if($isHtml == false){ $mail->message = nl2br($mail->message, false); } 
-		else {
-			$mail->message = htmlspecialchars($mail->message);
-			$arr1 = ["/href=\"http:/"];
-			$arr2 = ["href=\"https:"];
-			$mail->message = preg_replace($arr1, $arr2, $mail->message);
-			$arr1 = ["/href=\"http:/"];
-			$arr2 = ["href=\"https:"];
-			$mail->message = preg_replace($arr1, $arr2, $mail->message);
-			$mail->message = htmlspecialchars_decode($mail->message);
-		}
-		
-		$entrega = (object) [
-			"id" => $mail->id,
-			"box" => $mail->box,
-			"isHtml" => $isHtml,
-			"message_id" => $mail->message_id,
-			"uid" => $mail->uid,
-			"status" => $mail->status,
-			"subject" => $mail->subject,
-			"from" => $mail->from,
-			"from_email" => $mail->from_email,
-			"to" => $mail->to,
-			"to_email" => $mail->to_email,
-			"date" => (string) $date,
-			"size" => $mail->size,
-			"created" => $mail->created,
-			"message" => htmlspecialchars_decode($mail->message),
-			"attachments" => json_decode($mail->attachments),
-			"recent" => $mail->recent,
-			"flagged" => $mail->flagged,
-			"answered" => $mail->answered,
-			"deleted" => $mail->deleted,
-			"seen" => $mail->seen,
-			"draft" => $mail->draft,
-			"new" => $mail->new,
-			"response" => $mail->response,
-		];
-		
-		$response = (object) [
-			"error"    => true,
-			"record" => $entrega
-		];
-		
-		if($mail->id > 0){
-			$response->error = false;
-		}
-		
-		header("Content-type:application/json");
-		echo json_encode($response);
-		return json_encode($response);
-	}
-	
-	public function actionMy_email_list(){
-        if ($this->isGuest){ $this->goHome(); }
-		$mailBoxes = ($this->user->getEmailBoxes());
-		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]; break; } }
-		$box = !isset($_GET['ref']) ? 0 : $_GET['ref'];
-        if (!isset($box) || $box < 0){ $this->goHome(); }
-		$typeList = !isset($_GET['type_list']) ? "simple" : $_GET['type_list'];
-		$filter = !isset($_GET['folder']) ? 'default' : $_GET['folder'];
-		$folders = [
-			'inbox' => [
-				'draft' => 0,
-				'deleted' => 0
-			],
-			'seen' => [
-				'seen' => 1,
-				'draft' => 0,
-				'deleted' => 0
-			],
-			'not_seen' => [
-				'seen' => 0,
-				'draft' => 0,
-				'deleted' => 0
-			],
-			'trash' => [
-				'deleted' => 1
-			],
-			'draft' => [
-				'draft' => 1,
-				'deleted' => 0
-			],
-			'default' => [
-				'seen' => [0,1],
-				'draft' => [0],
-				'deleted' => 0
-			],
-		];
-		$filters = isset($folders[$filter]) ? $folders[$filter] : $folders['default'];
-		$filters['box'] = [ (int) $box ];
-		
-		$model = new Email($this->adapter);
-		$model->getByFilter($filters);
-		if($typeList == 'complete'){
-			$list = $model->getList();
-		}else{
-			$list = [];
-			foreach($model->getList() as $mail){
-				$mail = is_array($mail) ? (object) $mail : $mail;
-				$date = new DateText($mail->date);
-				
-				$isHtml = SiteController::isHTML((htmlspecialchars_decode($mail->message)));
-				if($isHtml == false){ $mail->message = nl2br($mail->message, false); } 
-				else {
-					$mail->message = htmlspecialchars($mail->message);
-					$arr1 = ["/href=\"http:/"];
-					$arr2 = ["href=\"https:"];
-					$mail->message = preg_replace($arr1, $arr2, $mail->message);
-					$arr1 = ["/href=\"http:/"];
-					$arr2 = ["href=\"https:"];
-					$mail->message = preg_replace($arr1, $arr2, $mail->message);
-					$mail->message = htmlspecialchars_decode($mail->message);
-				}
-				
-				$list[] = (object) [
-					"id" => $mail->id,
-					"box" => $mail->box,
-					"isHtml" => $isHtml,
-					"message_id" => $mail->message_id,
-					"uid" => $mail->uid,
-					"status" => $mail->status,
-					"subject" => $mail->subject,
-					"from" => $mail->from,
-					"from_email" => $mail->from_email,
-					"to" => $mail->to,
-					"to_email" => $mail->to_email,
-					"date" => (string) $date,
-					"size" => $mail->size,
-					"created" => $mail->created,
-					"message" => htmlspecialchars_decode($mail->message),
-					"attachments" => json_decode($mail->attachments),
-					"recent" => $mail->recent,
-					"flagged" => $mail->flagged,
-					"answered" => $mail->answered,
-					"deleted" => $mail->deleted,
-					"seen" => $mail->seen,
-					"draft" => $mail->draft,
-					"new" => $mail->new,
-					"response" => $mail->response,
-				];
-			}
-		}
-		
-		
-		$response = (object) [
-			"error"    => false,
-			"records" => $list
-		];
-		header("Content-type:application/json");
-		echo json_encode($response);
-		return json_encode($response);
-	}
-	
-	public function actionMy_email_body(){
-		$box = !isset($_GET['ref']) ? null : $_GET['ref'];
-		$email_id = !isset($_GET['email_id']) ? null : $_GET['email_id'];
-		$model = new Email($this->adapter);
-        if (!isset($box) || $box < 0){ $this->goHome(); }
-		$model->getById($email_id);
-		$date = new DateText($model->date);
-		$message = ($model->message);
-		if(SiteController::isHTML($message) == true){
-			header("text/html; charset=UTF-8");
-			echo "<style>"
-				."html { zoom: 0.85 !important;overflow: auto; }\n"
-			."</style>";
-		} else {
-			header("Content-Type: text/plain; charset=UTF-8");
-			// header("text/plain; charset=UTF-8");
-			$message = str_replace(["\n"], ['<br />'], $message);
-		}
-		// $message = preg_replace("/^http:/i", "https:", $message);
-		#$arr1 = ["/href=\"http:/", "/target=(.*)/"];
-		#$arr2 = ["href=\"https:", "target=\"_blancko\""];
-		
-		$arr1 = ["/href=\"http:/"];
-		$arr2 = ["href=\"https:"];
-		$message = preg_replace($arr1, $arr2, $message);
-		$arr1 = ["/href=\"http:/"];
-		$arr2 = ["href=\"https:"];
-		$message = preg_replace($arr1, $arr2, $message);
-		
-		$message = utf8_decode(utf8_encode($message));
-		
-		
-		echo  ($message);
-		return $message;
-	}
-	
 	public function actionMy_email_change_status(){
 		$box = !isset($_REQUEST['ref']) ? null : $_REQUEST['ref'];
 		$email_id = !isset($_REQUEST['id']) ? null : $_REQUEST['id'];
@@ -661,7 +432,7 @@ class SiteController extends ControladorBase{
 		]);
 	}
 	
-	// Formulario de Ingreso y Registro
+	// Manejador de Ingreso y Registro
     public function actionLogin(){
 		$error = null;
         $this->theme['default'] = 'demo-login';
@@ -779,6 +550,142 @@ class SiteController extends ControladorBase{
         ]);
     }
     
+	// Manejador de Cierre de sesion
+	public function actionLogout(){
+        $this->theme['default'] = 'demo-login';
+        global $global_session;
+        $global_session->close();
+        return $this->goHome();
+    }
+	
+	// Manejador de Inbox Email
+	public function actionMy_email(){
+        if ($this->isGuest){ $this->goHome(); }
+		$AllBoxes = $this->user->getEmailBoxes();
+		$this->render("my_inbox", [
+			"title"    =>"Correos electronico",
+			"AllBoxes" => $AllBoxes,
+		]);
+		/*
+		$mailBoxes = null;
+		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]; break; } }
+		$box = !isset($_GET['ref']) ? isset($mailBoxes) ? $mailBoxes['id'] : false : $_GET['ref'];
+        if (!isset($box) || $box < 0){ $this->goHome(); }
+		$mailBoxes = is_array($mailBoxes) ? (object) $mailBoxes : $mailBoxes;
+		$filter = !isset($_GET['folder']) ? 'default' : $_GET['folder'];
+		$this->render("my_inbox", [
+			"title"    =>"Correos electronico",
+			"ref" => $box,
+			"MailerBox" => $mailBoxes,
+			"AllBoxes" => $AllBoxes,
+			//"filter" => $filter,
+		]);*/
+	}
+	
+	public function actionMy_email_id(){
+        if ($this->isGuest){ $this->goHome(); }
+		$mailBoxes = ($this->user->getEmailBoxes());
+		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]['id']; break; } }
+		$box = !isset($_GET['ref']) ? isset($mailBoxes) ? $mailBoxes : 0 : $_GET['ref'];
+		$email_id = !isset($_GET['message_id']) ? 0 : $_GET['message_id'];
+        if (!isset($box) || $box < 0){ $this->goHome(); }
+        if (!isset($email_id) || $email_id < 0){ $this->goHome(); }
+		
+		$mail = new Email($this->adapter);
+        if (isset($box) && $box > 0){ $list = $mail->getByEmailFromBox($box, $email_id); }
+		else { $this->goHome(); }
+		$date = new DateText($mail->date);
+		
+		
+		$isHtml = SiteController::isHTML((htmlspecialchars_decode($mail->message)));
+		if($isHtml == false){ $mail->message = nl2br($mail->message, false); } 
+		else {
+			$mail->message = htmlspecialchars($mail->message);
+			$arr1 = ["/href=\"http:/"];
+			$arr2 = ["href=\"https:"];
+			$mail->message = preg_replace($arr1, $arr2, $mail->message);
+			$arr1 = ["/href=\"http:/"];
+			$arr2 = ["href=\"https:"];
+			$mail->message = preg_replace($arr1, $arr2, $mail->message);
+			$mail->message = htmlspecialchars_decode($mail->message);
+		}
+		
+		$entrega = (object) [
+			"id" => $mail->id,
+			"box" => $mail->box,
+			"isHtml" => $isHtml,
+			"message_id" => $mail->message_id,
+			"uid" => $mail->uid,
+			"status" => $mail->status,
+			"subject" => $mail->subject,
+			"from" => $mail->from,
+			"from_email" => $mail->from_email,
+			"to" => $mail->to,
+			"to_email" => $mail->to_email,
+			"date" => (string) $date,
+			"size" => $mail->size,
+			"created" => $mail->created,
+			"message" => htmlspecialchars_decode($mail->message),
+			"attachments" => json_decode($mail->attachments),
+			"recent" => $mail->recent,
+			"flagged" => $mail->flagged,
+			"answered" => $mail->answered,
+			"deleted" => $mail->deleted,
+			"seen" => $mail->seen,
+			"draft" => $mail->draft,
+			"new" => $mail->new,
+			"response" => $mail->response,
+		];
+		
+		$response = (object) [
+			"error"    => true,
+			"record" => $entrega
+		];
+		
+		if($mail->id > 0){
+			$response->error = false;
+		}
+		
+		header("Content-type:application/json");
+		echo json_encode($response);
+		return json_encode($response);
+	}
+	
+	// Manejador de Body para Email = iframe
+	public function actionMy_email_body(){
+		$box = !isset($_GET['ref']) ? null : $_GET['ref'];
+		$email_id = !isset($_GET['email_id']) ? null : $_GET['email_id'];
+		$model = new Email($this->adapter);
+        if (!isset($box) || $box < 0){ $this->goHome(); }
+		$model->getById($email_id);
+		$date = new DateText($model->date);
+		$message = ($model->message);
+		if(SiteController::isHTML($message) == true){
+			header("text/html; charset=UTF-8");
+			echo "<style>"
+				."html { zoom: 0.85 !important;overflow: auto; }\n"
+			."</style>";
+		} else {
+			header("Content-Type: text/plain; charset=UTF-8");
+			// header("text/plain; charset=UTF-8");
+			$message = str_replace(["\n"], ['<br />'], $message);
+		}
+		// $message = preg_replace("/^http:/i", "https:", $message);
+		#$arr1 = ["/href=\"http:/", "/target=(.*)/"];
+		#$arr2 = ["href=\"https:", "target=\"_blancko\""];
+		
+		$arr1 = ["/href=\"http:/"];
+		$arr2 = ["href=\"https:"];
+		$message = preg_replace($arr1, $arr2, $message);
+		$arr1 = ["/href=\"http:/"];
+		$arr2 = ["href=\"https:"];
+		$message = preg_replace($arr1, $arr2, $message);
+		
+		$message = utf8_decode(utf8_encode($message));
+		echo  ($message);
+		return $message;
+	}
+	
 	// Manejador de Permisos PHP LISTA
 	public function actionAdminPermissionsList(){
         if ($this->isGuest){ $this->goHome(); }

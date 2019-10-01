@@ -43,9 +43,9 @@ class Url{
 		$attributes_str = "";
 		$attributes['href'] = Url::to($url);
 		foreach ($attributes as $key => $val) {
-			$attributes_str .= ' ' . $key . '="' . $val . '"';
+			$attributes_str .= ' ' . ($key) . '="' . $val . '"';
 		}
-		return '<a' . Url::tag_class($styles) . $attributes_str . '>' . $content . '</a>' . "\n";
+		return '<a' . Url::tag_class($styles) . urldecode($attributes_str) . '>' . $content . '</a>' . "\n";
 	}
 
 	/** 

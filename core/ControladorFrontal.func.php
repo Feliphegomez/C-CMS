@@ -128,3 +128,4 @@ function cortar_string($string, $largo) {
    } 
    return $string;
 }
+
