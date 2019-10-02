@@ -56,20 +56,9 @@
 								foreach($mailBoxes as $box){
 									$box = is_array($box) ? (object) $box : $box;
 									
-									$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/inbox"]], 
+									$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/folder/inbox"]], 
 										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label
 									, ['sub_menu']);
-									/*
-									$boxes_html[] = PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-										. PHPStrap\Util\Html::ul([
-											FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'not_seen']], 'Sin Leer', ['sub_menu'])
-											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'inbox']], 'Bandeja Entrada', ['sub_menu'])
-											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'seen']], 'Leidos', ['sub_menu'])
-											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'trash']], 'Papelera', ['sub_menu'])
-											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id, 'folder' => 'draft']], 'Borradores', ['sub_menu'])
-											, FelipheGomez\Url::a(['site/my_email', ['ref' => $box->id]], 'Todo', ['sub_menu'])
-									], ['nav child_menu']);
-									*/
 								}
 							}
 							// Sistema
@@ -118,7 +107,10 @@
 							// Mis correos
                             $menu_section_emails = ($this->checkPermission('my:emails') == true) ? (PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('h3', 'Mis correos')
-                                . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
+                                . PHPStrap\Util\Html::ul([
+									PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope-o"]) . "Mis Correos" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
+										. PHPStrap\Util\Html::ul($boxes_html, ['nav child_menu'])
+								], ['nav side-menu'])
                             , ['menu_section'])) : "";
 							
                             echo PHPStrap\Util\Html::tag('div', 
@@ -166,12 +158,10 @@
 							$myEmailsPendings = new Email($this->adapter);
 							$mails = $myEmailsPendings->loadMailsPending($mailBoxes);
 							$html_mail = "";
-							foreach($mails as $mail){
+							foreach(array_reverse($mails) as $mail){
 								$html_mail .= PHPStrap\Util\Html::tag('li', 
-									
-								
 									FelipheGomez\Url::a(
-										['site/my_email', ["V" => "#/{$mail->box}/not_seen/view/{$mail->id}-0"]]
+										['site/my_email', ["V" => "#/{$mail->box}/folder/not_seen/view/{$mail->id}-0"]]
 										, # PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
 												PHPStrap\Util\Html::tag('span', 
 														#PHPStrap\Util\Html::tag('span', $mail->from)

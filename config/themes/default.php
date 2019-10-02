@@ -431,6 +431,10 @@ return [
                     'type' => 'script',
                     'file' => '/vendors/fullcalendar/3.1.0/dist/lang-all.js', // fullcalendar
                 ],*/
+                [
+                    'type' => 'script',
+                    'file' => 'https://cdn.tiny.cloud/1/86bdm4wz6s6i3vb1ja8m19wt904rgmypspgr60gmdcw4a5wz/tinymce/5/tinymce.min.js', // Scripts DEMO
+                ],
             ],
             'footer_scripts' => [
                 [

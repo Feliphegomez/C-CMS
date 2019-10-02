@@ -66,25 +66,30 @@ class SiteController extends ControladorBase{
 			$filter = !isset($_REQUEST['folder']) ? 'default' : $_REQUEST['folder'];
 			$folders = [
 				'inbox' => [
+					'status' => 'read',
 					'seen' => 0,
 					'draft' => 0,
 					'deleted' => 0
 				],
 				'seen' => [
+					'status' => 'read',
 					'seen' => 1,
 					'draft' => 0,
 					'deleted' => 0
 				],
 				'not_seen' => [
+					'status' => 'unread',
 					'seen' => 0,
 					'draft' => 0,
 					'deleted' => 0
 				],
 				'trash' => [
+					'status' => 'read',
 					'seen' => 0,
 					'deleted' => 1
 				],
 				'draft' => [
+					'status' => 'read',
 					'seen' => 0,
 					'draft' => 1,
 					'deleted' => 0
@@ -585,7 +590,12 @@ class SiteController extends ControladorBase{
 	public function actionMy_email_id(){
         if ($this->isGuest){ $this->goHome(); }
 		$mailBoxes = ($this->user->getEmailBoxes());
-		for($i = 0; $i < count($mailBoxes); $i++){ if($mailBoxes[$i]['enable'] == true){ $mailBoxes = $mailBoxes[$i]['id']; break; } }
+		for($i = 0; $i < count($mailBoxes); $i++){
+			if($mailBoxes[$i]->actived == true){
+				$mailBoxes = $mailBoxes[$i]->id;
+				break; 
+			}
+		}
 		$box = !isset($_GET['ref']) ? isset($mailBoxes) ? $mailBoxes : 0 : $_GET['ref'];
 		$email_id = !isset($_GET['message_id']) ? 0 : $_GET['message_id'];
         if (!isset($box) || $box < 0){ $this->goHome(); }

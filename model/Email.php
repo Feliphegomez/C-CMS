@@ -233,7 +233,7 @@ class Email extends EntidadBase {
 		
 		$filtros = [];
 		foreach($params as $k=>$v){
-			$v = is_array($v) ? implode("','", $v) : json_encode($v);
+			$v = is_array($v) ? implode("','", $v) : is_string($v) ? $v: json_encode($v);
 			$filtros[] = "{$k}='{$v}'";
 		}
 		$sql = "UPDATE {$this->getTableUse()} SET " . implode(',', $filtros) . " WHERE id='{$this->id}'";

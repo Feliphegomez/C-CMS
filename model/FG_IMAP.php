@@ -192,9 +192,12 @@ class FG_IMAP extends EntidadBase{
 			
 		foreach($files as $attachment){
 			$attachment['id'] = str_replace(["<", ">"], "", $attachment['id']);			
-			$filename = isset($attachment['name']) && $attachment['name'] !== "" ? ($attachment['name']) : isset($attachment['filename']) && $attachment['filename'] !== "" ? ($attachment['filename']) : FG_IMAP::randomString();
-			$filename = $filename !== "" ? ($filename) : FG_IMAP::randomString();
-			$name = FG_IMAP::decodeMimeStr($filename);
+			$name = isset($attachment['name']) && $attachment['name'] !== "" ? ($attachment['name']) : null;
+			$filename = isset($attachment['filename']) && $attachment['filename'] !== "" ? ($attachment['filename']) : null;
+			$name = ($name !== null) ? FG_IMAP::decodeMimeStr($name) : ($filename !== null) ? FG_IMAP::decodeMimeStr($filename) : FG_IMAP::randomString();
+			$filename = ($filename);
+			
+			
 			$folderSrv = (dirname(__DIR__)) . "/public/attachments/{$this->parameters->host}/{$this->parameters->user}/{$year}-{$mouth}-{$day}/{$email}/";
 			$folderPub = "/public/attachments/{$this->parameters->host}/{$this->parameters->user}/{$year}-{$mouth}-{$day}/{$email}/";
 			$path_srv = $folderSrv . $name;
@@ -281,6 +284,15 @@ class FG_IMAP extends EntidadBase{
 			
 			$replaces[] = "cid:{$attachment->targetFile}";
 			$replaces_to[] = $attachment->path_short;
+			
+			if(isset($attachment->name)){
+				$replaces[] = "{$attachment->name}";
+				$replaces_to[] = $attachment->path_short;
+			}
+			if(isset($attachment->filename)){
+				$replaces[] = "{$attachment->filename}";
+				$replaces_to[] = $attachment->path_short;
+			}
 			
 			if($attachment->id > 0){
 				$attachments_finish[] = $attachment;

@@ -34,17 +34,13 @@ foreach($mailBoxes as $mailBox){
 	echo " - - - - - - - - - - - - \n";
 	$imap = new FG_IMAP($mailBox, $adapter);
 	if($imap->isValid() !== false){
-		#$emails = $imap->searchBy('SINCE '. date('d-M-Y',strtotime("-1 day")));
-		$emails = $imap->searchBy('UNSEEN');
-		# $emails = $imap->searchBy('ALL');
-		
+		$emails = $imap->searchBy(TYPE_SYNC_EMAILS);	
 		
 		$total_search = (count($emails));
 		echo "{$total_search} Encontrado(s)\n";
 		if($total_search > 0){
 			// Correo
 			foreach(array_reverse($emails) as $email){
-				echo json_encode($email);
 				$mail = $imap->getMail($email);
 				#$mail = $imap->getMail(674);
 				#echo "message_id: {$mail->message_id}\n";
