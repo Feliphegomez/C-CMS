@@ -133,6 +133,11 @@ return [
                     'type' => 'script',
                     'file' => 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js', // axios
                 ],
+				/*
+                [
+                    'type' => 'stylesheet',
+                    'file' => '/vendors/tinymce/custom/skin.min.css', // Custom Theme Style
+                ],*/
 				/* Footer */
                 [
                     'type' => 'script',

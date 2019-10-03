@@ -1485,102 +1485,122 @@ ul {
 					success(div);
 				  });
 				};
-
+				
 				tinymce.init({
-				  selector: 'textarea#editor-message',
-				  //plugins: 'print preview fullpage powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable help formatpainter permanentpen pageembed charmap tinycomments mentions quickbars linkchecker emoticons',
-				  plugins: 'print preview fullpage casechange importcss searchreplace autolink directionality advcode'
-				  + 'fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists'
-				  + 'checklist wordcount tinymcespellchecker a11ychecker imagetools textpattern noneditable formatpainter permanentpen pageembed charmap'
-				  + 'quickbars linkchecker emoticons',
-				  imagetools_cors_hosts: ['picsum.photos'],
-				  tinydrive_token_provider: function (success, failure) {
-					success({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.Ks_BdfH4CWilyzLNk8S2gDARFhuxIauLa8PwhdEQhEo' });
-				  },
-				  tinydrive_demo_files_url: '/docs/demo/tiny-drive-demo/demo_files.json',
-				  tinydrive_dropbox_app_key: 'jee1s9eykoh752j',
-				  tinydrive_google_drive_key: 'AIzaSyAsVRuCBc-BLQ1xNKtnLHB3AeoK-xmOrTc',
-				  tinydrive_google_drive_client_id: '748627179519-p9vv3va1mppc66fikai92b3ru73mpukf.apps.googleusercontent.com',
-				  menubar: 'file edit view insert format tools table',
-				  toolbar: 'undo template redo '
-				  + '| bold italic underline strikethrough '
-				  + '| fontselect fontsizeselect formatselect '
-				  + '| alignleft aligncenter alignright alignjustify '
-				  + '| outdent indent '
-				  + '| numlist bullist checklist '
-				  + '| forecolor backcolor casechange permanentpen formatpainter removeformat '
-				  + '| pagebreak '
-				  + '| charmap emoticons '
-				  + '| fullscreen  preview save print '
-				  + '| insertfile image media pageembed link anchor codesample '
-				  + '| a11ycheck ltr rtl',
-				  autosave_ask_before_unload: true,
-				  autosave_interval: "30s",
-				  autosave_prefix: "{path}{query}-{id}-",
-				  autosave_restore_when_empty: false,
-				  autosave_retention: "2m",
-				  image_advtab: true,
-				  content_css: [
-					'//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-					'//www.tiny.cloud/css/codepen.min.css'
-				  ],
-				  link_list: [
-					{ title: 'My page 1', value: 'http://www.tinymce.com' },
-					{ title: 'My page 2', value: 'http://www.moxiecode.com' }
-				  ],
-				  image_list: [
-					{ title: 'My page 1', value: 'http://www.tinymce.com' },
-					{ title: 'My page 2', value: 'http://www.moxiecode.com' }
-				  ],
-				  image_class_list: [
-					{ title: 'None', value: '' },
-					{ title: 'Some class', value: 'class-name' }
-				  ],
-				  importcss_append: true,
-				  height: 400,
-				  file_picker_callback: function (callback, value, meta) {
-					/* Provide file and text for the link dialog */
-					if (meta.filetype === 'file') {
-					  callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
-					}
-
-					/* Provide image and alt text for the image dialog */
-					if (meta.filetype === 'image') {
-					  callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
-					}
-
-					/* Provide alternative source and posted for the media dialog */
-					if (meta.filetype === 'media') {
-					  callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
-					}
-				  },
-				  templates: [
-						{ title: 'Register', description: 'register', url: '/templates/mails/register.php' },
-						{ title: 'signature-0001', description: '', url: '/templates/mails/signature-0001.html' },
-						{ title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
-						{ title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
-						{ title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+					selector: 'textarea#editor-message',
+					themes: 'advanced',
+					height: 550,
+					elementpath: false,
+					paste_as_text: true,
+					powerpaste_allow_local_images: false,
+					plugins: [
+						'fullpage template importcss preview image imagetools advcode colorpicker media table powerpaste',
+						'advlist autolink lists link charmap print preview anchor textcolor',
+						'searchreplace visualblocks fullscreen',
+						'insertdatetime contextmenu help wordcount'
 					],
-				  template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
-				  template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
-				  height: 600,
-				  image_caption: true,
-				  quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-				  noneditable_noneditable_class: "mceNonEditable",
-				  toolbar_drawer: 'sliding',
-				  spellchecker_dialog: true,
-				  spellchecker_whitelist: ['Ephox', 'Moxiecode'],
-				  tinycomments_mode: 'embedded',
-				  content_style: ".mymention{ color: green; }",
-				  contextmenu: "link image imagetools table configurepermanentpen",
-				  mentions_selector: '.mymention',
-				  mentions_fetch: mentions_fetch,
-				  mentions_menu_hover: mentions_menu_hover,
-				  mentions_menu_complete: mentions_menu_complete,
-				  mentions_select: mentions_select,
-				  //language: 'ES_MX'
-				  //language: 'advanced'
-				 });
+					/*
+					external_plugins: {
+						'powerpaste': 'http://www.server.com/application/external_plugins/powerpaste/plugin.js'
+					},*/
+					powerpaste_word_import: "clean",
+					powerpaste_html_import: "merge",
+					image_advtab: true,
+					visualblocks_default_state: true,
+					end_container_on_empty_block: true,
+					importcss_append: true,
+					menubar: "format edit tools table",
+					aste_postprocess: function(editor, fragment) {
+						// Fragment is a DocumentFragment node containing the DOM structure of the pasted content,
+						// after it has been filtered by the PowerPaste plugin.
+						var textnode = document.createTextNode("Added Text");
+						// Modify the fragment via the argument - do not return a value!
+						fragment.node.appendChild(textnode);
+					},
+					toolbar: 
+						'fullpage visualblocks template code preview | '
+						+ 'pastetext undo redo | styleselect formatselect removeformat | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | insert link image imagetools'
+						+'| bullist numlist outdent indent | help',
+					content_css: [
+						//'/templates/mails/style01.css'
+					],
+					templates: [
+						{ title: 'Registro', description: 'register', url: '/templates/mails/register.php' },
+						{ title: 'Signature-0001', description: '', url: '/templates/mails/signature-0001.html' },
+						{ title: 'Tabla', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+						{ title: 'Lista con fechas', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>Mi Lista</h2><ul><li></li><li></li></ul></div>' },
+						
+						
+						{ title: 'Abacus (Blog)', description: '', url: '/templates/mails/FG-abacus-blog.html' },
+						{ title: 'Abacus (Product)', description: '', url: '/templates/mails/FG-abacus-product.html' },
+						{ title: 'Abacus (Re-opt-in)', description: '', url: '/templates/mails/FG-abacus-re-opt-in.html' },
+						{ title: 'Abacus (Transactional)', description: '', url: '/templates/mails/FG-abacus-transactional.html' },
+						{ title: 'Cerberus (Fluid)', description: '', url: '/templates/mails/FG-cerberus-fluid.html' },
+						{ title: 'Cerberus (Hybrid)', description: '', url: '/templates/mails/FG-cerberus-hybrid.html' },
+						{ title: 'Cerberus (InLine)', description: '', url: '/templates/mails/FG-cerberus-responsive.html' },
+						{ title: 'Email (InLine)', description: '', url: '/templates/mails/FG-email-inlined.html' },
+						{ title: 'Email', description: '', url: '/templates/mails/FG-email.html' },
+						{ title: 'Email Marketing', description: '', url: '/templates/mails/FG-HTML-Email-Marketing-Template.html' },
+						{ title: 'Karakil (Blog)', description: '', url: '/templates/mails/FG-karakol-blog.html' },
+						{ title: 'Karakil (Product)', description: '', url: '/templates/mails/FG-karakol-product.html' },
+						{ title: 'Karakil (Transactional)', description: '', url: '/templates/mails/FG-karakol-transactional.html' },
+						{ title: 'plain re opt-in', description: '', url: '/templates/mails/FG-plain-re-opt-in.html' },
+						{ title: 'Responsive Email', description: '', url: '/templates/mails/FG-responsive-html-email-template.html' },
+						{ title: 'Single Column', description: '', url: '/templates/mails/FG-single-column.html' },
+						{ title: 'Email Marketing', description: '', url: '/templates/mails/FG-Template-Email-Marketing.html' },
+						{ title: '', description: '', url: '/templates/mails/FG-three-cols-images.html' },
+						{ title: '', description: '', url: '/templates/mails/FG-two-cols-simple.html' },
+						{ title: '', description: '', url: '/templates/mails/FG-wayfair-blog.html' },
+						{ title: '', description: '', url: '/templates/mails/FG-wayfair-newsletter.html' },
+						{ title: '', description: '', url: '/templates/mails/FG-wayfair-transactional.html' },
+					],
+					template_cdate_format: '[Fecha de Creacion (CDATE): %m/%d/%Y : %H:%M:%S]',
+					template_mdate_format: '[Fecha de Modificación (MDATE): %m/%d/%Y : %H:%M:%S]',
+					code_dialog_height: 200,
+					// importcss_file_filter: "/templates/mails/style01.css",
+					fullpage_default_doctype: "<!DOCTYPE html>",
+					fullpage_default_encoding: "UTF-8",
+					fullpage_default_font_size: "12px",
+					fullpage_fontsizes : '13px,14px,15px,18pt,xx-large',
+					fullpage_default_font_family: "'Times New Roman', Georgia, Serif;",
+					fullpage_default_langcode: "es-CO",
+					fullpage_default_title: "Monteverde",
+					// fullpage_default_text_color: "blue",
+					//fullpage_hide_in_source_view: true,
+					style_formats: [
+						{
+							title: 'Headers',
+							items: [
+								{ title: 'h1', block: 'h1' },
+								{ title: 'h2', block: 'h2' },
+								{ title: 'h3', block: 'h3' },
+								{ title: 'h4', block: 'h4' },
+								{ title: 'h5', block: 'h5' },
+								{ title: 'h6', block: 'h6' }
+							]
+						},
+						{
+							title: 'Blocks',
+							items: [
+								{ title: 'p', block: 'p' },
+								{ title: 'div', block: 'div' },
+								{ title: 'pre', block: 'pre' }
+							]
+						},
+						{
+							title: 'Containers',
+							items: [
+								{ title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+								{ title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+								{ title: 'blockquote', block: 'blockquote', wrapper: true },
+								{ title: 'hgroup', block: 'hgroup', wrapper: true },
+								{ title: 'aside', block: 'aside', wrapper: true },
+								{ title: 'figure', block: 'figure', wrapper: true }
+							]
+						}
+					],
+				});
+				
 			}
 		},
 	});
