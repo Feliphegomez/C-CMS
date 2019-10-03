@@ -822,47 +822,11 @@ ul {
 		</div>
 		<div class="inbox-body">
 			<div class="mail-option">
-				<div class="btn-group">
+				<div class="btn-group pull-right">
 					<router-link :to="{ name: 'Home', params: { box_id: $route.params.box_id, folder: 'inbox' } }" tag="a" class="btn mini blue" aria-expanded="false" type="button">
 						<i class=" fa fa-times"></i>
 					</router-link>
 				</div>
-				
-				<div class="btn-group hidden-phone">
-					<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
-						More
-						<i class="fa fa-angle-down "></i>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-						<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-						<li class="divider"></li>
-						<li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-					 </ul>
-				</div>
-				<div class="btn-group">
-					<a @click="printMail()" class="btn mini blue" aria-expanded="false" type="button">
-						<i class="fa fa-floppy-o"></i> Guardar
-					</a>
-				</div>
-				<div class="btn-group">
-					<a @click="printMail()" class="btn mini blue" aria-expanded="false" type="button">
-						<i class="fa fa-send"></i>  Enviar
-					</a>
-				</div>
-				
-				
-				<!-- //
-				<ul class="unstyled inbox-pagination">
-					 <li><span>1-50 of 234</span></li>
-					 <li>
-						 <a class="np-btn" href="#"><i class="fa fa-angle-left  pagination-left"></i></a>
-					 </li>
-					 <li>
-						 <a class="np-btn" href="#"><i class="fa fa-angle-right pagination-right"></i></a>
-					 </li>
-				</ul>
-				-->
 			</div>
 			<div class="mail-option">
 			</div>
@@ -870,19 +834,23 @@ ul {
 		<div class="inbox-body">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12">
-					<form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-						
+					<form id="demo-form2" data-parsley-validate class="form-horizontal-not form-label-left">
 						<div class="form-group">
-							<label class="control-label col-md-2 col-sm-2 col-xs-12" for="compose-to">
+							<div class="col-md-1 col-sm-1 col-xs-2">
+								<a v-if="form.from.length < 5" class="btn btn-sm btn-success" @click="form.from.push({ label: '', address_mail: '' });">
+									<i class="fa fa-plus"></i>
+								</a>
+							</div>
+							<label class="control-label col-md-2 col-sm-2 col-xs-10" for="compose-to">
 								Para: <span class="required">*</span>
 							</label>
-							<div class="col-md-10 col-sm-10 col-xs-12">
+							<div class="col-md-9 col-sm-9 col-xs-12">
 								<div class="col-xs-12" v-for="(from, from_index) in form.from">
 									<div class="col-xs-4">
-										<input required="required" type="text" class="tags form-control" v-model="from.label" />
+										<input required="required" type="text" class="tags form-control" v-model="from.label" placeholder="Nombre(s) y Apellido(s)" />
 									</div>
 									<div class="col-xs-6">
-										<input required="required" type="email" class="tags form-control" v-model="from.address_mail" />
+										<input required="required" type="email" class="tags form-control" v-model="from.address_mail" placeholder="Correo Electronico" />
 									</div>
 									<div class="col-xs-2">
 										<a class="btn btn-sm btn-danger" @click="form.from.splice(from_index, 1)">
@@ -891,41 +859,37 @@ ul {
 									</div>
 									<div class="clearfix"></div>
 								</div>
-								<div class="col-xs-10">
-									<a class="btn btn-sm btn-success pull-right" @click="form.from.push({ label: '', address_mail: '' });">
-										<i class="fa fa-plus"></i>
-									</a>
-								</div>
-								<div class="col-xs-2"></div>
 							</div>
+							<div class="clearfix"><hr /></div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-md-2 col-sm-2 col-xs-12" for="compose-cc">
+							<div class="col-md-1 col-sm-1 col-xs-2">
+								<a v-if="form.CC.length < 5" class="btn btn-sm btn-success" @click="form.CC.push({ label: '', address_mail: '' });">
+									<i class="fa fa-plus"></i>
+								</a>
+							</div>
+							<label class="control-label col-md-2 col-sm-2 col-xs-10" for="compose-cc">
 								Cc / Bcc: <span class="required"></span>
 							</label>
-							<div class="col-md-10 col-sm-10 col-xs-12">
+							<div class="col-md-9 col-sm-9 col-xs-12">
 								<div class="col-xs-12" v-for="(CC, CC_index) in form.CC">
 									<div class="col-xs-4">
-										<input required="required" type="text" class="tags form-control" v-model="CC.label" />
+										<input required="required" type="text" class="tags form-control" v-model="CC.label" placeholder="Nombre(s) y Apellido(s)" />
 									</div>
 									<div class="col-xs-6">
-										<input required="required" type="email" class="tags form-control" v-model="CC.address_mail" />
+										<input required="required" type="email" class="tags form-control" v-model="CC.address_mail" placeholder="Correo Electronico" />
 									</div>
 									<div class="col-xs-2">
-										<a class="btn btn-sm btn-danger" @click="form.CC.splice(from_index, 1)">
+										<a class="btn btn-sm btn-danger" @click="form.CC.splice(from_index, 1);">
 											<i class="fa fa-times"></i>
 										</a>
 									</div>
 									<div class="clearfix"></div>
 								</div>
-								<div class="col-xs-10">
-									<a class="btn btn-sm btn-success pull-right" @click="form.CC.push({ label: '', address_mail: '' });">
-										<i class="fa fa-plus"></i>
-									</a>
-								</div>
-								<div class="col-xs-2"></div>
 							</div>
+							<div class="clearfix"><hr /></div>
 						</div>
+						
 						<div class="form-group">
 							<label class="control-label col-md-2 col-sm-2 col-xs-12" for="compose-subject">
 								Asunto: <span class="required">*</span>
@@ -933,36 +897,30 @@ ul {
 							<div class="col-md-10 col-sm-10 col-xs-12">
 								<input type="text" v-model="form.subject" required="required" class="form-control" />
 							</div>
+							<div class="clearfix"><hr /></div>
 						</div>
-						
 						<div class="ln_solid"></div>
 						
 						<div class="form-group">
 							<div id="alerts"></div>
 							<textarea v-model="form.message" name="editor-message" id="editor-message"></textarea>
+							<div class="clearfix"><hr /></div>
 						</div>
 						<div class="ln_solid"></div>
+						<div class="clearfix"></div>
 						
-
-					  <div class="form-group">
-						  <div class="col-lg-offset-2 col-lg-10">
-							  <span class="btn green fileinput-button">
-								<i class="fa fa-plus fa fa-white"></i>
-								<span>Attachment</span>
-								<input type="file" name="files[]" multiple="">
-							  </span>
-							  <button class="btn btn-send" type="submit">Send</button>
-						  </div>
-					  </div>
-					  <div class="ln_solid"></div>
-					  <div class="form-group">
-						<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-						  <button class="btn btn-primary" type="button">Cancel</button>
-						  <button class="btn btn-primary" type="reset">Reset</button>
-						  <button type="submit" class="btn btn-success">Submit</button>
+						<div class="form-group">
+							<div class="col-lg-offset-2 col-lg-10">
+								<span class="btn green fileinput-button">
+									<i class="fa fa-plus fa fa-white"></i>
+									<span>Adjuntar Archivo(s)</span>
+									<input type="file" name="files[]" multiple="">
+								</span>
+								<button class="btn btn-send" type="submit">Enviar</button>
+							</div>
+							<div class="clearfix"></div>
 						</div>
-					  </div>
-
+						<div class="clearfix"></div>
 					</form>
 					
 			  </div>
@@ -1489,12 +1447,16 @@ ul {
 				tinymce.init({
 					selector: 'textarea#editor-message',
 					themes: 'advanced',
-					height: 550,
+					height: 'calc(80vh)',
 					elementpath: false,
 					paste_as_text: true,
 					powerpaste_allow_local_images: false,
+					image_title: true,
+					convert_urls: true,
+					automatic_uploads: true,
+					file_picker_types: 'image',
 					plugins: [
-						'fullpage template importcss preview image imagetools advcode colorpicker media table powerpaste',
+						'fullpage save template importcss preview image imagetools advcode colorpicker media table powerpaste',
 						'advlist autolink lists link charmap print preview anchor textcolor',
 						'searchreplace visualblocks fullscreen',
 						'insertdatetime contextmenu help wordcount'
@@ -1506,7 +1468,7 @@ ul {
 					powerpaste_word_import: "clean",
 					powerpaste_html_import: "merge",
 					image_advtab: true,
-					visualblocks_default_state: true,
+					visualblocks_default_state: false,
 					end_container_on_empty_block: true,
 					importcss_append: true,
 					menubar: "format edit tools table",
@@ -1518,19 +1480,26 @@ ul {
 						fragment.node.appendChild(textnode);
 					},
 					toolbar: 
-						'fullpage visualblocks template code preview | '
-						+ 'pastetext undo redo | styleselect formatselect removeformat | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | insert link image imagetools'
+						'fullpage visualblocks template code preview save | '
+						+ 'insertfile pastetext undo redo | styleselect formatselect removeformat | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | insert link image imagetools'
 						+'| bullist numlist outdent indent | help',
 					content_css: [
 						//'/templates/mails/style01.css'
 					],
+					save_enablewhendirty: true,
+					save_oncancelcallback: function () {
+						console.log('Save canceled');
+					},
+					save_onsavecallback: function () {
+						console.log('Saved');
+						message = tinyMCE.activeEditor.getContent();
+						doc = tinyMCE.activeEditor.getDoc();
+						console.log('message', message);
+						console.log('doc', doc);
+					},					
 					templates: [
-						{ title: 'Registro', description: 'register', url: '/templates/mails/register.php' },
-						{ title: 'Signature-0001', description: '', url: '/templates/mails/signature-0001.html' },
-						{ title: 'Tabla', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+						{ title: 'Tabla Sencilla', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
 						{ title: 'Lista con fechas', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>Mi Lista</h2><ul><li></li><li></li></ul></div>' },
-						
-						
 						{ title: 'Abacus (Blog)', description: '', url: '/templates/mails/FG-abacus-blog.html' },
 						{ title: 'Abacus (Product)', description: '', url: '/templates/mails/FG-abacus-product.html' },
 						{ title: 'Abacus (Re-opt-in)', description: '', url: '/templates/mails/FG-abacus-re-opt-in.html' },
@@ -1546,17 +1515,18 @@ ul {
 						{ title: 'Karakil (Transactional)', description: '', url: '/templates/mails/FG-karakol-transactional.html' },
 						{ title: 'plain re opt-in', description: '', url: '/templates/mails/FG-plain-re-opt-in.html' },
 						{ title: 'Responsive Email', description: '', url: '/templates/mails/FG-responsive-html-email-template.html' },
-						{ title: 'Single Column', description: '', url: '/templates/mails/FG-single-column.html' },
-						{ title: 'Email Marketing', description: '', url: '/templates/mails/FG-Template-Email-Marketing.html' },
-						{ title: '', description: '', url: '/templates/mails/FG-three-cols-images.html' },
-						{ title: '', description: '', url: '/templates/mails/FG-two-cols-simple.html' },
-						{ title: '', description: '', url: '/templates/mails/FG-wayfair-blog.html' },
-						{ title: '', description: '', url: '/templates/mails/FG-wayfair-newsletter.html' },
-						{ title: '', description: '', url: '/templates/mails/FG-wayfair-transactional.html' },
+						{ title: 'Columna Sencilla', description: '', url: '/templates/mails/FG-single-column.html' },
+						{ title: 'Correo Marketing', description: '', url: '/templates/mails/FG-Template-Email-Marketing.html' },
+						{ title: '3 Columnas con imagenes', description: '', url: '/templates/mails/FG-three-cols-images.html' },
+						{ title: '2 Columnas simples', description: '', url: '/templates/mails/FG-two-cols-simple.html' },
+						{ title: 'Wayfair (Blog)', description: '', url: '/templates/mails/FG-wayfair-blog.html' },
+						{ title: 'Wayfair (Newsletter)', description: '', url: '/templates/mails/FG-wayfair-newsletter.html' },
+						{ title: 'Wayfair (Transactional)', description: '', url: '/templates/mails/FG-wayfair-transactional.html' },
+						{ title: 'Registro', description: 'register', url: '/templates/mails/register.php' },
 					],
 					template_cdate_format: '[Fecha de Creacion (CDATE): %m/%d/%Y : %H:%M:%S]',
 					template_mdate_format: '[Fecha de Modificación (MDATE): %m/%d/%Y : %H:%M:%S]',
-					code_dialog_height: 200,
+					//code_dialog_height: 200,
 					// importcss_file_filter: "/templates/mails/style01.css",
 					fullpage_default_doctype: "<!DOCTYPE html>",
 					fullpage_default_encoding: "UTF-8",
@@ -1566,7 +1536,7 @@ ul {
 					fullpage_default_langcode: "es-CO",
 					fullpage_default_title: "Monteverde",
 					// fullpage_default_text_color: "blue",
-					//fullpage_hide_in_source_view: true,
+					fullpage_hide_in_source_view: true,
 					style_formats: [
 						{
 							title: 'Headers',
@@ -1599,6 +1569,41 @@ ul {
 							]
 						}
 					],
+					file_picker_callback: function(cb, value, meta) {
+						var input = document.createElement('input');
+						input.setAttribute('type', 'file');
+						input.setAttribute('accept', 'image/*');
+						
+						// Note: In modern browsers input[type="file"] is functional without 
+						// even adding it to the DOM, but that might not be the case in some older
+						// or quirky browsers like IE, so you might want to add it to the DOM
+						// just in case, and visually hide it. And do not forget do remove it
+						// once you do not need it anymore.
+
+						input.onchange = function() {
+						  var file = this.files[0];
+						  
+						  var reader = new FileReader();
+						  reader.onload = function () {
+							// Note: Now we need to register the blob in TinyMCEs image blob
+							// registry. In the next release this part hopefully won't be
+							// necessary, as we are looking to handle it internally.
+							var id = 'blobid' + (new Date()).getTime();
+							var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+							var base64 = reader.result.split(',')[1];
+							var blobInfo = blobCache.create(id, file, base64);
+							blobCache.add(blobInfo);
+
+							// call the callback and populate the Title field with the file name
+							cb(blobInfo.blobUri(), { title: file.name });
+						  };
+						  reader.readAsDataURL(file);
+						};
+						
+						input.click();
+					  },
+
+
 				});
 				
 			}

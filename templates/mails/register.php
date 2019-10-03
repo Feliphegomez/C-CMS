@@ -102,9 +102,11 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
                                     <td bgcolor="#ffffff" width="100" align="left">
-										<a >
-											<img alt="Logo" src="https://micuenta.monteverdeltda.com/templates/mails/images/logo-monteverde.png" width="52" height="78" style="display: block; font-family: Helvetica, Arial, sans-serif; color: #666666; font-size: 16px;" border="0" />
-										</a>
+										<center>
+											<a>
+												<img alt="Logo" src="https://micuenta.monteverdeltda.com/templates/mails/images/logo-monteverde.png" width="90" height="auto" style="display: block; font-family: Helvetica, Arial, sans-serif; color: #666666; font-size: 16px;" border="0" />
+											</a>
+										</center>
 									</td>
                                     <td bgcolor="#ffffff" width="400" align="right" class="mobile-hide">
                                         <table border="0" cellpadding="0" cellspacing="0">
