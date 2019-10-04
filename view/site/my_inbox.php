@@ -1536,7 +1536,7 @@ ul {
 					fullpage_default_langcode: "es-CO",
 					fullpage_default_title: "Monteverde",
 					// fullpage_default_text_color: "blue",
-					fullpage_hide_in_source_view: true,
+					//fullpage_hide_in_source_view: true,
 					style_formats: [
 						{
 							title: 'Headers',

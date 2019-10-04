@@ -7,8 +7,6 @@
  *
  * ******************************/
 
-
-
 // Funciones para correo electronico
 function getBody($uid, $imap){
 	$body = get_part($imap, $uid, "TEXT/HTML");
@@ -81,7 +79,9 @@ class FG_IMAP extends EntidadBase{
 			$this->parameters = $parameters;
 			$parameters = is_array($parameters) ? (object) $parameters : $parameters;
 			$this->host = "{{$parameters->host}:{$parameters->port}/imap{$parameters->args_add}}";
-			$this->imap = @imap_open($this->host, $parameters->user, $parameters->pass);
+			$this->imap = @imap_open($this->host, $parameters->user, $parameters->pass
+				#, NULL, 1, ['DISABLE_AUTHENTICATOR' => 'PLAIN']
+			);
 			if($this->imap !== false){ $this->is_valid = true; }
 		}
 	}
