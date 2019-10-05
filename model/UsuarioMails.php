@@ -16,6 +16,7 @@ class UsuarioMails extends ModeloBase{
 	public function __sleep(){
 		return ['boxes'];
 	}
+	
 	public function __toString(){
 		return json_encode($this->boxes);
 	}
@@ -27,16 +28,9 @@ class UsuarioMails extends ModeloBase{
 				$email = new EmailBox($this->adapter);
 				$email->getById($item->email);
 				if(isset($email->id)){
-					/*$this->boxes[] = [
-						'id' 	=> $email->id,
-						'label' 	=> $email->label,
-						'port'	=> $email->actived == 1 ? true : false,
-						'enable'	=> $email->port,
-						'args_add'	=> $email->args_add,
-						// 'mailbox' 	=> "{{$email->host}:{$email->port}{$email->args_add}}INBOX",
-						'username' 	=> "{$email->user}",
-						'password' 	=> "{$email->pass}"
-					];*/
+					if(is_object($email)){ $email->send_enabled = $item->send_enabled; }
+					if(is_array($email)){ $email['send_enabled'] = $item->send_enabled; }
+					
 					$this->boxes[] = $email;
 				}
 			}

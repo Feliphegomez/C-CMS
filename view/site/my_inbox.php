@@ -403,7 +403,7 @@ ul {
 				
 			</div>
 			<div class="inbox-body">
-				<router-link v-bind:to="{ name: 'Compose', params: { box_id: myBox.id } }" tag="a" class="btn btn-compose">
+				<router-link v-if="myBox.send_enabled === 1" v-bind:to="{ name: 'Compose', params: { box_id: myBox.id } }" tag="a" class="btn btn-compose">
 					Redactar
 				</router-link>
 			</div>
@@ -834,7 +834,15 @@ ul {
 		<div class="inbox-body">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12">
-					<form id="demo-form2" data-parsley-validate class="form-horizontal-not form-label-left">
+					{{ form }}
+				</div>
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<form 
+						@submit="validateMail"
+						method="POST"
+						action="javascript:return false;" 
+						id="create-mail"
+						class="form-horizontal-not form-label-left">
 						<div class="form-group">
 							<div class="col-md-1 col-sm-1 col-xs-2">
 								<a v-if="form.from.length < 5" class="btn btn-sm btn-success" @click="form.from.push({ label: '', address_mail: '' });">
@@ -892,10 +900,10 @@ ul {
 						
 						<div class="form-group">
 							<label class="control-label col-md-2 col-sm-2 col-xs-12" for="compose-subject">
-								Asunto: <span class="required">*</span>
+								Asunto: <span class="required"></span>
 							</label>
 							<div class="col-md-10 col-sm-10 col-xs-12">
-								<input type="text" v-model="form.subject" required="required" class="form-control" />
+								<input type="text" v-model="form.subject" class="form-control" />
 							</div>
 							<div class="clearfix"><hr /></div>
 						</div>
@@ -922,7 +930,6 @@ ul {
 						</div>
 						<div class="clearfix"></div>
 					</form>
-					
 			  </div>
 			</div>
 			<div class="clearfix"></div>
@@ -1021,11 +1028,19 @@ ul {
 </div><!-- /.modal -->
 
 <script>
+
+	function excepcionForm(message){
+		var self = this;
+		self.name = "excepcionForm";
+		self.message = message;
+	};
+			
 	const api = axios.create({
 	  baseURL: '/',
 	  timeout: 60000,
 	  headers: {'X-Custom-Header': 'foobar'}
 	});
+	
 	api.interceptors.response.use(function (response) {
 	  if (response.headers['x-xsrf-token']) {
 		document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
@@ -1606,6 +1621,153 @@ ul {
 
 				});
 				
+			},
+			
+			validateMail(){
+				console.log("Validando correo");
+				var self = this;
+				var percent = 0;
+				 var notice = new PNotify({
+					text: 'Please Wait',
+					icon: 'fa fa-spinner fa-pulse',
+					hide: false,
+					shadow: false,
+					width: '200px',
+					styling: "bootstrap3",
+					modules: {
+					  Buttons: {
+						closer: false,
+						sticker: false
+					  }
+					}
+				  });
+				  
+				var form = {};
+				// form.box = 0;
+				form.box = self.$route.params.box_id;
+				
+				try {
+					percent += 7;
+					notice.update({ title: 'Validando cuenta de origen', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+					if(form.box <= 0){ throw new excepcionForm("No existe el remitente o no tienes permisos para enviar con esta cuenta."); }
+					notice.update({ title: 'Cuenta de origen. OK', text: percent + '% completado.', icon: 'fa fa-check', type: 'info' });
+					
+					var delayInMilliseconds = 1000; // 1 Segundo por campo = 1000 Milisegundos
+					
+					var in_process = false;
+					self.form.from.forEach(function(from){
+						setTimeout(function() {
+							percent += 2;
+							notice.update({ title: 'Validando ' + from.label, text: percent + '% completado. se esta revisando la cuenta ' + from.address_mail, icon: 'fa fa-spinner fa-pulse', type: 'info', width: '350px' });
+							
+							if(in_process == false){
+								
+								
+								/*
+								api.get('/index.php', {
+									params: {
+										controller: 'site',
+										action: 'verificar_email',
+										address_mail: from.address_mail,
+									}
+								})
+								.then(function (r) {
+									console.log('r', r);
+									if(r.data.error !== undefined && r.data.error == false){
+										notice.update({
+											title: 'Resultado ' + from.label,
+											text: percent + '% completado. ' + r.data.message,
+											icon: (r.data.error == true) ? 'fa fa-times' : 'fa fa-check',
+											// hide: true,
+											type: (r.data.error == true) ? 'error' : 'success',
+											// shadow: true,
+											width: '25%',
+											// modules: {
+											// 	Buttons: { closer: true, sticker: true }
+											// }
+										});
+									}
+								})
+								.catch(function (error) {
+									console.log(error);
+									
+								});*/
+							}
+						
+						}, delayInMilliseconds);
+					});
+					
+					/*
+					self.form.from.forEach(function(from){
+						// setTimeout(function() {
+							percent += 2;
+							notice.update({ title: 'Validando ' + from.label, text: percent + '% completado. se esta revisando la cuenta ' + from.address_mail, icon: 'fa fa-spinner fa-pulse', type: 'info', width: '350px' });
+							
+							
+							api.get('/index.php', { 
+								params: {
+									controller: 'site',
+									action: 'verificar_email',
+									address_mail: from.address_mail,
+								}
+							})
+							.then(function (r) {
+								console.log('r', r);
+								if(r.data.error !== undefined && r.data.error == false){
+									notice.update({
+										title: 'Resultado ' + from.label,
+										text: percent + '% completado. ' + r.data.message,
+										icon: (r.data.error == true) ? 'fa fa-times' : 'fa fa-check',
+										// hide: true,
+										type: (r.data.error == true) ? 'error' : 'success',
+										// shadow: true,
+										width: '25%',
+										// modules: {
+										// 	Buttons: { closer: true, sticker: true }
+										// }
+									});
+								}
+							})
+							.catch(function (error) {
+								console.log(error);
+								
+							});
+						
+						// }, delayInMilliseconds);
+					});*/
+				} 
+				catch(e){
+					console.log(e);
+					if (e.name === 'excepcionForm') {
+						console.log("Manejar error de Formulario.");
+						console.log(e.message);
+						var options = {};
+						options.error = 'success';
+						options.text = e.message;
+						options.icon = 'fa fa-times';
+						options.hide = true;
+						options.type = 'error';
+						options.shadow = true;
+						options.modules = { Buttons: { closer: true, sticker: true } };
+						notice.update(options);
+						/*
+						  if (percent === 80) {
+							options.title = 'Almost There';
+						  }
+						  if (percent >= 100) {
+							window.clearInterval(interval);
+							options.title = 'Done!';
+							options.type = 'success';
+							options.hide = true;
+							options.shadow = true;
+							options.width = PNotify.defaults.width;
+							options.modules = { Buttons: { closer: true, sticker: true } };
+						  }
+						  */
+					} else {
+						console.log("Manejar otros errores");
+					}
+				}
 			}
 		},
 	});
