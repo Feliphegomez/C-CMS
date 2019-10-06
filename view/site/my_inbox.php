@@ -845,7 +845,7 @@ ul {
 						class="form-horizontal-not form-label-left">
 						<div class="form-group">
 							<div class="col-md-1 col-sm-1 col-xs-2">
-								<a v-if="form.from.length < 5" class="btn btn-sm btn-success" @click="form.from.push({ label: '', address_mail: '' });">
+								<a v-if="form.from.length < 5" class="btn btn-sm btn-success" @click="form.from.push({ label: '', address_mail: '', valid: null });">
 									<i class="fa fa-plus"></i>
 								</a>
 							</div>
@@ -861,6 +861,9 @@ ul {
 										<input required="required" type="email" class="tags form-control" v-model="from.address_mail" placeholder="Correo Electronico" />
 									</div>
 									<div class="col-xs-2">
+										<a class="btn btn-sm btn-info" @click="validateMailAddress('from', from_index)">
+											<i class="fa fa-question"></i>
+										</a>
 										<a class="btn btn-sm btn-danger" @click="form.from.splice(from_index, 1)">
 											<i class="fa fa-times"></i>
 										</a>
@@ -872,7 +875,7 @@ ul {
 						</div>
 						<div class="form-group">
 							<div class="col-md-1 col-sm-1 col-xs-2">
-								<a v-if="form.CC.length < 5" class="btn btn-sm btn-success" @click="form.CC.push({ label: '', address_mail: '' });">
+								<a v-if="form.CC.length < 5" class="btn btn-sm btn-success" @click="form.CC.push({ label: '', address_mail: '', valid: null });">
 									<i class="fa fa-plus"></i>
 								</a>
 							</div>
@@ -888,7 +891,10 @@ ul {
 										<input required="required" type="email" class="tags form-control" v-model="CC.address_mail" placeholder="Correo Electronico" />
 									</div>
 									<div class="col-xs-2">
-										<a class="btn btn-sm btn-danger" @click="form.CC.splice(from_index, 1);">
+										<a class="btn btn-sm btn-info" @click="validateMailAddress('CC', CC_index)">
+											<i class="fa fa-question"></i>
+										</a>
+										<a class="btn btn-sm btn-danger" @click="form.CC.splice(CC_index, 1);">
 											<i class="fa fa-times"></i>
 										</a>
 									</div>
@@ -1028,7 +1034,6 @@ ul {
 </div><!-- /.modal -->
 
 <script>
-
 	function excepcionForm(message){
 		var self = this;
 		self.name = "excepcionForm";
@@ -1210,7 +1215,7 @@ ul {
 				},
 				form: {
 					from: [
-						{ label: 'Ayuda y Soporte Monteverde', address_mail: 'soporte@monteverdeltda.com' },
+						{ label: 'Ayuda y Soporte Monteverde', address_mail: 'soporte@monteverdeltda.com', valid: null },
 					],
 					CC: [],
 					subject: '',
@@ -1622,12 +1627,74 @@ ul {
 				});
 				
 			},
-			
+			validateEmail(email) {
+				var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				return re.test(String(email).toLowerCase());
+			},
+			getValidateEmail(address_mail, callback){
+				var self = this;
+				api.get('/index.php', {
+					params: {
+						controller: 'site',
+						action: 'verificar_email',
+						address_mail: address_mail,
+					}
+				})
+				.then(function (r) {
+					return r.data;					  
+				})
+				.catch(function (error) {
+					if(error.response.data){ return error.response.data; } else { return error.response; };
+				});
+			},
+			// validateMailAddress(address_mail){
+			validateMailAddress(list, index){
+				var self = this;
+				var checkEmail = new PNotify({
+					text: 'Validando ' + self.form[list][index].address_mail,
+					icon: 'fa fa-spinner fa-pulse',
+					hide: false,
+					shadow: false,
+					width: '200px',
+					styling: "bootstrap3",
+				});
+
+				api.get('/index.php', {
+					params: {
+						controller: 'site',
+						action: 'verificar_email',
+						address_mail: self.form[list][index].address_mail,
+					}
+				})
+				.then(function (r) {
+					eCheck = r.data;
+					self.form[list][index].valid = eCheck.error;
+					
+					checkEmail.update({
+						title: "Resultado " + self.form[list][index].address_mail,
+						text: eCheck.message,
+						icon: (eCheck.error == true) ? 'fa fa-times' : 'fa fa-check',
+						hide: true,
+						type: (eCheck.error == true) ? 'error' : 'success',
+						shadow: true,
+						width: '25%',
+						modules: {
+						  Buttons: {
+							closer: false,
+							sticker: false
+						  }
+						}
+					});
+				})
+				.catch(function (error) {
+					console.error(error.response);
+				});
+			},
 			validateMail(){
 				console.log("Validando correo");
 				var self = this;
 				var percent = 0;
-				 var notice = new PNotify({
+				var notice = new PNotify({
 					text: 'Please Wait',
 					icon: 'fa fa-spinner fa-pulse',
 					hide: false,
@@ -1640,7 +1707,7 @@ ul {
 						sticker: false
 					  }
 					}
-				  });
+				});
 				  
 				var form = {};
 				// form.box = 0;
@@ -1653,88 +1720,32 @@ ul {
 					notice.update({ title: 'Cuenta de origen. OK', text: percent + '% completado.', icon: 'fa fa-check', type: 'info' });
 					
 					var delayInMilliseconds = 1000; // 1 Segundo por campo = 1000 Milisegundos
+					var fromTotal = self.form.from.length;
+					var ccTotal = self.form.CC.length;
+					console.log('fromTotal', fromTotal);
+					console.log('ccTotal', ccTotal);
 					
-					var in_process = false;
-					self.form.from.forEach(function(from){
-						setTimeout(function() {
-							percent += 2;
-							notice.update({ title: 'Validando ' + from.label, text: percent + '% completado. se esta revisando la cuenta ' + from.address_mail, icon: 'fa fa-spinner fa-pulse', type: 'info', width: '350px' });
-							
-							if(in_process == false){
-								
-								
-								/*
-								api.get('/index.php', {
-									params: {
-										controller: 'site',
-										action: 'verificar_email',
-										address_mail: from.address_mail,
-									}
-								})
-								.then(function (r) {
-									console.log('r', r);
-									if(r.data.error !== undefined && r.data.error == false){
-										notice.update({
-											title: 'Resultado ' + from.label,
-											text: percent + '% completado. ' + r.data.message,
-											icon: (r.data.error == true) ? 'fa fa-times' : 'fa fa-check',
-											// hide: true,
-											type: (r.data.error == true) ? 'error' : 'success',
-											// shadow: true,
-											width: '25%',
-											// modules: {
-											// 	Buttons: { closer: true, sticker: true }
-											// }
-										});
-									}
-								})
-								.catch(function (error) {
-									console.log(error);
-									
-								});*/
+					for (i = 0; i < fromTotal; i++) { if (self.form.from[i].label.length < 4 || !self.validateEmail(self.form.from[i].address_mail)){ self.form.from.splice(i, 1); } };
+					for (i = 0; i < ccTotal; i++) { if (self.form.CC[i].label.length < 4 || !self.validateEmail(self.form.CC[i].address_mail)){ self.form.CC.splice(i, 1); } };
+					
+					percent += 7;
+					notice.update({ title: 'Validando asunto', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+					selfContinue = self.form.subject == "" ? false : true;
+					if(selfContinue == false){
+						bootbox.confirm({
+							message: "El correo no tiene asunto, deseas continuar?",
+							locale: 'es',
+							callback: function (confirmSubject) {
+								if(confirmSubject == true){
+									self.validateMessageAndSend();
+								}else{
+									notice.update({ title: 'Envio cancelado', text: 'Cancelamos el envio.', icon: 'fa fa-times', type: 'error' });
+								}
 							}
-						
-						}, delayInMilliseconds);
-					});
-					
-					/*
-					self.form.from.forEach(function(from){
-						// setTimeout(function() {
-							percent += 2;
-							notice.update({ title: 'Validando ' + from.label, text: percent + '% completado. se esta revisando la cuenta ' + from.address_mail, icon: 'fa fa-spinner fa-pulse', type: 'info', width: '350px' });
-							
-							
-							api.get('/index.php', { 
-								params: {
-									controller: 'site',
-									action: 'verificar_email',
-									address_mail: from.address_mail,
-								}
-							})
-							.then(function (r) {
-								console.log('r', r);
-								if(r.data.error !== undefined && r.data.error == false){
-									notice.update({
-										title: 'Resultado ' + from.label,
-										text: percent + '% completado. ' + r.data.message,
-										icon: (r.data.error == true) ? 'fa fa-times' : 'fa fa-check',
-										// hide: true,
-										type: (r.data.error == true) ? 'error' : 'success',
-										// shadow: true,
-										width: '25%',
-										// modules: {
-										// 	Buttons: { closer: true, sticker: true }
-										// }
-									});
-								}
-							})
-							.catch(function (error) {
-								console.log(error);
-								
-							});
-						
-						// }, delayInMilliseconds);
-					});*/
+						});
+					}else{
+						self.validateMessageAndSend();
+					}
 				} 
 				catch(e){
 					console.log(e);
@@ -1750,25 +1761,16 @@ ul {
 						options.shadow = true;
 						options.modules = { Buttons: { closer: true, sticker: true } };
 						notice.update(options);
-						/*
-						  if (percent === 80) {
-							options.title = 'Almost There';
-						  }
-						  if (percent >= 100) {
-							window.clearInterval(interval);
-							options.title = 'Done!';
-							options.type = 'success';
-							options.hide = true;
-							options.shadow = true;
-							options.width = PNotify.defaults.width;
-							options.modules = { Buttons: { closer: true, sticker: true } };
-						  }
-						  */
 					} else {
 						console.log("Manejar otros errores");
 					}
 				}
-			}
+			},
+			validateMessageAndSend(){
+				var self = this;
+				console.log('Validando mensje');
+				notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+			},
 		},
 	});
 

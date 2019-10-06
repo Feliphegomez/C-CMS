@@ -911,13 +911,12 @@ class SiteController extends ControladorBase{
 		$error = null;
 		$returnData = [];
 		$returnData['error'] = true;
-		 $returnData['email']= !isset($_GET['address_mail']) ? null : $_GET['address_mail'];
+		$returnData['email'] = !isset($_GET['address_mail']) ? null : $_GET['address_mail'];
 		$returnData['message'] = '';
 		
 		if($returnData['email'] == null){
 			$returnData['message'] = 'No se detecto correo para verificar.';
 		}else{
-				
 			// Initialize library class
 			$mail = new FelipheGomez\VerifyEmail();
 			// Set the timeout value on stream
@@ -928,7 +927,7 @@ class SiteController extends ControladorBase{
 			// Set email address for SMTP request
 			$mail->setEmailFrom('no-reply@monteverdeltda.com');
 			// Email to check
-			$email = 'andres.gomez.monteverde@gmail.com';
+			$email = $returnData['email'];
 			
 			// Check if email is valid and exist
 			if($mail->check($email)){
