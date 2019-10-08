@@ -874,37 +874,6 @@ ul {
 							<div class="clearfix"><hr /></div>
 						</div>
 						<div class="form-group">
-							<div class="col-md-1 col-sm-1 col-xs-2">
-								<a v-if="form.CC.length < 5" class="btn btn-sm btn-success" @click="form.CC.push({ label: '', address_mail: '', valid: null });">
-									<i class="fa fa-plus"></i>
-								</a>
-							</div>
-							<label class="control-label col-md-2 col-sm-2 col-xs-10" for="compose-cc">
-								Cc / Bcc: <span class="required"></span>
-							</label>
-							<div class="col-md-9 col-sm-9 col-xs-12">
-								<div class="col-xs-12" v-for="(CC, CC_index) in form.CC">
-									<div class="col-xs-4">
-										<input required="required" type="text" class="tags form-control" v-model="CC.label" placeholder="Nombre(s) y Apellido(s)" />
-									</div>
-									<div class="col-xs-6">
-										<input required="required" type="email" class="tags form-control" v-model="CC.address_mail" placeholder="Correo Electronico" />
-									</div>
-									<div class="col-xs-2">
-										<a class="btn btn-sm btn-info" @click="validateMailAddress('CC', CC_index)">
-											<i class="fa fa-question"></i>
-										</a>
-										<a class="btn btn-sm btn-danger" @click="form.CC.splice(CC_index, 1);">
-											<i class="fa fa-times"></i>
-										</a>
-									</div>
-									<div class="clearfix"></div>
-								</div>
-							</div>
-							<div class="clearfix"><hr /></div>
-						</div>
-						
-						<div class="form-group">
 							<label class="control-label col-md-2 col-sm-2 col-xs-12" for="compose-subject">
 								Asunto: <span class="required"></span>
 							</label>
@@ -1065,7 +1034,7 @@ ul {
 			var self = this;
 			self.$root.currentBox();
 			self.$root.loadList(self.box_id, self.folder);
-			// console.log(self.box_id + ' - ' + self.folder);
+			// // console.log(self.box_id + ' - ' + self.folder);
 		},
 		computed: {
 		},
@@ -1187,6 +1156,7 @@ ul {
 		data() {
 			return {
 				mail_id: this.$route.params.mail_id,
+				box_id: this.$route.params.box_id,
 				record: {
 					answered: 0,
 					attachments: [],
@@ -1214,10 +1184,13 @@ ul {
 					uid: 0,
 				},
 				form: {
+					id: this.$route.params.mail_id,
+					box: this.$route.params.box_id,
 					from: [
-						{ label: 'Ayuda y Soporte Monteverde', address_mail: 'soporte@monteverdeltda.com', valid: null },
+						// { label: 'Ayuda y Soporte Monteverde', address_mail: 'soporte@monteverdeltda.com', valid: null },
 					],
-					CC: [],
+					draft: 0,
+					send: 1,
 					subject: '',
 					message: '',
 					attachments: [],
@@ -1227,10 +1200,36 @@ ul {
 		mounted() {
 			var self = this;
 			if(self.mail_id == null || self.mail_id == 0){
-				console.log('no hay email.');
+				// console.log('no hay email.');
+				insert = {
+					box: self.form.box,
+					draft: 1,
+					send: self.form.send,
+					create_by: <?= $this->user->id; ?>,
+				};
+				
+				console.log('creando borrador');
+				console.log(insert);
+				
+				api.post('/api.php/records/emails', insert)
+				.then(function (r) {
+					console.log(r);
+					if(r.data > 0){
+						self.$router.push({ name: 'Edit', params: { mail_id: r.data } })
+					} else {
+						self.$router.push({ name: 'Home' })
+					};
+				})
+				.catch(function (error) {
+					
+				});
+			} else {
+				if(self.form.from.length == 0){
+					self.form.from.push({ label: 'nombre', address_mail: 'correo@cliente.com', valid: null });
+				}
+				self.loadTiny();
 			}
 			
-			self.loadTiny();
 		},
 		created() {},
 		methods: {
@@ -1508,14 +1507,14 @@ ul {
 					],
 					save_enablewhendirty: true,
 					save_oncancelcallback: function () {
-						console.log('Save canceled');
+						// console.log('Save canceled');
 					},
 					save_onsavecallback: function () {
-						console.log('Saved');
+						// console.log('Saved');
 						message = tinyMCE.activeEditor.getContent();
 						doc = tinyMCE.activeEditor.getDoc();
-						console.log('message', message);
-						console.log('doc', doc);
+						// console.log('message', message);
+						// console.log('doc', doc);
 					},					
 					templates: [
 						{ title: 'Tabla Sencilla', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
@@ -1691,7 +1690,7 @@ ul {
 				});
 			},
 			validateMail(){
-				console.log("Validando correo");
+				// console.log("Validando correo");
 				var self = this;
 				var percent = 0;
 				var notice = new PNotify({
@@ -1721,37 +1720,34 @@ ul {
 					
 					var delayInMilliseconds = 1000; // 1 Segundo por campo = 1000 Milisegundos
 					var fromTotal = self.form.from.length;
-					var ccTotal = self.form.CC.length;
-					console.log('fromTotal', fromTotal);
-					console.log('ccTotal', ccTotal);
+					// console.log('fromTotal', fromTotal);
+					// console.log('ccTotal', ccTotal);
 					
 					for (i = 0; i < fromTotal; i++) { if (self.form.from[i].label.length < 4 || !self.validateEmail(self.form.from[i].address_mail)){ self.form.from.splice(i, 1); } };
-					for (i = 0; i < ccTotal; i++) { if (self.form.CC[i].label.length < 4 || !self.validateEmail(self.form.CC[i].address_mail)){ self.form.CC.splice(i, 1); } };
 					
 					percent += 7;
 					notice.update({ title: 'Validando asunto', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
 					selfContinue = self.form.subject == "" ? false : true;
 					if(selfContinue == false){
-						bootbox.confirm({
-							message: "El correo no tiene asunto, deseas continuar?",
-							locale: 'es',
-							callback: function (confirmSubject) {
-								if(confirmSubject == true){
-									self.validateMessageAndSend();
-								}else{
-									notice.update({ title: 'Envio cancelado', text: 'Cancelamos el envio.', icon: 'fa fa-times', type: 'error' });
-								}
-							}
-						});
+						throw new excepcionForm("Cancelamos el envio por que no el correo no tiene asunto.");
 					}else{
-						self.validateMessageAndSend();
+						// console.log('Validando mensje');
+						notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+						
+						self.form.message = tinyMCE.activeEditor.getContent();
+						if(self.form.message == ''){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
+						
+						notice.update({ title: 'Espere...', text: 'Estamos enviando el/los mensaje(s).', icon: 'fa fa-spinner fa-pulse', type: 'warning' });
+						
+						/*self.form.from*/
+						console.log(self.form);
 					}
 				} 
 				catch(e){
-					console.log(e);
+					// console.log(e);
 					if (e.name === 'excepcionForm') {
-						console.log("Manejar error de Formulario.");
-						console.log(e.message);
+						// console.log("Manejar error de Formulario.");
+						// console.log(e.message);
 						var options = {};
 						options.error = 'success';
 						options.text = e.message;
@@ -1762,14 +1758,9 @@ ul {
 						options.modules = { Buttons: { closer: true, sticker: true } };
 						notice.update(options);
 					} else {
-						console.log("Manejar otros errores");
+						// console.log("Manejar otros errores");
 					}
 				}
-			},
-			validateMessageAndSend(){
-				var self = this;
-				console.log('Validando mensje');
-				notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
 			},
 		},
 	});
@@ -1891,7 +1882,7 @@ ul {
 					}
 				})
 				.catch(function (error) {
-					console.log(error);
+					// console.log(error);
 					return false;
 				});
 			},
@@ -1906,18 +1897,18 @@ ul {
 					}
 				})
 				.then(function (r) {
-					// console.log('r', r);
+					// // console.log('r', r);
 					if(r.data !== undefined){
 						if(r.data.error !== undefined && r.data.error == false){
 							return self.mail = r.data.record;
-							// console.log(self.email_single);
+							// // console.log(self.email_single);
 						}
 					}else{
-						console.log('error');
+						// console.log('error');
 					}
 				})
 				.catch(function (error) {
-					console.log(error);
+					// console.log(error);
 				});
 			},
 			loadList(boxId, folderSelected){
@@ -1983,8 +1974,8 @@ ul {
 					],
 				};
 				
-				console.log('loadList Folder:', self.folder);
-				console.log('loadList boxId:', self.box_id);
+				// console.log('loadList Folder:', self.folder);
+				// console.log('loadList boxId:', self.box_id);
 				
 				api.get('/api.php/records/emails', { params: {
 					filter: folders[self.folder],
@@ -1995,7 +1986,7 @@ ul {
 						if (r.data.records){
 							self.mails = [];
 							r.data.records.forEach(function(mail){
-								// console.log('mail',  mail);
+								// // console.log('mail',  mail);
 								mail.attachments = JSON.parse(mail.attachments)
 								self.mails.push(mail);
 							});
@@ -2005,7 +1996,7 @@ ul {
 					}
 				})
 				.catch(function (error) {
-					console.log(error);
+					// console.log(error);
 				});
 			},
 		}
