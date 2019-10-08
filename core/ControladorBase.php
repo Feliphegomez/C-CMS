@@ -39,7 +39,42 @@ class ControladorBase{
 		if(isset($this->user->permissions->list)){
 			$this->setPermissions($this->user->permissions->list);
 		}
+		$this->addScriptsBase();
+		
     }
+	
+	private function addScriptsBase(){
+		$toMessageFormat = 'Date.prototype.toMessageFormat = function() {
+			months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+			days = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
+			hoy = new Date();
+			if(this.getMonth() == hoy.getMonth()){
+				if(this.getWeek() == hoy.getWeek()){
+					if(this.getDate() == hoy.getDate()){
+						return ((this.getHours() < 10) ? "0" + this.getHours() : this.getHours()) + ":" + ((this.getMinutes() < 10) ? "0" + this.getMinutes() : this.getMinutes()) + " (Hoy)";
+					} else {
+						if((hoy.getDate() - this.getDate()) == 1){
+							return days[this.getDay()] + " " + this.getDate() + ", " + ((this.getHours() < 10) ? "0" + this.getHours() : this.getHours()) + ":" + ((this.getMinutes() < 10) ? "0" + this.getMinutes() : this.getMinutes()) + " (Ayer)";
+						} else {
+							return days[this.getDay()] + " " + this.getDate() + ", a las " + ((this.getHours() < 10) ? "0" + this.getHours() : this.getHours()) + ":" + ((this.getMinutes() < 10) ? "0" + this.getMinutes() : this.getMinutes());
+						}
+					}
+				}
+				else { return this.getDate() + " de " + months[this.getMonth()] + ", a las " + ((this.getHours() < 10) ? "0" + this.getHours() : this.getHours()) + ":" + ((this.getMinutes() < 10) ? "0" + this.getMinutes() : this.getMinutes()); }
+			}
+			else { return this.getDate() + " de " + months[this.getMonth()] + " del " + this.getFullYear() + ", a las " + ((this.getHours() < 10) ? "0" + this.getHours() : this.getHours()) + ":" + ((this.getMinutes() < 10) ? "0" + this.getMinutes() : this.getMinutes()); }
+		};';
+		$this->appendScriptBefore($toMessageFormat);
+		$toMysqlFormat = 'Date.prototype.toMysqlFormat = function() {
+			function twoDigits(d) {
+				if(0 <= d && d < 10) return "0" + d.toString();
+				if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+				return d.toString();
+			}
+			return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+		};';
+		$this->appendScriptBefore($toMysqlFormat);
+	}
 
     public function setPermissions($permissions = null){
 		$this->permissions = [];

@@ -94,6 +94,10 @@ return [
                 ],
                 [
                     'type' => 'stylesheet',
+                    'file' => '/vendors/pnotify/dist/pnotify.brighttheme.css', // PNotify
+                ],
+                [
+                    'type' => 'stylesheet',
                     'file' => '/vendors/pnotify/dist/pnotify.buttons.css', // 
                 ],
                 [
@@ -406,6 +410,22 @@ return [
                 [
                     'type' => 'script',
                     'file' => '/vendors/pnotify/dist/pnotify.nonblock.js', // End PNotify
+                ],
+                [
+                    'type' => 'script',
+                    'file' => '/vendors/pnotify/dist/pnotify.callbacks.js', // 
+                ],
+				[
+                    'type' => 'script',
+                    'file' => '/vendors/pnotify/dist/pnotify.confirm.js', // 
+                ],
+				[
+                    'type' => 'script',
+                    'file' => '/vendors/pnotify/dist/pnotify.history.js', // 
+                ],
+				[
+                    'type' => 'script',
+                    'file' => '/vendors/pnotify/dist/pnotify.mobile.js', // 
                 ],
                 [
                     'type' => 'script',

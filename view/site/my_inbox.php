@@ -609,7 +609,7 @@ ul {
 							<td class="view-message text-right">
 								<template v-if="mail.date !== undefined && mail.date !== undefined">
 									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-										{{ mail.date }}
+										{{ mail.date.toMessageFormat() }}
 									</router-link>
 								</template>
 							</td>
@@ -629,7 +629,7 @@ ul {
 			</div>
 			<div class="col-sm-5 text-right">
 				<ul class="unstyled inbox-pagination">
-					<li><span>{{ mail.date }}</span></li>
+					<li><span>{{ mail.date.toMessageFormat() }}</span></li>
 				</ul>
 			</div>
 		</div>
@@ -827,15 +827,17 @@ ul {
 						<i class=" fa fa-times"></i>
 					</router-link>
 				</div>
+				<div class="btn-group pull-right">
+					<a @click="saveDraft()" class="btn mini blue" aria-expanded="false">
+						<i class=" fa fa-save"></i>
+					</a>
+				</div>
 			</div>
 			<div class="mail-option">
 			</div>
 		</div>
 		<div class="inbox-body">
 			<div class="row">
-				<div class="col-md-12 col-sm-12 col-xs-12">
-					{{ form }}
-				</div>
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<form 
 						@submit="validateMail"
@@ -905,7 +907,12 @@ ul {
 						</div>
 						<div class="clearfix"></div>
 					</form>
-			  </div>
+				
+				
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						{{ form }}
+					</div>
+				</div>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -1206,10 +1213,9 @@ ul {
 					draft: 1,
 					send: self.form.send,
 					create_by: <?= $this->user->id; ?>,
+					from: "[]",
+					attachments: "[]",
 				};
-				
-				console.log('creando borrador');
-				console.log(insert);
 				
 				api.post('/api.php/records/emails', insert)
 				.then(function (r) {
@@ -1224,8 +1230,27 @@ ul {
 					
 				});
 			} else {
+				
+				api.get('/api.php/records/emails/' + self.mail_id, {
+					params: {
+						
+					}
+				})
+				.then(function (r) {
+					if(r.data.id > 0){
+						r.data.from = JSON.parse(r.data.from);
+						r.data.attachments = JSON.parse(r.data.attachments);
+						self.form = r.data;
+					} else {
+						self.$router.push({ name: 'Home' })
+					};
+				})
+				.catch(function (error) {
+					
+				});
+				
 				if(self.form.from.length == 0){
-					self.form.from.push({ label: 'nombre', address_mail: 'correo@cliente.com', valid: null });
+					self.form.from.push({ label: 'nombre', address_mail: 'correo@sincorreo.com', valid: null });
 				}
 				self.loadTiny();
 			}
@@ -1510,11 +1535,7 @@ ul {
 						// console.log('Save canceled');
 					},
 					save_onsavecallback: function () {
-						// console.log('Saved');
-						message = tinyMCE.activeEditor.getContent();
-						doc = tinyMCE.activeEditor.getDoc();
-						// console.log('message', message);
-						// console.log('doc', doc);
+						self.saveDraft();
 					},					
 					templates: [
 						{ title: 'Tabla Sencilla', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
@@ -1553,9 +1574,9 @@ ul {
 					fullpage_fontsizes : '13px,14px,15px,18pt,xx-large',
 					fullpage_default_font_family: "'Times New Roman', Georgia, Serif;",
 					fullpage_default_langcode: "es-CO",
-					fullpage_default_title: "Monteverde",
+					fullpage_default_title: "Tienes un mensaje de Monteverde Servicios Ambientales y Forestales LTDA",
 					// fullpage_default_text_color: "blue",
-					//fullpage_hide_in_source_view: true,
+					fullpage_hide_in_source_view: true,
 					style_formats: [
 						{
 							title: 'Headers',
@@ -1621,10 +1642,57 @@ ul {
 						
 						input.click();
 					  },
-
-
+				});
+			},
+			saveDraft(){
+				var self = this;
+				message = tinyMCE.activeEditor.getContent();
+				// doc = tinyMCE.activeEditor.getDoc();
+				self.form.message = message;
+				console.log('Guardando Mensaje actual ', self.form);
+				
+				var Notice = new PNotify({
+					//styling: "bootstrap3",
+					text: 'Guardando',
+					icon: 'fa fa-spinner fa-pulse',
+					hide: false,
+					shadow: false,
+					width: '200px',
 				});
 				
+				api.put('/api.php/records/emails/' + self.form.id, {
+					id: self.form.id,
+					subject: self.form.subject,
+					message: self.form.message,
+					from: JSON.stringify(self.form.from),
+					attachments: JSON.stringify(self.form.attachments),
+					delete: 0,
+					seen: 0,
+					recent: 0,
+				})
+				.then(function (r) {
+					console.log(r);
+					if(r.data > 0){
+						Notice.update({
+							title: 'Guardado!',
+							text: 'Se guardo con éxito el mensaje.',
+							icon: 'fa fa-times',
+							hide: true,
+							shadow: true,
+						});
+					} else {
+						Notice.update({
+							title: 'Error',
+							text: 'Error',
+							icon: 'fa fa-times',
+							hide: true,
+							shadow: true,
+						});
+					};
+				})
+				.catch(function (error) {
+					
+				});
 			},
 			validateEmail(email) {
 				var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -1699,12 +1767,12 @@ ul {
 					hide: false,
 					shadow: false,
 					width: '200px',
-					styling: "bootstrap3",
+					//styling: "bootstrap3",
 					modules: {
 					  Buttons: {
 						closer: false,
 						sticker: false
-					  }
+					  },
 					}
 				});
 				  
@@ -1731,16 +1799,44 @@ ul {
 					if(selfContinue == false){
 						throw new excepcionForm("Cancelamos el envio por que no el correo no tiene asunto.");
 					}else{
-						// console.log('Validando mensje');
+						console.log('Validando mensje');
 						notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
-						
 						self.form.message = tinyMCE.activeEditor.getContent();
-						if(self.form.message == ''){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
-						
+						htmlBody = $(self.form.message);
+						if(htmlBody.length <= 5){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
 						notice.update({ title: 'Espere...', text: 'Estamos enviando el/los mensaje(s).', icon: 'fa fa-spinner fa-pulse', type: 'warning' });
 						
-						/*self.form.from*/
-						console.log(self.form);
+						
+						
+						/*
+						notice.update({
+							text: 'Confirme que desee enviar el correo electronico?.',
+							type: 'notice',
+							icon: false,
+							buttons: {
+								closer: false,
+								sticker: false
+							},
+							confirm: {
+								confirm:true
+							}
+						});
+						notice.on('pnotify.confirm', function() {
+							alert('Ok, cool.');
+						});
+						notice.on('pnotify.cancel', function() {
+							alert('Oh ok. Chicken, I see.');
+						});*/
+						self.pNotify()
+						.confirm({
+							title: 'Confirm',
+							text: 'Do you really want to remove this item?'
+						})
+						.then(function onConfirm() {
+							alert('Removido!');
+						},function onCancel() {
+							alert('Cancelado!');
+						});
 					}
 				} 
 				catch(e){
@@ -1760,6 +1856,57 @@ ul {
 					} else {
 						// console.log("Manejar otros errores");
 					}
+				}
+			},
+			pNotify() {
+				var defaultSettings = {
+					icon: 'glyphicon glyphicon-question-sign'
+				};
+				var confirmSettings = {
+					confirm: true,
+					buttons: {
+						closer: false,
+						sticker: false
+					},
+					hide: false,
+					history: {
+						history: false
+					}
+				};
+				var _api = {
+					confirm: confirm
+				};
+				return _api;
+				////////////
+				function factory(settings) {
+					settings = $.extend({}, defaultSettings, settings);
+					return new PNotify({
+						title: settings.title,
+						text: settings.text,
+						icon: 'glyphicon glyphicon-question-sign',
+						hide: false,
+						confirm: {
+							confirm: true
+						},
+						buttons: {
+							closer: false,
+							sticker: false
+						},
+						history: {
+							history: false
+						}
+					});
+				}
+				function confirm(settings) {
+					confirmSettings.title = settings.title;
+					confirmSettings.text = settings.text;
+					var result = factory(confirmSettings).get();
+					return {
+						then: function (onConfirm, onCancel) {
+							result.on('pnotify.confirm', onConfirm);
+							result.on('pnotify.cancel', onCancel);
+						}
+					};
 				}
 			},
 		},
@@ -1804,7 +1951,7 @@ ul {
 					attachments: [],
 					box: 0,
 					created: '',
-					date: '',
+					date: new Date(),
 					deleted: 0,
 					draft: 0,
 					flagged: 0,
@@ -1900,6 +2047,7 @@ ul {
 					// // console.log('r', r);
 					if(r.data !== undefined){
 						if(r.data.error !== undefined && r.data.error == false){
+							r.data.record.date = new Date(r.data.record.date.date);
 							return self.mail = r.data.record;
 							// // console.log(self.email_single);
 						}
@@ -1986,8 +2134,8 @@ ul {
 						if (r.data.records){
 							self.mails = [];
 							r.data.records.forEach(function(mail){
-								// // console.log('mail',  mail);
-								mail.attachments = JSON.parse(mail.attachments)
+								mail.date = new Date(mail.date);
+								mail.attachments = JSON.parse(mail.attachments);
 								self.mails.push(mail);
 							});
 						}
