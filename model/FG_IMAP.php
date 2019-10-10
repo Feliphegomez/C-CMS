@@ -138,6 +138,11 @@ class FG_IMAP extends EntidadBase{
 		$structure = imap_fetchstructure($this->getConn(), $email);
 		$files = [];
 		$attachments = [];
+		$structure->parts = !isset($structure->parts) ? [] : $structure->parts;
+		if(count($structure->parts) == 0){
+			$structure->parts[] = $structure;
+		}
+		
 		if( isset($structure->parts) && count($structure->parts) ) {
 			for($i = 0; $i < count($structure->parts); $i++) {
 				$attachment = [
@@ -246,6 +251,7 @@ class FG_IMAP extends EntidadBase{
 	
 	public function getOverview($sequence = 0, $options = 0){
 		$r = [];
+		$r['to'] = [];
 		//$MC = $this->checkIMAP();
 		$overview = @imap_fetch_overview($this->getConn(), $sequence, 0);
 		$size = sizeof($overview);
@@ -257,13 +263,29 @@ class FG_IMAP extends EntidadBase{
 					preg_match('/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i', $v, $b);
 					$v = !isset($b[0]) ? $v : $b[0];
 				} 
-				else if($k === 'from' || $k === 'to'){
-					$r["{$k}_complete"] = $v;
+				else if($k === 'from'){
+					$r["{$k}_email"] = $v;
 					preg_match('/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i', $v, $b);
 					$b[0] = !isset($b[0]) ? $v : $b[0];
-					$r["{$k}_name"] = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
+					$v = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
+				} else if($k === 'udate'){
+				} else if($k === 'to'){
+					preg_match('/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i', $v, $b);
+					$b[0] = !isset($b[0]) ? $v : $b[0];
+					$name = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
+					$r['to'][] = (object) ['label' => $name, 'address_mail' => $v];
+				} else if($k === 'subject'){
+				} else if($k === 'date'){
+					//$v = date("Y-m-d H:i:s", $v);
+				} else if($k === 'size' || $k === 'uid' || $k === 'msgno'){
+					$v = (int) $v;
+				} else if($k === 'recent' || $k === 'new' || $k === 'seen' || $k === 'flagged' || $k === 'answered' || $k === 'deleted' || $k === 'draft' || $k === 'deleted'){
+					#$v = (!isset($v) || empty($v) || $v == 0) ? 0 : ($v === true || $v === 1 || $v == 'true') ? 1 : 0;
+				} else {
 				}
-				$r[$k] = $v;
+				if($k !== 'to'){
+					$r[$k] = $v;
+				}				
 			}
 		}
 		return $r;
@@ -299,7 +321,6 @@ class FG_IMAP extends EntidadBase{
 			}
 		}
 		
-
 		$Message = getBody($Overview->uid, $this->getConn());
 		$Message = str_replace($replaces, $replaces_to, $Message);
 		$Message = ($Message);
@@ -313,10 +334,9 @@ class FG_IMAP extends EntidadBase{
 			"uid" => $Overview->uid,
 			"status" => $Overview->seen ? 'read' : 'unread',
 			"subject" => $Overview->subject,
-			"from" => $Overview->from_complete,
-			"from_email" => $Overview->from,
-			"to" => $Overview->to_complete,
-			"to_email" => $Overview->to,
+			"from" => $Overview->from,
+			"from_email" => $Overview->from_email,
+			"to" => $Overview->to,
 			"date" => $Overview->date,
 			"message" => (($Message)),
 			"size" => $Overview->size,
@@ -329,6 +349,7 @@ class FG_IMAP extends EntidadBase{
 			"draft" => $Overview->draft,
 			"attachments" => $attachments_finish
 		];
+		
 		$creaMail = new Email($this->adapter);
 		$idMailSQL = $creaMail->crear($mailInsert);
 		$mailInsert['id'] = $idMailSQL;

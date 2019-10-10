@@ -5,6 +5,7 @@
     display: table;
     table-layout: fixed;
     width: 100%;
+	/* overflow: hidden; */
 }
 .mail-box aside {
     display: table-cell;
@@ -53,14 +54,6 @@
 .user-head .user-name span a {
     color: #87e2e7;
     font-size: 12px;
-}
-a.mail-dropdown {
-    background: none repeat scroll 0 0 #80d3d9;
-    border-radius: 2px;
-    color: #01a7b3;
-    font-size: 10px;
-    margin-top: 20px;
-    padding: 3px 5px;
 }
 .inbox-body {
     padding: 20px;
@@ -362,150 +355,218 @@ ul.inbox-pagination li {
 }
 ul {
     list-style-type: none;
-    padding: 0px;
-    margin: 0px;
+    /* padding: 0px; */
+    /* margin: 0px; */
 }
  
 </style>
 
 <div id="app">
-	<div class="mail-box">
-		<aside class="sm-side">
-			<div class="user-head">
-				<!-- //
-				<a class="inbox-avatar" href="javascript:;">
-					<img  width="64" hieght="60" src="http://bootsnipp.com/img/avatars/ebeb306fd7ec11ab68cbcaa34282158bd80361a7.jpg">
-				</a>
-				-->
-				<!-- Default dropright button -->
-				<div class="row">
-					<div class="col-sm-10" style="overflow:hidden;">
-						<div class="user-name">
-							<h5><a href="#">{{ myBox.label }}</a></h5>
-							<span><a href="#">{{ myBox.user }}</a></span>
+	<div>
+		<div class="row">
+			<div class="col-lg-2 col-md-3 col-sm-4 col-xs-12">
+				<nav class="navbar navbar-default" role="navigation">
+					<!-- El logotipo y el icono que despliega el menú se agrupan para mostrarlos mejor en los dispositivos móviles -->
+					<div class="navbar-header bg-info">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+							<span class="sr-only">Desplegar navegación</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<div class="navbar-brand" style="height:auto;zoom:0.7;">
+							<div class="mail-box">
+								<div class="user-name">
+									<font :title="myBox.user">
+										<i class="fa fa-envelope"></i> 
+										{{ myBox.label }}
+										<br /> <font style="zoom:0.7;">{{ myBox.user }}</font>
+									</font>
+									
+									<div class="btn-group mail-dropdown pull-right">
+										<a class="mail-dropdown pull-right dropdown-toggle" href="javascript:;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<i class="fa fa-chevron-down"></i>
+										</a>
+										<ul class="dropdown-menu">
+											<li v-for="(box, index_box) in boxes" :key="box.id" class="dropdown-item">
+												<router-link :to="{ name: 'Home', params: { box_id: box.id } }" tag="a">
+													{{ box.label }}
+												</router-link>
+											</li>
+											<li class="divider"></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
 						</div>
 					</div>
-					<div class="col-sm-2">
-						<div class="btn-group dropright mail-dropdown pull-right">
-							<a class="mail-dropdown pull-right dropdown-toggle" href="javascript:;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="fa fa-chevron-down"></i>
-							</a>
-							<ul class="dropdown-menu">
-								<li v-for="(box, index_box) in boxes" :key="box.id" class="dropdown-item">
-									<router-link :to="{ name: 'Home', params: { box_id: box.id } }" tag="a">
-										{{ box.label }}
-									</router-link>
-								</li>
-							</ul>
+					<br /><hr /><br /> 
+					<div class="collapse navbar-collapse navbar-ex1-collapse">
+						<ul class="inbox-nav inbox-divider">
+							<!-- // 
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown">
+								Cambiar Cuenta <b class="caret"></b>
+								</a>
+								<ul class="dropdown-menu">
+									<li v-for="(box, index_box) in boxes" class="dropdown-item">
+										<router-link :to="{ name: 'Home', params: { box_id: box.id } }" tag="a">
+											{{ box.label }}
+										</router-link>
+									</li>
+									<!-- // 
+									<li class="divider"></li>
+									<li><a href="#">Acción #5</a></li>
+									-- >
+								</ul>
+							</li>
+							-->
+							<!-- // <li class="active_not"><a href="#">Enlace #1</a></li> -->							
+							<li class="">
+								<router-link v-if="myBox.send_enabled === 1" v-bind:to="{ name: 'Compose', params: { box_id: myBox.id } }" tag="a" class="btn btn-compose" style="color:#FFF;">
+									Redactar
+								</router-link>
+							</li>							
+							<router-link :to="{ name: 'Folder', params: { folder: 'inbox' } }" tag="li">
+								<a>
+									<i class="fa fa-inbox"></i>
+									Bandeja Entrada
+								</a>
+							</router-link>
+							<router-link :to="{ name: 'Folder', params: { folder: 'not_seen' } }" tag="li">
+								<a>
+									<i class="fa fa-envelope-o"></i>
+									Sin Leer
+								</a>
+							</router-link>
+							<router-link v-bind:to="{ name: 'Folder', params: { folder: 'seen' } }" tag="li">
+								<a>
+									<i class="fa fa-envelope"></i>
+									Leidos
+								</a>
+							</router-link>
+							<router-link v-bind:to="{ name: 'Folder', params: { folder: 'send' } }" tag="li">
+								<a>
+									<i class="fa fa-send"></i>
+									Enviados
+								</a>
+							</router-link>
+							<router-link v-bind:to="{ name: 'Folder', params: { folder: 'trash' } }" tag="li">
+								<a>
+									<i class="fa fa-trash-o"></i>
+									Papelera
+								</a>
+							</router-link>
+							<router-link v-bind:to="{ name: 'Folder', params: { folder: 'draft' } }" tag="li">
+								<a>
+									<i class="fa fa-floppy-o"></i>
+									Borradores
+								</a>
+							</router-link>
+							<!-- // 
+							<router-link v-bind:to="{ name: 'Folder', params: { folder: 'default' } }" tag="li">
+								<a>
+									<i class="fa fa-inbox"></i>
+									Todos
+								</a>
+							</router-link>
+							-->
+							
+							
+							
+						</ul>
+
+						<!-- // 
+						<ul class="inbox-nav inbox-divider">
+							<li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-danger pull-right">2</span></a></li>
+							<li><a href="#"><i class="fa fa-envelope-o"></i> Sent Mail</a></li>
+							<li><a href="#"><i class="fa fa-bookmark-o"></i> Important</a></li>
+							<li><a href="#"><i class=" fa fa-external-link"></i> Drafts <span class="label label-info pull-right">30</span></a></li>
+							<li><a href="#"><i class=" fa fa-trash-o"></i> Trash</a></li>
+						</ul>
+						-->
+						
+						<!-- //
+						<div class="inbox-body text-center">
+							<div class="btn-group">
+								<a class="btn mini btn-primary" href="javascript:;">
+									<i class="fa fa-plus"></i>
+								</a>
+							</div>
+							<div class="btn-group">
+								<a class="btn mini btn-success" href="javascript:;">
+									<i class="fa fa-phone"></i>
+								</a>
+							</div>
+							<div class="btn-group">
+								<a class="btn mini btn-info" href="javascript:;">
+									<i class="fa fa-cog"></i>
+								</a>
+							</div>
 						</div>
+						-->
 					</div>
-				</div>
-				
+				</nav>
 			</div>
-			<div class="inbox-body">
-				<router-link v-if="myBox.send_enabled === 1" v-bind:to="{ name: 'Compose', params: { box_id: myBox.id } }" tag="a" class="btn btn-compose">
-					Redactar
-				</router-link>
+			<div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
+				<aside class="lg-side" style="overflow-y:auto; zoom: 0.8;"> <!-- // max-height:calc(80vh);min-height: calc(80vh); -->
+					<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-12 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
+						<router-view :key="$route.fullPath"></router-view><!-- //  :change="currentBox()" -->
+					</div>
+				</aside>
 			</div>
-			<ul class="inbox-nav inbox-divider">
-				<router-link :to="{ name: 'Folder', params: { folder: 'inbox' } }" tag="li">
-					<a>
-						<i class="fa fa-inbox"></i>
-						Bandeja Entrada
-					</a>
-				</router-link>
-				<router-link :to="{ name: 'Folder', params: { folder: 'not_seen' } }" tag="li">
-					<a>
-						<i class="fa fa-envelope-o"></i>
-						Sin Leer
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'seen' } }" tag="li">
-					<a>
-						<i class="fa fa-envelope"></i>
-						Leidos
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'send' } }" tag="li">
-					<a>
-						<i class="fa fa-send"></i>
-						Enviados
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'trash' } }" tag="li">
-					<a>
-						<i class="fa fa-trash-o"></i>
-						Papelera
-					</a>
-				</router-link>
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'draft' } }" tag="li">
-					<a>
-						<i class="fa fa-floppy-o"></i>
-						Borradores
-					</a>
-				</router-link>
-				<!-- // 
-				<router-link v-bind:to="{ name: 'Folder', params: { folder: 'default' } }" tag="li">
-					<a>
-						<i class="fa fa-inbox"></i>
-						Todos
-					</a>
-				</router-link>
-				-->
-			</ul>
-			<!-- // 
-			<ul class="inbox-nav inbox-divider">
-				<li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox <span class="label label-danger pull-right">2</span></a></li>
-				<li><a href="#"><i class="fa fa-envelope-o"></i> Sent Mail</a></li>
-				<li><a href="#"><i class="fa fa-bookmark-o"></i> Important</a></li>
-				<li><a href="#"><i class=" fa fa-external-link"></i> Drafts <span class="label label-info pull-right">30</span></a></li>
-				<li><a href="#"><i class=" fa fa-trash-o"></i> Trash</a></li>
-			</ul>
-			-->
-			
-			<!-- //
-			<div class="inbox-body text-center">
-				<div class="btn-group">
-					<a class="btn mini btn-primary" href="javascript:;">
-						<i class="fa fa-plus"></i>
-					</a>
-				</div>
-				<div class="btn-group">
-					<a class="btn mini btn-success" href="javascript:;">
-						<i class="fa fa-phone"></i>
-					</a>
-				</div>
-				<div class="btn-group">
-					<a class="btn mini btn-info" href="javascript:;">
-						<i class="fa fa-cog"></i>
-					</a>
-				</div>
-			</div>
-			-->
-		</aside>
-		<aside class="lg-side" style="overflow-y:auto; max-height:calc(80vh);min-height: calc(80vh);zoom: 0.8;">
-			<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-12 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
-				<router-view :key="$route.fullPath"></router-view><!-- //  :change="currentBox()" -->
-			</div>
-		</aside>
+		</div>
 	</div>
 </div>
 	
 <template id="home">
 	<div>
-		<div class="inbox-head">
-			<h3>
-				<template v-if="$root.folder != undefined">{{ $root.folder }}</template>
-			</h3>
-			<form action="#" class="pull-right position">
-				<div class="input-append">
-					<input type="text" class="sr-input" placeholder="No habilitado">
-					<button class="btn sr-btn" type="button"><i class="fa fa-search"></i></button>
-				</div>
-			</form>
-		</div>
+		<!-- // 
+			<div class="inbox-head">
+				<h3>
+					<template v-if="$root.folder != undefined">{{ $root.labels.folders[$root.folder] }}</template>
+				</h3>
+				<form action="#" class="pull-right position">
+					<div class="input-append">
+						<input type="text" class="sr-input" placeholder="No habilitado">
+						<button class="btn sr-btn" type="button"><i class="fa fa-search"></i></button>
+					</div>
+				</form>
+			</div>
+		-->
 		<div class="inbox-body">
 			<div class="mail-option">
+				<div class="col-xs-7">
+					<div class="btn-group">
+						<a @click="$root.loadList(box_id, folder)" data-original-title="Refresh" data-placement="top" data-toggle="dropdown" href="#" class="btn mini tooltips">
+							<i class=" fa fa-refresh"></i>
+						</a>
+					</div>
+				</div>
+				<div class="col-xs-5">
+					<ul class="unstyled inbox-pagination">
+						<li><span> {{ ((($root.list.limit * $root.list.page) - $root.list.limit) + 1) }} - {{ ((($root.list.limit * $root.list.page) + $root.list.limit) - $root.list.limit) }}</span></li>
+						<li><span></span></li>
+						<li>
+							<router-link v-if="$root.list.page > 1" accesskey="b" class="np-btn" :key="'list-page-' + $root.list.page" v-bind:to="{ name: 'Folder-Page', params: { page: ($root.list.page - 1) } }">
+								<i class="fa fa-angle-left pagination-left"></i>
+							</router-link>
+							<a accesskey="b" class="np-btn" style="cursor:no-drop;" v-else>
+								<i class="fa fa-angle-left pagination-left"></i>
+							</a>
+						</li>
+						<li>
+							<router-link v-if="(($root.list.page * $root.list.limit) + 1) < $root.list.total && ($root.list.total + 1) > $root.list.limit" accesskey="n" class="np-btn" :key="'list-page-' + $root.list.page" v-bind:to="{ name: 'Folder-Page', params: { page: ($root.list.page + 1) } }">
+								<i class="fa fa-angle-right pagination-left"></i>
+							</router-link>
+							<a accesskey="n" class="np-btn" style="cursor:no-drop;" v-else>
+								<i class="fa fa-angle-right pagination-left"></i>
+							</a>
+						</li>
+							
+					</ul>
+				</div>
 				<!-- // 
 				<div class="chk-all">
 					<input type="checkbox" class="mail-checkbox mail-group-checkbox">
@@ -522,11 +583,6 @@ ul {
 					</div>
 				</div>
 				-->
-				<div class="btn-group">
-					<a click="$root.loadList(box_id, folder)" data-original-title="Refresh" data-placement="top" data-toggle="dropdown" href="#" class="btn mini tooltips">
-						<i class=" fa fa-refresh"></i>
-					</a>
-				</div>
 				<!--
 				<div class="btn-group hidden-phone">
 					<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
@@ -554,21 +610,16 @@ ul {
 				</div>
 				-->
 				
-				<ul class="unstyled inbox-pagination">
-					 <li><span> {{ $root.mails.length }} Total</span></li>
-				</ul>
 			</div>
+			
 			<table class="table table-inbox table-hover">
 				<tbody>
-					<tr v-if="$root.mails.length == null || $root.mails.length <= 0">
-						<td colspan="6">No hay mensajes</td>
-					</tr>
-					<tr v-for="(mail, index_mail) in $root.mails" :class="mail.status" :key="mail.index_mail" v-else>
+					<tr v-for="(mail, index_mail) in $root.list.data" :class="mail.status" :key="index_mail" v-if="$root.list.data.length !== null && $root.list.data.length > 0">
 						<template v-if="mail.id !== undefined && mail.id > 0">
-							<td class="inbox-small-cells">
-								<!-- // <input type="checkbox" class="mail-checkbox" /> -->
-							</td>
-							<td class="inbox-small-cells">
+							<router-link tag="td" class="inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
+								<input type="checkbox" class="mail-checkbox" />
+							</router-link>
+							<router-link tag="td" class="inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
 								<template v-if="mail.recent !== undefined && mail.recent === 1">
 									<i class="fa fa-asterisk"></i>
 								</template>
@@ -583,233 +634,295 @@ ul {
 								<template v-if="mail.deleted !== undefined && mail.deleted === 1">
 									<i class="fa fa-trash"></i> 
 								</template>
-							</td>
-							<td class="view-message dont-show">
-								<template v-if="mail.from !== undefined && mail.from !== undefined">
-									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
-										{{ mail.from.slice(0,22) }}
-									</router-link>
-								</template>
-							</td>
-							<td class="view-message">
+							</router-link>
+							<router-link tag="td" class="view-message" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
 								<template v-if="mail.subject !== undefined">
-									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
-										{{ mail.subject.slice(0,28) }}
-									</router-link>
+									{{ (mail.subject == undefined || mail.subject == '') ? "&lt;Sin asunto&gt;" : (mail.subject.length > 28 ? mail.subject.slice(0,28) : mail.subject) }}
 								</template>
-							</td>
-							<td class="view-message inbox-small-cells">
-									<router-link 
-										:key="index_mail" 
-										v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }"
-										v-if="mail.attachments.length > 0" :title="mail.attachments.length">
-										<i class="fa fa-paperclip"></i>
-									</router-link>
-							</td>
-							<td class="view-message text-right">
+							</router-link>
+							<router-link tag="td" class="view-message dont-show" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
+								<template v-if="mail.from !== undefined && mail.from !== undefined">
+									{{ mail.from }} &lt;{{ mail.from_email }}&gt;
+								</template>
+							</router-link>
+							<router-link tag="td" class="view-message inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
+								<i class="fa fa-paperclip" v-if="mail.attachments.length > 0" :title="mail.attachments.length"></i>
+							</router-link>
+							<router-link tag="td" class="view-message text-right" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
 								<template v-if="mail.date !== undefined && mail.date !== undefined">
-									<router-link :key="index_mail" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id } }">
-										{{ mail.date.toMessageFormat() }}
-									</router-link>
+									{{ mail.date.toMessageFormat() }}
 								</template>
-							</td>
+							</router-link>
 						</template>
+					</tr>
+					<tr v-else>
+						<td colspan="6">No hay mensajes</td>
 					</tr>
 				</tbody>
 			</table>
+			<div class="mail-option">
+				<ul class="unstyled inbox-pagination">
+					 <li><span> Total: {{ $root.list.total }}</span></li>
+				</ul>
+				<ul class="unstyled inbox-pagination pull-left">
+					 <li>Página: <span>{{ $root.list.page }} - {{ Math.round($root.list.total / $root.list.limit) }}</span> | Limite: <span>{{ $root.list.limit }}</span></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </template>
 
 <template id="view">
 	<div>
-		<div class="inbox-head">
-			<div class="col-sm-7">
-				<h3><b>Asunto: </b> {{ mail.subject }}</h3>
-			</div>
-			<div class="col-sm-5 text-right">
-				<ul class="unstyled inbox-pagination">
-					<li><span>{{ mail.date.toMessageFormat() }}</span></li>
-				</ul>
-			</div>
-		</div>
-		<div class="inbox-body">
-			<div class="mail-option">
-				<ul class="unstyled inbox-pagination">
-					<li><span>{{ index }} de {{ mailsTotal }}</span></li>
-					<li v-if="prevMail.id > 0">
-						<router-link accesskey="b" class="np-btn" :key="prevMail.id" v-bind:to="{ name: 'View-Single', params: { box_id: prevMail.box_id, index: prevMail.index, mail_id: prevMail.id, folder: folder } }">
-							<i class="fa fa-angle-left  pagination-left"></i>
-						</router-link>
-					</li>
-					<li v-if="nextMail.id > 0">
-						<router-link accesskey="n" class="np-btn" :key="nextMail.id" v-bind:to="{ name: 'View-Single', params: { box_id: nextMail.box_id, index: nextMail.index, mail_id: nextMail.id, folder: folder } }">
-							<i class="fa fa-angle-right pagination-right"></i>
-						</router-link>
-					</li>
-					<li>
-						<router-link tag="a" data-original-title="Regresar" data-placement="top" data-toggle="dropdown" v-bind:to="{ name: 'Folder', folder: $route.params.folder }" class="np-btn">
-							<i class="fa fa-times"></i> 
-						</router-link>
-					</li>
-				</ul>
-			</div>
-			<div class="mail-option">
-				<!-- //
-				<div class="btn-group hidden-phone">
-					<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
-						More
-						<i class="fa fa-angle-down "></i>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-						<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-						<li class="divider"></li>
-						<li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-					 </ul>
-				</div>
-				<div class="btn-group">
-					 <a data-toggle="dropdown" href="#" class="btn mini blue">
-						 Move to
-						 <i class="fa fa-angle-down "></i>
-					 </a>
-					 <ul class="dropdown-menu">
-						 <li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-						 <li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-						 <li class="divider"></li>
-						 <li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-					 </ul>
-				</div>
-				-->
-				<div v-if="mail.deleted == 1" class="btn-group">
-					<a @click="$root.changeFolder(mail.id, $root.ref, 'not_seen')" class="btn mini blue" aria-expanded="false">
-						<i class="fa fa-inbox"></i> Sacar de la papelera
-					</a>
-				</div>
-				
-				<div class="btn-group hidden-phone">
-					<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
-						Más <i class="fa fa-angle-down "></i>
-					</a>
-					<ul class="dropdown-menu">
-						<li v-if="mail.seen == 0 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0">
-							<a @click="$root.changeFolder(mail.id, $root.ref, 'seen')">
-								<i class="fa fa-check-circle-o"></i> Marcar como leído
-							</a>
-						</li>
-						<li v-if="mail.seen == 1 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0">
-							<a @click="$root.changeFolder(mail.id, $root.ref, 'not_seen')">
-								<i class="fa fa-check-circle-o"></i> Marcar como no leído
-							</a>
-						</li>
-						<!-- //
-						<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-						<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li> 
-						-->
-						<li class="divider"></li>
-						<li>
-							<a @click="$root.changeFolder(mail.id, $root.ref, 'trash')" v-if="mail.deleted == 0" >
-								<i class="fa fa-trash-o"></i> Enviar a la papelera
-							</a>
-						</li>
-					 </ul>
-				</div>
-								
-				<div class="btn-group">
-					<a class="btn mini blue" aria-expanded="false" type="button" @click="printMail()">
-						<i class="fa fa-share"></i>  Re Enviar
-					</a>
-				</div>
-				
-				<div class="btn-group">
-					<a class="btn mini blue" aria-expanded="false" type="button" @click="printMail()">
-						<i class="fa fa-reply"></i>  Responder
-					</a>
-				</div>
-				
-				<div v-if="mail.seen == 0 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0" class="btn-group">
-					<a @click="$root.changeFolder(mail.id, $root.ref, 'seen')" class="btn mini blue" aria-expanded="false">
-						<i class="fa fa-check-circle"></i> Marcar como leído
-					</a>
-				</div>
-				<div v-if="mail.seen == 1 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0" class="btn-group">
-					<a @click="$root.changeFolder(mail.id, $root.ref, 'not_seen')" class="btn mini blue" aria-expanded="false">
-						<i class="fa fa-check-circle-o"></i> Marcar como no leído
-					</a>
-				</div>
-				
-				
-				<ul class="unstyled inbox-pagination">
-					<li>
-						<a class="np-btn" aria-expanded="false" type="button" @click="printMail()">
-							<i class="fa fa-print"></i> 
-						</a>
-					</li>
-					<li>
-						<a :href="$root.urlBodyEmail" class="np-btn" target="_blank" v-if="mail.draft == 0 && mail.deleted == 0">
-							<i class="fa fa-external-link"></i> 
-						</a>
-					</li>
-				</ul>
-			</div>
-			<div class="mail_heading row">
-				<div class="col-sm-12">
-					<h4>
+		<div class="row">
+			<div class="col-xs-12">
+				<!-- CONTENT MAIL -->
+				<div class="">
+					<div class="mail-option">
+						<div class="col-xs-7">
+							<div class="btn-group">
+								<router-link tag="a" data-original-title="Regresar" data-placement="top" v-bind:to="{ name: 'Folder', folder: $route.params.folder }" class="btn mini blue">
+									<i class="fa fa-times"></i> 
+								</router-link>
+							</div>
+							
+							<div class="btn-group">
+								<a data-toggle="dropdown" href="#" class="btn btn-sm btn-default" aria-expanded="false">
+									Más <i class="fa fa-angle-down "></i>
+								</a>
+								<ul class="dropdown-menu">
+									<li v-if="mail.seen == 0 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0">
+										<a @click="$root.changeFolder(mail.id, $root.ref, 'seen')">
+											<i class="fa fa-check-circle-o"></i> Marcar como leído
+										</a>
+									</li>
+									<li v-if="mail.seen == 1 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0">
+										<a @click="$root.changeFolder(mail.id, $root.ref, 'not_seen')">
+											<i class="fa fa-check-circle-o"></i> Marcar como no leído
+										</a>
+									</li>
+									<!-- //
+									<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
+									<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li> 
+									-->
+									<li class="divider"></li>
+									<li>
+										<a @click="$root.changeFolder(mail.id, $root.ref, 'trash')" v-if="mail.deleted == 0" >
+											<i class="fa fa-trash-o"></i> Enviar a la papelera
+										</a>
+									</li>
+								 </ul>
+							</div>
+									
+							<div class="btn-group">
+								<button class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Responder</button>
+								<!-- // <button class="btn btn-sm btn-default" type="button" ><i class="fa fa-share"></i></button> -->
+								<!-- // <button @click="printMail()" class="btn btn-sm btn-default" type="button" ><i class="fa fa-print"></i></button> -->
+								<!-- // <button class="btn btn-sm btn-default" type="button" ><i class="fa fa-trash-o"></i></button> -->
+							</div>
+							
+							<div v-if="mail.deleted == 1" class="btn-group">
+								<a @click="$root.changeFolder(mail.id, $root.ref, 'not_seen')" class="btn mini blue" aria-expanded="false">
+									<i class="fa fa-inbox"></i> Sacar de la papelera
+								</a>
+							</div>
 						
-						<b>De:</b> {{ mail.from }}
-						<br>
-						<b>Para:</b> {{ mail.to }}
-					</h4>
-				</div>
-				<div class="col-sm-12">
-				</div>
-			</div>
-			
-			<template v-if="mail.attachments !== undefined">
-				<div class="" v-if="mail.attachments.length > 0">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">
-								<i class="fa fa-paperclip"></i> Archivos Adjuntos ({{ mail.attachments.length }})
-							</h3>
+							<div v-if="mail.seen == 0 && mail.draft == 0 && mail.deleted == 0 && mail.send !== 0" class="btn-group">
+								<a @click="$root.changeFolder(mail.id, $root.ref, 'seen')" class="btn btn-sm btn-success" aria-expanded="false">
+									<i class="fa fa-check-circle"></i> Marcar como leído
+								</a>
+							</div>
 						</div>
-						<ul class="list-group">
-							
-							<a :href="attachment.path_short" download="" class="list-group-item " v-for="attachment, index) in (mail.attachments)">
-								{{ attachment.name.slice(0,25) }} - 
-								<b style="color:olivedrab;">Clic para descargar</b>
-							</a>
-							
-						</ul>
+						<div class="col-xs-5">
+							<ul class="unstyled inbox-pagination">
+								<li><span>{{ index }} de {{ mailsTotal }}</span></li>
+								<li><span></span></li>
+								<li>
+									<router-link v-if="prevMail.id > 0" accesskey="b" class="np-btn" :key="prevMail.id" v-bind:to="{ name: 'View-Single', params: { box_id: prevMail.box_id, index: prevMail.index, mail_id: prevMail.id, folder: folder } }">
+										<i class="fa fa-angle-left pagination-left"></i>
+									</router-link>
+									<a accesskey="b" class="np-btn" style="cursor:no-drop;" v-else>
+										<i class="fa fa-angle-left pagination-left"></i>
+									</a>
+								</li>
+								<li>
+									<router-link v-if="nextMail.id > 0" accesskey="n" class="np-btn" :key="nextMail.id" v-bind:to="{ name: 'View-Single', params: { box_id: nextMail.box_id, index: nextMail.index, mail_id: nextMail.id, folder: folder } }">
+										<i class="fa fa-angle-right pagination-right"></i>
+									</router-link>
+									<a accesskey="n" class="np-btn" style="cursor:no-drop;" v-else>
+										<i class="fa fa-angle-right pagination-right"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="inbox-body">
+						<div class="mail_heading row">
+							<div class="col-md-8">
+								<h2>{{ mail.subject }}</h2>
+								De: <strong>{{ mail.from }}</strong> <span>({{ mail.from_email }})</span>
+							</div>
+							<div class="col-md-4 text-right">
+								<p class="date"> 
+									{{ mail.date.toMessageFormat() }} 
+								</p>
+							</div>
+							<div class="col-md-12">
+								<h4 style="padding: 2em;margin: 2em;font-size:1px;"> </h4>
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="sender-info">
+							<div class="row">
+								<div class="col-md-12">
+									<!-- // <strong>{{ mail.from }}</strong>
+									<span>({{ mail.from_email }})</span> -->Para 
+									<strong v-for="(to, mail_to_index) in mail.to">{{ to.label }} &lt;{{ to.address_mail }}&gt;</strong>
+									<!-- // <a class="sender-dropdown"><i class="fa fa-chevron-down"></i></a> -->
+								</div>
+							</div>
+						</div>
+						<div class="mail-option">
+							<ul class="unstyled inbox-pagination">
+								<li>
+									<a class="np-btn" aria-expanded="false" type="button" @click="printMail()">
+										<i class="fa fa-print"></i> 
+									</a>
+								</li>
+								<li>
+									<a :href="$root.urlBodyEmail" class="np-btn" target="_blank" v-if="mail.draft == 0 && mail.deleted == 0">
+										<i class="fa fa-external-link"></i> 
+									</a>
+								</li>
+								<li>
+									<a @click="resizeIframeZoom()" class="np-btn">
+										<i class="fa fa-search-minus"></i> 
+									</a>
+								</li>
+							</ul>
+						</div>
+						
+						
+						<!-- Archivos Adjuntos -->
+						<template v-if="mail.attachments !== undefined">									
+							<div class="" v-if="mail.attachments.length > 0">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">
+											<i class="fa fa-paperclip"></i> Archivos Adjuntos ({{ mail.attachments.length }})
+										</h3>
+									</div>
+									<ul class="list-group">
+										<a :href="attachment.path_short" download="" class="list-group-item " v-for="(attachment, index) in mail.attachments">
+											{{ attachment.name }}
+											<b style="color:olivedrab;">Clic para descargar</b>
+										</a>
+										
+									</ul>
+								</div>
+							</div>
+							<div v-else="">Este correo no contiene archivos adjuntos.</div>
+							<div class="ln_solid"></div>
+							<div class="clearfix"></div>
+						</template>
+						<!-- / Archivos Adjuntos -->
+						
+						<!-- Message HTML -->
+						<div class="view-mail">
+							<template v-if="mail.message !== undefined">
+								<!-- // <div style="border: #666 0px dashed; zoom:0.8;padding:0;"> -->
+								<div>
+									<!-- // <iframe @onload="resizeIframe(this)" id="printf" name="printf" frameborder="0" width="100%" style="height:auto;min-height:calc(100vh)" :src="$root.urlBodyEmail" ></iframe> -->
+									<iframe style="min-height:calc(40vh)" id="printf" name="printf" frameborder="0" width="100%" :src="$root.urlBodyEmail" v-on:load="resizeIframe(this)" ></iframe>
+								</div>
+							</template>
+						</div>
+						<!-- / Message HTML -->
+						
+						<!-- Archivos Adjuntos -->
+						<template v-if="mail.attachments !== undefined">
+							<div class="ln_solid"></div>
+							<div class="clearfix"></div>
+							<div class="attachment" v-if="mail.attachments.length > 0">
+								<p>
+									<span><i class="fa fa-paperclip"></i> {{ mail.attachments.length }} Archivos Adjuntos </span>
+									<!-- — <a href="#">Download all attachments</a> | <a href="#">View all images</a> -->
+								</p>
+								<div class="row">
+									<div v-for="(attachment, index) in mail.attachments">
+										<div class="col-sm-2 col-xs-1" style="zoom:0.9;overflow-x: hidden;border: 0.3px dotted #666;padding: 0.3em;">
+											<div class="atch-thumb">
+												<!-- // <img src="/public/assets/images/inbox.png" alt="img" /> -->
+												<center>
+													<template v-if="[
+														'ai', 'avi', 'css', 'csv', 'dbf', 'doc', 'dwg', 'exe', 'fla', 'flash', 'html'
+														, 'iso', 'jpg', 'js', 'json', 'mp3', 'mp4', 'png', 'ppt', 'psd', 'rtf', 'svg', 'txt', 'xls', 'xml', 'zip'
+													].includes((attachment.name.split('.')[(attachment.name.split('.').length - 1)]))">													
+														<img :src="'/public/assets/icons/136517-file-types/svg/' + attachment.name.split('.')[(attachment.name.split('.').length - 1)] + '.svg'" :alt="attachment.name.split('.')[(attachment.name.split('.').length - 1)]" />
+													</template>
+													<template v-else>
+														<template v-if="['xls', 'xlsx'].includes((attachment.name.split('.')[(attachment.name.split('.').length - 1)]))">													
+															<img src="/public/assets/icons/136517-file-types/svg/xls.svg" alt="XLS" />
+														</template>
+														<template v-else-if="attachment.filetype === 'PDF'">
+															<img src="/public/assets/icons/136517-file-types/svg/pdf.svg" alt="PDF" />
+														</template>
+														<template v-else-if="attachment.filetype === 'X-ICON'">
+															<img width="100%" :src="attachment.path_short" alt="X-ICON" />
+														</template>
+														<template v-else-if="attachment.filetype === 'MP4'">
+															<img src="/public/assets/icons/136517-file-types/svg/mp4.svg" alt="MP4" />
+														</template>
+														<template v-else-if="attachment.filetype === 'ZIP'">
+															<img src="/public/assets/icons/136517-file-types/svg/ZIP.svg" alt="ZIP" />
+														</template>
+														<template v-else-if="attachment.filetype === 'POSTSCRIPT'">
+															<img src="/public/assets/icons/136517-file-types/svg/search.svg" alt="POSTSCRIPT" />
+														</template>
+														<template v-else-if="attachment.filetype.search('VND.EXCEL') >= 0">
+															<img src="/public/assets/icons/136517-file-types/svg/xls.svg" alt="XLS" />
+														</template>
+														<template v-else>
+															<img src="/public/assets/icons/136517-file-types/svg/file.svg" alt="NO DETECTADO" />
+														</template>
+													</template>
+												</center>
+											</div>
+											<div class="file-name">
+												<!-- // {{ attachment.name.split(/(\d)/).join(' ') }} -->
+												<!-- // {{ attachment.name.split(/([\w\d])/).join('_').replace(/(#\w{10})[\w\d]+/g, '$1')  }} -->
+												{{ attachment.name.replace(/(#\w{10})[\w\d]+/g, '$1') }}
+											</div>
+											<span class="pull-right"> 
+												<template v-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) < 1024">
+													<b>{{ parseInt(attachment.filesize/1024) }}</b> KB 
+												</template>
+												<template v-else-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) > 1024">
+													<b>{{ parseInt(Math.round(attachment.filesize/1024)/1024) }}</b> MB 
+												</template>
+												<template v-else>
+													<b>{{ attachment.filesize }}</b> B 
+												</template>
+											</span>
+											<div class="links" style="cursor:pointer" >
+												<a :href="attachment.path_short" target="_blank"><b>Ver</b></a> - <a :href="attachment.path_short" download=""><b>Descargar</b></a>
+											</div>
+										</div>
+										<template v-if="[5,11,17,23,29].includes(index)">
+											<div class="col-xs-12 clearfix"><hr height="15px"></div>
+										</template>
+									</div>
+								</div>
+							</div>
+						</template>
+						<!-- / Archivos Adjuntos -->
 					</div>
 				</div>
-				<div v-else="">Este correo no contiene archivos adjuntos.</div>
-				<div class="ln_solid"></div>
-				<div class="clearfix"></div>
-			</template>
-			
-			
-			<div class="view-mail">
-				<template v-if="mail.message !== undefined">
-					<div style="border: #666 0.25px dashed; zoom:0.8;padding:24px;">
-						<!-- // <div v-html="mail.message"></div> -->
-						<!-- <div v-html="mail.message" width="100%" style="height:auto;min-height:calc(100vh)"></div> -->
-						<iframe id="printf" name="printf" frameborder="0" width="100%" style="height:auto;min-height:calc(100vh)" :src="$root.urlBodyEmail" :key="mail.id"></iframe>
-					</div>
-				</template>
+				<!-- /CONTENT MAIL -->
 			</div>
-			<!-- // 
-			<div class="btn-group">
-				<button class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Reply</button>
-				<button class="btn btn-sm btn-default" type="button"  data-placement="top" data-toggle="tooltip" data-original-title="Forward"><i class="fa fa-share"></i></button>
-				<button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Print"><i class="fa fa-print"></i></button>
-				<button class="btn btn-sm btn-default" type="button" data-placement="top" data-toggle="tooltip" data-original-title="Trash"><i class="fa fa-trash-o"></i></button>
-				<br />
-			</div>
-			-->
 		</div>
-	  <hr>
-  </div>
+	</div>
 </template>
 
 <template id="compose-edit">
@@ -847,7 +960,7 @@ ul {
 						class="form-horizontal-not form-label-left">
 						<div class="form-group">
 							<div class="col-md-1 col-sm-1 col-xs-2">
-								<a v-if="form.from.length < 5" class="btn btn-sm btn-success" @click="form.from.push({ label: '', address_mail: '', valid: null });">
+								<a v-if="form.to.length < 5" class="btn btn-sm btn-success" @click="form.to.push({ label: '', address_mail: '', valid: null });">
 									<i class="fa fa-plus"></i>
 								</a>
 							</div>
@@ -855,18 +968,18 @@ ul {
 								Para: <span class="required">*</span>
 							</label>
 							<div class="col-md-9 col-sm-9 col-xs-12">
-								<div class="col-xs-12" v-for="(from, from_index) in form.from">
+								<div class="col-xs-12" v-for="(to, to_index) in form.to">
 									<div class="col-xs-4">
-										<input required="required" type="text" class="tags form-control" v-model="from.label" placeholder="Nombre(s) y Apellido(s)" />
+										<input required="required" type="text" class="tags form-control" v-model="to.label" placeholder="Nombre(s) y Apellido(s)" />
 									</div>
 									<div class="col-xs-6">
-										<input required="required" type="email" class="tags form-control" v-model="from.address_mail" placeholder="Correo Electronico" />
+										<input required="required" type="email" class="tags form-control" v-model="to.address_mail" placeholder="Correo Electronico" />
 									</div>
 									<div class="col-xs-2">
-										<a class="btn btn-sm btn-info" @click="validateMailAddress('from', from_index)">
+										<a class="btn btn-sm btn-info" @click="validateMailAddress('to', to_index)">
 											<i class="fa fa-question"></i>
 										</a>
-										<a class="btn btn-sm btn-danger" @click="form.from.splice(from_index, 1)">
+										<a class="btn btn-sm btn-danger" @click="form.to.splice(to_index, 1)">
 											<i class="fa fa-times"></i>
 										</a>
 									</div>
@@ -1040,6 +1153,7 @@ ul {
 		mounted() {
 			var self = this;
 			self.$root.currentBox();
+			
 			self.$root.loadList(self.box_id, self.folder);
 			// // console.log(self.box_id + ' - ' + self.folder);
 		},
@@ -1078,14 +1192,22 @@ ul {
 		mounted() {
 			var self = this;
 			self.$root.currentBox();
-			if(Number(self.$route.params.box_id) > 0 && self.$root.mails.length == 0){
-				self.$root.loadList((self.$route.params.box_id), self.$route.params.folder);
+			if(Number(self.$route.params.box_id) > 0 && self.$root.list.data.length == 0){
+				self.$root.loadList((self.$route.params.box_id), self.$route.params.folder); // Listado para vista individual
 			}
 			self.$root.loadMail();
 			indexCurr = Number(self.$route.params.index);
 			indexPrev = (Number(self.$route.params.index) - 1);
 			indexNext = (Number(self.$route.params.index) + 1);
 			self.index = indexCurr + 1;
+			$('.emails').tagsInput({
+				height: 'auto',
+				width: 'auto',
+				//itemValue: 'address_mail',
+				//itemText: 'label',
+			});
+			
+			// http://micuenta.monteverdeltda.com/api.php/records/emails_boxes
 		},
 		computed: {
 			prevMail(){
@@ -1100,8 +1222,8 @@ ul {
 				indexNext = (Number(self.$route.params.index) + 1);
 				
 				if (indexPrev >= 0){
-					prevInfo = self.$root.mails[indexPrev];
-					if(prevInfo.id != undefined && prevInfo.id > 0){
+					prevInfo = self.$root.list.data[indexPrev];
+					if(prevInfo != undefined && prevInfo.id !== undefined && prevInfo.id > 0){
 						returnInfo.id = prevInfo.id;
 						returnInfo.box_id = prevInfo.box;
 						returnInfo.index = indexPrev;
@@ -1122,7 +1244,7 @@ ul {
 				indexNext = (Number(self.$route.params.index) + 1);
 				
 				if (indexNext <= (self.mailsTotal - 1)){
-					nextInfo = self.$root.mails[indexNext];
+					nextInfo = self.$root.list.data[indexNext];
 					if(nextInfo.id != undefined && nextInfo.id > 0){
 						returnInfo.id = nextInfo.id;
 						returnInfo.box_id = nextInfo.box;
@@ -1133,27 +1255,88 @@ ul {
 				return returnInfo;
 			},
 			mailsTotal(){
-				return this.$root.mails.length;
+				return this.$root.list.data.length;
 			},
 			mail(){
 				return this.$root.mail;
 			},
 			mails(){
-				return this.$root.mails;
+				return this.$root.list.data;
 			},
 		},
 		methods: {
+			dividirCadena(cadenaADividir,separador) {
+			   var arrayDeCadenas = cadenaADividir.split(separador);
+			   document.write('<p>La cadena original es: "' + cadenaADividir + '"');
+			   document.write('<br>El separador es: "' + separador + '"');
+			   document.write("<br>El array tiene " + arrayDeCadenas.length + " elementos: ");
+
+			   for (var i=0; i < arrayDeCadenas.length; i++) {
+				  document.write(arrayDeCadenas[i] + " / ");
+			   }
+			},
 			unescape(unsafe){
 				return window.unescape(unsafe);
 			},
 			translateAttachments(attachments){
 				return JSON.parse(attachments);
 			},
-			
+			tagsFormat(data){
+				r = [];
+				if(data.length > 0){
+					data.forEach(function(a){
+						a.address_mail = (a.address_mail == undefined) ? ((a.user !== undefined) ? a.user : "") : "";
+						a.label = (a.label == undefined || a.label.length < 1) ? a.address_mail : a.label;
+						r.push(a);
+						// r.push(a.label + " <" + a.address_mail + ">");
+					});
+				}
+				return r;
+				return r.join(',');
+			},
 			printMail(){
 				var self = this;
 				window.frames["printf"].focus();
 				window.frames["printf"].print();
+			},
+			resizeIframe() {
+				obj = document.getElementById("printf");
+				obj.contentWindow.document.body.style.overflowX = "auto";
+				obj.contentWindow.document.body.style.overflowY = "hidden";
+				wInDoc = obj.contentWindow.document.body.scrollWidth;
+				hInDoc = obj.contentWindow.document.body.scrollHeight;
+				// console.log('hInDoc', hInDoc);
+				// console.log('wInDoc', wInDoc);
+				// console.log('resolution', wInDoc + 'x' + hInDoc);
+				
+				wMyDoc = obj.contentWindow.innerWidth;
+				hMyDoc = obj.contentWindow.innerHeight;
+				// console.log('hMyDoc', hMyDoc);
+				// console.log('wMyDoc', wMyDoc);
+				// console.log('Myresolution', wMyDoc + 'x' + hMyDoc);
+				
+				ZoomDect = wMyDoc / wInDoc;
+				// console.log('ZoomDect', ZoomDect);
+				
+				height = obj.contentWindow.document.body.scrollHeight + obj.contentWindow.innerHeight;
+				obj.style.minHeight = height + 'px';
+				obj.style.height = height + 'px';
+				//obj.contentWindow.document.body.style.zoom = ZoomDect;
+			},
+			resizeIframeZoom() {
+				if(obj.contentWindow.document.body.style.zoom && obj.contentWindow.document.body.style.zoom < 1){
+					obj.contentWindow.document.body.style.zoom = 1;
+				} else  {					
+					obj = document.getElementById("printf");
+					obj.contentWindow.document.body.style.overflowX = "auto";
+					obj.contentWindow.document.body.style.overflowY = "hidden";
+					wInDoc = obj.contentWindow.document.body.scrollWidth;
+					hInDoc = obj.contentWindow.document.body.scrollHeight;				
+					wMyDoc = obj.contentWindow.innerWidth;
+					hMyDoc = obj.contentWindow.innerHeight;				
+					ZoomDect = wMyDoc / wInDoc;
+					obj.contentWindow.document.body.style.zoom = ZoomDect;
+				}
 			},
 		}
 	});
@@ -1171,7 +1354,7 @@ ul {
 					created: '',
 					date: '',
 					deleted: 0,
-					draft: 0,
+					draft: 1,
 					flagged: 0,
 					from: '',
 					from_email: '',
@@ -1193,11 +1376,13 @@ ul {
 				form: {
 					id: this.$route.params.mail_id,
 					box: this.$route.params.box_id,
-					from: [
+					to: [
 						// { label: 'Ayuda y Soporte Monteverde', address_mail: 'soporte@monteverdeltda.com', valid: null },
 					],
-					draft: 0,
-					send: 1,
+					draft: 1,
+					send: 0,
+					flagged: 0,
+					seen: 0,
 					subject: '',
 					message: '',
 					attachments: [],
@@ -1206,14 +1391,20 @@ ul {
 		},
 		mounted() {
 			var self = this;
+			self.$root.currentBox();
 			if(self.mail_id == null || self.mail_id == 0){
 				// console.log('no hay email.');
 				insert = {
+					from: self.$root.myBox.label,
+					from_email: self.$root.myBox.user,
 					box: self.form.box,
+					to: "[{ label: '', address_mail: '', valid: null }]",
 					draft: 1,
-					send: self.form.send,
+					send: 0,
+					new: 0,
+					recent: 0,
+					flagged: 0,
 					create_by: <?= $this->user->id; ?>,
-					from: "[]",
 					attachments: "[]",
 				};
 				
@@ -1222,6 +1413,7 @@ ul {
 					console.log(r);
 					if(r.data > 0){
 						self.$router.push({ name: 'Edit', params: { mail_id: r.data } })
+						location.reload();
 					} else {
 						self.$router.push({ name: 'Home' })
 					};
@@ -1238,7 +1430,7 @@ ul {
 				})
 				.then(function (r) {
 					if(r.data.id > 0){
-						r.data.from = JSON.parse(r.data.from);
+						r.data.to = JSON.parse(r.data.to);
 						r.data.attachments = JSON.parse(r.data.attachments);
 						self.form = r.data;
 					} else {
@@ -1249,8 +1441,8 @@ ul {
 					
 				});
 				
-				if(self.form.from.length == 0){
-					self.form.from.push({ label: 'nombre', address_mail: 'correo@sincorreo.com', valid: null });
+				if(self.form.to.length == 0){
+					self.form.to.push({ label: 'nombre', address_mail: 'correo@sincorreo.com', valid: null });
 				}
 				self.loadTiny();
 			}
@@ -1260,255 +1452,28 @@ ul {
 		methods: {
 			loadTiny(){
 				var self = this;
-				/*tinymce.init({
-					selector: "#editor-message",  // change this value according to your HTML
-					plugins: "template",
-					menubar: "insert",
-					toolbar: "template",
-					templates: [
-						{title: 'Some title 1', description: 'Some desc 1', content: 'My content'},
-						{title: 'Some title 2', description: 'Some desc 2', content: 'My content 2'},
-						//{title: 'Some title 2', description: 'Some desc 2', url: 'development.html'}
-					]
-				});*/
-				var fakeServer = (function () {
-				  /* Use tinymce's Promise shim */
-				  var Promise = tinymce.util.Promise;
-
-				  /* Some user names for our fake server */
-				  var userNames = [
-					'Terry Green', 'Edward Carroll', 'Virginia Turner', 'Alexander Schneider', 'Gary Vasquez', 'Randy Howell',
-					'Katherine Moore', 'Betty Washington', 'Grace Chapman', 'Christina Nguyen', 'Danielle Rose', 'Thomas Freeman',
-					'Thomas Armstrong', 'Vincent Lee', 'Brittany Kelley', 'Brenda Wheeler', 'Amy Price', 'Hannah Harvey',
-					'Bobby Howard', 'Frank Fox', 'Diane Hopkins', 'Johnny Hawkins', 'Sean Alexander', 'Emma Roberts', 'Thomas Snyder',
-					'Thomas Allen', 'Rebecca Ross', 'Amy Boyd', 'Kenneth Watkins', 'Sarah Tucker', 'Lawrence Burke', 'Emma Carr',
-					'Zachary Mason', 'John Scott', 'Michelle Davis', 'Nicholas Cole', 'Gerald Nelson', 'Emily Smith', 'Christian Stephens',
-					'Grace Carr', 'Arthur Watkins', 'Frances Baker', 'Katherine Cook', 'Roger Wallace', 'Pamela Arnold', 'Linda Barnes',
-					'Jacob Warren', 'Billy Ramirez', 'Pamela Walsh', 'Paul Wade', 'Katherine Campbell', 'Jeffrey Berry', 'Patrick Bowman',
-					'Dennis Alvarez', 'Crystal Lucas', 'Howard Mendoza', 'Patricia Wallace', 'Peter Stone', 'Tiffany Lane', 'Joe Perkins',
-					'Gloria Reynolds', 'Willie Fernandez', 'Doris Harper', 'Heather Sandoval', 'Danielle Franklin', 'Ann Ellis',
-					'Christopher Hernandez', 'Pamela Perry', 'Matthew Henderson', 'Jesse Mitchell', 'Olivia Reed', 'David Clark', 'Juan Taylor',
-					'Michael Garrett', 'Gerald Guerrero', 'Jerry Coleman', 'Joyce Vasquez', 'Jane Bryant', 'Sean West', 'Deborah Bradley',
-					'Phillip Castillo', 'Martha Coleman', 'Ryan Santos', 'Harold Hanson', 'Frances Hoffman', 'Heather Fisher', 'Martha Martin',
-					'George Gray', 'Rachel Herrera', 'Billy Hart', 'Kelly Campbell', 'Kelly Marshall', 'Doris Simmons', 'Julie George',
-					'Raymond Burke', 'Ruth Hart', 'Jack Schmidt', 'Billy Schmidt', 'Ruth Wagner', 'Zachary Estrada', 'Olivia Griffin', 'Ann Hayes',
-					'Julia Weaver', 'Anna Nelson', 'Willie Anderson', 'Anna Schneider', 'Debra Torres', 'Jordan Holmes', 'Thomas Dean',
-					'Maria Burton', 'Terry Long', 'Danielle McDonald', 'Kyle Flores', 'Cheryl Garcia', 'Judy Delgado', 'Karen Elliott',
-					'Vincent Ortiz', 'Ann Wright', 'Ann Ramos', 'Roy Jensen', 'Keith Cunningham', 'Mary Campbell', 'Jesse Ortiz', 'Joseph Mendoza',
-					'Nathan Bishop', 'Lori Valdez', 'Tammy Jacobs', 'Mary West', 'Juan Mitchell', 'Thomas Adams', 'Christian Martinez', 'James Ramos',
-					'Deborah Ross', 'Eric Holmes', 'Thomas Diaz', 'Sharon Morales', 'Kathryn Hamilton', 'Helen Edwards', 'Betty Powell',
-					'Harry Campbell', 'Raymond Perkins', 'Melissa Wallace', 'Danielle Hicks', 'Harold Brewer', 'Jack Burns', 'Anna Robinson',
-					'Dorothy Nguyen', 'Jane Dean', 'Janice Hunter', 'Ryan Moore', 'Brian Riley', 'Brittany Bradley', 'Phillip Ortega', 'William Fisher',
-					'Jennifer Schultz', 'Samantha Perez', 'Linda Carr', 'Ann Brown', 'Shirley Kim', 'Jeremy Alvarez', 'Dylan Oliver', 'Roy Gomez',
-					'Ethan Brewer', 'Ruth Lucas', 'Marilyn Myers', 'Danielle Wright', 'Jose Meyer', 'Bobby Brown', 'Angela Crawford', 'Brandon Willis',
-					'Kyle McDonald', 'Aaron Valdez', 'Kevin Webb', 'Ashley Gordon', 'Karen Jenkins', 'Johnny Santos', 'Ashley Henderson', 'Amy Walters',
-					'Amber Rodriguez', 'Thomas Ross', 'Dorothy Wells', 'Jennifer Murphy', 'Douglas Phillips', 'Helen Johnston', 'Nathan Hawkins',
-					'Roger Mitchell', 'Michael Young', 'Eugene Cruz', 'Kevin Snyder', 'Frank Ryan', 'Tiffany Peters', 'Beverly Garza', 'Maria Wright',
-					'Shirley Jensen', 'Carolyn Munoz', 'Kathleen Day', 'Ethan Meyer', 'Rachel Fields', 'Joan Bell', 'Ashley Sims', 'Sara Fields',
-					'Elizabeth Willis', 'Ralph Torres', 'Charles Lopez', 'Aaron Green', 'Arthur Hanson', 'Betty Snyder', 'Jose Romero', 'Linda Martinez',
-					'Zachary Tran', 'Sean Matthews', 'Eric Elliott', 'Kimberly Welch', 'Jason Bennett', 'Nicole Patel', 'Emily Guzman', 'Lori Snyder',
-					'Sandra White', 'Christina Lawson', 'Jacob Campbell', 'Ruth Foster', 'Mark McDonald', 'Carol Williams', 'Alice Washington',
-					'Brandon Ross', 'Judy Burns', 'Zachary Hawkins', 'Julie Chavez', 'Randy Duncan', 'Lisa Robinson', 'Jacqueline Reynolds', 'Paul Weaver',
-					'Edward Gilbert', 'Deborah Butler', 'Frances Fox', 'Joshua Schmidt', 'Ashley Oliver', 'Martha Chavez', 'Heather Hudson',
-					'Lauren Collins', 'Catherine Marshall', 'Katherine Wells', 'Robert Munoz', 'Pamela Nelson', 'Dylan Bowman', 'Virginia Snyder',
-					'Janet Ruiz', 'Ralph Burton', 'Jose Bryant', 'Russell Medina', 'Brittany Snyder', 'Richard Cruz', 'Matthew Jimenez', 'Danielle Graham',
-					'Steven Guerrero', 'Benjamin Matthews', 'Janet Mendoza', 'Harry Brewer', 'Scott Cooper', 'Alexander Keller', 'Virginia Gordon',
-					'Randy Scott', 'Kimberly Olson', 'Helen Lynch', 'Ronald Garcia', 'Joseph Willis', 'Philip Walker', 'Tiffany Harris', 'Brittany Weber',
-					'Gregory Harris', 'Sean Owens', 'Wayne Meyer', 'Roy McCoy', 'Keith Lucas', 'Christian Watkins', 'Christopher Porter', 'Sandra Lopez',
-					'Harry Ward', 'Julie Sims', 'Albert Keller', 'Lori Ortiz', 'Virginia Henry', 'Samuel Green', 'Judith Cole', 'Ethan Castillo', 'Angela Ellis',
-					'Amy Reid', 'Jason Brewer', 'Aaron Clark', 'Aaron Elliott', 'Doris Herrera', 'Howard Castro', 'Kenneth Davis', 'Austin Spencer',
-					'Jonathan Marshall', 'Phillip Nelson', 'Julia Guzman', 'Robert Hansen', 'Kevin Anderson', 'Gerald Arnold', 'Austin Castro', 'Zachary Moore',
-					'Joseph Cooper', 'Barbara Black', 'Albert Mendez', 'Marie Lane', 'Jacob Nichols', 'Virginia Marshall', 'Aaron Miller', 'Linda Harvey',
-					'Christopher Morris', 'Emma Fields', 'Scott Guzman', 'Olivia Alexander', 'Kelly Garrett', 'Jesse Hanson', 'Henry Wong', 'Billy Vasquez',
-					'Larry Ramirez', 'Bryan Brooks', 'Alan Berry', 'Nicole Powell', 'Stephen Bowman', 'Eric Hughes', 'Elizabeth Obrien', 'Timothy Ramos',
-					'Michelle Russell', 'Denise Ruiz', 'Sean Carter', 'Amanda Barnett', 'Kathy Black', 'Terry Gutierrez', 'John Jensen', 'Grace Sanchez',
-					'Tiffany Harvey', 'Jacqueline Sims', 'Wayne Lee', 'Roy Foster', 'Joyce Hart', 'Joseph Russell', 'Harold Washington', 'Beverly Cox',
-					'Nicole Morales', 'Anna Carpenter', 'Jesse Ray', 'Ann Snyder', 'Mark Diaz', 'Elizabeth Harper', 'Andrew Guerrero', 'Cheryl Silva',
-					'Michelle Hudson', 'Jeffrey Santos', 'Victoria Vasquez', 'Matthew Meyer', 'Jacob Murray', 'Jose Munoz', 'Edward Howell', 'Vincent Hunter',
-					'Daniel Walters', 'Samantha Obrien', 'Laura Elliott', 'Richard Olson', 'Daniel Graham', 'Carol Lee', 'Grace Sullivan', 'Nancy Rodriguez',
-					'Tyler Tran', 'Crystal Shaw', 'Madison Allen', 'Ralph Sims', 'Joe Jenkins', 'Dennis Ray', 'Arthur Davidson', 'Victoria Allen', 'Arthur Jackson',
-					'Joan Thomas', 'Daniel Hopkins', 'Gloria Hicks', 'Danielle Price', 'Craig Keller', 'Alan Morgan', 'Gregory Silva', 'Samantha Kelly',
-					'Rachel Williamson', 'Bruce Garrett', 'Jacob Smith', 'Kathleen Nichols', 'Sarah Long', 'Carol Pearson', 'Virginia Mendez', 'Judy Valdez',
-					'Jason Garza', 'Brenda Fowler', 'Karen Edwards', 'Alexander Anderson', 'Pamela Wallace', 'Ruth Howell', 'Walter Hernandez', 'George Lucas',
-					'Samantha Long', 'Margaret Garza', 'Kathleen Schultz', 'Frances Guerrero', 'Amber Meyer', 'Rachel Morales', 'Teresa Curtis', 'Heather Bell',
-					'Grace Johnson', 'Melissa King', 'Zachary Cook', 'Carol Schultz', 'Jane Beck', 'Karen Stone', 'Roger Brooks', 'Carolyn Fuller', 'Nicholas Coleman',
-					'William Bishop', 'Christine May', 'Linda George', 'Jean Meyer', 'Cheryl Armstrong', 'Danielle Welch', 'Amanda Graham', 'Janice Carter',
-					'Catherine Brooks', 'Lawrence Gonzalez', 'Amy Russell', 'Eugene Jimenez', 'Joseph Carlson', 'Peter McCoy', 'Jerry Washington', 'Carolyn Obrien',
-					'Mark Walker', 'Stephanie Hoffman', 'Julie Pena', 'Karen Curtis', 'Bryan Cruz', 'Madison Shaw', 'Rachel Graham', 'Susan Simpson', 'Andrea Harrison',
-					'Bryan Miller', 'Vincent McDonald', 'Jesse McCoy', 'Christine Ramos', 'Dorothy Riley', 'Karen Warren', 'Ashley Weber', 'Judith Robinson',
-					'Alan Mendez', 'Donna Medina', 'Helen Lane', 'Douglas Clark', 'Brenda Romero', 'Doris Wells', 'Patrick Howell', 'Doris Lawrence', 'Harry Jacobs',
-					'Phillip Rose', 'Deborah Patel', 'Bryan Day', 'Rachel Butler', 'Paul Butler', 'Judy Knight', 'Willie Wallace', 'Phillip Anderson', 'Emma Black',
-					'Lisa Lynch', 'Kimberly Freeman', 'Ronald West', 'Kathleen Harris', 'Martha Ruiz', 'Phillip Moreno', 'Robert Vargas', 'Jesse Diaz', 'Christine Weber',
-					'Karen Stanley', 'Theresa Edwards', 'Kathryn Chavez', 'Sarah Rios', 'Danielle Wong', 'Kathy Carr', 'Joan Diaz', 'Albert Walters',
-					'Denise Kim', 'Katherine Pearson', 'Diana Richardson', 'Harry Ford', 'Eric Mills', 'Sean Hicks', 'Joe Brown', 'Judith Morgan', 'Harry Hunter',
-					'Matthew Bryant', 'Tyler Rose', 'Mildred Delgado', 'Emma Peters', 'Walter Delgado', 'Lauren Gilbert', 'Christopher Romero'
-				  ];
-
-				  /* some user profile images for our fake server */
-				  var images = [
-					'camilarocun', 'brianmichel', 'absolutehype', '4l3d', 'lynseybrowne', 'hi_kendall', '4ae78e7058d2434', 'yusuf_y7',
-					'beauty__tattoos', 'mehrank36176270', 'fabriziocuscini', 'hassaminian', 'mediajorge', 'alexbienz', 'eesates', 'donjain',
-					'austinknight', 'ehlersd', 'bipiiin', 'victorstuber', 'curiousoffice', 'chowdhury_sayan', 'upslon', 'gcauchon', 'pawel_murawski',
-					'mr_r_a', 'jeremieges', 'nickttng', 'patrikward', 'sinecdoques', 'gabrielbeduschi', 'ashmigosh', 'shxnx', 'laborisova',
-					'anand_2688', 'mefahad', 'puneetsmail', 'jefrydagucci', 'duck4fuck', 'verbaux', 'nicolasjengler', 'sorousht_', 'am0rz',
-					'dominiklevitsky', 'jarjan', 'ganilaughs', 'namphong122', 'tiggreen', 'allisongrayce', 'messagepadapp', 'madebylipsum',
-					'tweetubhai', 'avonelink', 'ahmedkojito', 'piripipirics', 'dmackerman', 'markcipolla'
-				  ];
-
-				  /* some user profile descriptions for our fake server */
-				  var descriptions = [
-					'I like to work hard, play hard!',
-					'I drink like a fish, that is a fish that drinks coffee.',
-					'OutOfCheeseError: Please reinstall universe.',
-					'Do not quote me.',
-					'No one reads these things right?'
-				  ];
-
-				  /* This represents a database of users on the server */
-				  var userDb = {};
-				  userNames.map(function (fullName) {
-					var name = fullName.toLowerCase().replace(/ /g, '');
-					var description = descriptions[Math.floor(descriptions.length * Math.random())];
-					var image = 'https://s3.amazonaws.com/uifaces/faces/twitter/' + images[Math.floor(images.length * Math.random())] + '/128.jpg';
-					return {
-					  id: name,
-					  name: name,
-					  fullName: fullName,
-					  description: description,
-					  image: image
-					};
-				  }).forEach(function(user) {
-					userDb[user.id] = user;
-				  });
-
-				  /* This represents getting the complete list of users from the server with only basic details */
-				  var fetchUsers = function() {
-					return new Promise(function(resolve, _reject) {
-					  /* simulate a server delay */
-					  setTimeout(function() {
-						var users = Object.keys(userDb).map(function(id) {
-						  return {
-							id: id,
-							name: userDb[id].name,
-						  };
-						});
-						resolve(users);
-					  }, 500);
-					});
-				  };
-
-				  /* This represents requesting all the details of a single user from the server database */
-				  var fetchUser = function(id) {
-					return new Promise(function(resolve, reject) {
-					  /* simulate a server delay */
-					  setTimeout(function() {
-						if (Object.prototype.hasOwnProperty.call(userDb, id)) {
-						  resolve(userDb[id]);
-						}
-						reject('unknown user id "' + id + '"');
-					  }, 300);
-					});
-				  };
-
-				  return {
-					fetchUsers: fetchUsers,
-					fetchUser: fetchUser
-				  };
-				})();
-
-				/* These are "local" caches of the data returned from the fake server */
 				var usersRequest = null;
 				var userRequest = {};
-
-				var mentions_fetch = function (query, success) {
-				  /* Fetch your full user list from somewhere */
-				  if (usersRequest === null) {
-					usersRequest = fakeServer.fetchUsers();
-				  }
-				  usersRequest.then(function(users) {
-					/* query.term is the text the user typed after the '@' */
-					users = users.filter(function (user) {
-					  return user.name.indexOf(query.term.toLowerCase()) !== -1;
-					});
-
-					users = users.slice(0, 10);
-
-					/* Where the user object must contain the properties `id` and `name`
-					   but you could additionally include anything else you deem useful. */
-					success(users);
-				  });
-				};
-
-				var mentions_menu_hover = function (userInfo, success) {
-				  /* request more information about the user from the server and cache it locally */
-				  if (!userRequest[userInfo.id]) {
-					userRequest[userInfo.id] = fakeServer.fetchUser(userInfo.id);
-				  }
-				  userRequest[userInfo.id].then(function(userDetail) {
-					var div = document.createElement('div');
-
-					div.innerHTML = (
-					'<div class="card">' +
-					  '<h1>' + userDetail.fullName + '</h1>' +
-					  '<img class="avatar" src="' + userDetail.image + '"/>' +
-					  '<p>' + userDetail.description + '</p>' +
-					'</div>'
-					);
-
-					success(div);
-				  });
-				};
-
-				var mentions_menu_complete = function (editor, userInfo) {
-				  var span = editor.getDoc().createElement('span');
-				  span.className = 'mymention';
-				  span.setAttribute('data-mention-id', userInfo.id);
-				  span.appendChild(editor.getDoc().createTextNode('@' + userInfo.name));
-				  return span;
-				};
-
-				var mentions_select = function (mention, success) {
-				  /* `mention` is the element we previously created with `mentions_menu_complete`
-					 in this case we have chosen to store the id as an attribute */
-				  var id = mention.getAttribute('data-mention-id');
-				  /* request more information about the user from the server and cache it locally */
-				  if (!userRequest[id]) {
-					userRequest[id] = fakeServer.fetchUser(id);
-				  }
-				  userRequest[id].then(function(userDetail) {
-					var div = document.createElement('div');
-					div.innerHTML = (
-					  '<div class="card">' +
-					  '<h1>' + userDetail.fullName + '</h1>' +
-					  '<img class="avatar" src="' + userDetail.image + '"/>' +
-					  '<p>' + userDetail.description + '</p>' +
-					  '</div>'
-					);
-					success(div);
-				  });
-				};
-				
 				tinymce.init({
 					selector: 'textarea#editor-message',
 					themes: 'advanced',
 					height: 'calc(80vh)',
 					elementpath: false,
-					paste_as_text: true,
-					powerpaste_allow_local_images: false,
 					image_title: true,
 					convert_urls: true,
 					automatic_uploads: true,
 					file_picker_types: 'image',
 					plugins: [
-						'fullpage save template importcss preview image imagetools advcode colorpicker media table powerpaste',
+						'fullpage save template importcss preview image imagetools advcode colorpicker media table',
 						'advlist autolink lists link charmap print preview anchor textcolor',
 						'searchreplace visualblocks fullscreen',
 						'insertdatetime contextmenu help wordcount'
 					],
-					/*
 					external_plugins: {
-						'powerpaste': 'http://www.server.com/application/external_plugins/powerpaste/plugin.js'
-					},*/
+						'powerpaste': '/public/assets/vendors/tinymce/plugins/powerpaste/plugin.js'
+					},
+					paste_as_text: true,
+					powerpaste_allow_local_images: false,
 					powerpaste_word_import: "clean",
 					powerpaste_html_import: "merge",
 					image_advtab: true,
@@ -1516,53 +1481,96 @@ ul {
 					end_container_on_empty_block: true,
 					importcss_append: true,
 					menubar: "format edit tools table",
-					aste_postprocess: function(editor, fragment) {
-						// Fragment is a DocumentFragment node containing the DOM structure of the pasted content,
-						// after it has been filtered by the PowerPaste plugin.
+					paste_postprocess: function(editor, fragment) {
 						var textnode = document.createTextNode("Added Text");
-						// Modify the fragment via the argument - do not return a value!
 						fragment.node.appendChild(textnode);
 					},
-					toolbar: 
-						'fullpage visualblocks template code preview save | '
-						+ 'insertfile pastetext undo redo | styleselect formatselect removeformat | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | insert link image imagetools'
-						+'| bullist numlist outdent indent | help',
-					content_css: [
-						//'/templates/mails/style01.css'
-					],
+					toolbar: 'fullpage visualblocks template code preview save | ' + 'insertfile pastetext undo redo | styleselect formatselect removeformat | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | insert link image imagetools'+ '| bullist numlist outdent indent | help',
 					save_enablewhendirty: true,
 					save_oncancelcallback: function () {
-						// console.log('Save canceled');
+						console.log('Save canceled');
 					},
 					save_onsavecallback: function () {
 						self.saveDraft();
-					},					
+					},
 					templates: [
-						{ title: 'Tabla Sencilla', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
-						{ title: 'Lista con fechas', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>Mi Lista</h2><ul><li></li><li></li></ul></div>' },
-						{ title: 'Abacus (Blog)', description: '', url: '/templates/mails/FG-abacus-blog.html' },
-						{ title: 'Abacus (Product)', description: '', url: '/templates/mails/FG-abacus-product.html' },
-						{ title: 'Abacus (Re-opt-in)', description: '', url: '/templates/mails/FG-abacus-re-opt-in.html' },
-						{ title: 'Abacus (Transactional)', description: '', url: '/templates/mails/FG-abacus-transactional.html' },
-						{ title: 'Cerberus (Fluid)', description: '', url: '/templates/mails/FG-cerberus-fluid.html' },
-						{ title: 'Cerberus (Hybrid)', description: '', url: '/templates/mails/FG-cerberus-hybrid.html' },
-						{ title: 'Cerberus (InLine)', description: '', url: '/templates/mails/FG-cerberus-responsive.html' },
-						{ title: 'Email (InLine)', description: '', url: '/templates/mails/FG-email-inlined.html' },
-						{ title: 'Email', description: '', url: '/templates/mails/FG-email.html' },
-						{ title: 'Email Marketing', description: '', url: '/templates/mails/FG-HTML-Email-Marketing-Template.html' },
-						{ title: 'Karakil (Blog)', description: '', url: '/templates/mails/FG-karakol-blog.html' },
-						{ title: 'Karakil (Product)', description: '', url: '/templates/mails/FG-karakol-product.html' },
-						{ title: 'Karakil (Transactional)', description: '', url: '/templates/mails/FG-karakol-transactional.html' },
-						{ title: 'plain re opt-in', description: '', url: '/templates/mails/FG-plain-re-opt-in.html' },
-						{ title: 'Responsive Email', description: '', url: '/templates/mails/FG-responsive-html-email-template.html' },
-						{ title: 'Columna Sencilla', description: '', url: '/templates/mails/FG-single-column.html' },
-						{ title: 'Correo Marketing', description: '', url: '/templates/mails/FG-Template-Email-Marketing.html' },
-						{ title: '3 Columnas con imagenes', description: '', url: '/templates/mails/FG-three-cols-images.html' },
-						{ title: '2 Columnas simples', description: '', url: '/templates/mails/FG-two-cols-simple.html' },
-						{ title: 'Wayfair (Blog)', description: '', url: '/templates/mails/FG-wayfair-blog.html' },
-						{ title: 'Wayfair (Newsletter)', description: '', url: '/templates/mails/FG-wayfair-newsletter.html' },
-						{ title: 'Wayfair (Transactional)', description: '', url: '/templates/mails/FG-wayfair-transactional.html' },
-						{ title: 'Registro', description: 'register', url: '/templates/mails/register.php' },
+						{
+							title: 'Tabla Sencilla',
+							description: 'creates a new table',
+							content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>'
+						},
+						{
+							title: 'Lista con fechas', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>Mi Lista</h2><ul><li></li><li></li></ul></div>'
+						},
+						{
+							title: 'Abacus (Blog)', description: '', url: '/templates/mails/FG-abacus-blog.html'
+						},
+						{
+							title: 'Abacus (Product)', description: '', url: '/templates/mails/FG-abacus-product.html'
+						},
+						{
+							title: 'Abacus (Re-opt-in)', description: '', url: '/templates/mails/FG-abacus-re-opt-in.html'
+						},
+						{
+							title: 'Abacus (Transactional)', description: '', url: '/templates/mails/FG-abacus-transactional.html'
+						},
+						{
+							title: 'Cerberus (Fluid)', description: '', url: '/templates/mails/FG-cerberus-fluid.html'
+						},
+						{
+							title: 'Cerberus (Hybrid)', description: '', url: '/templates/mails/FG-cerberus-hybrid.html'
+						},
+						{
+							title: 'Cerberus (InLine)', description: '', url: '/templates/mails/FG-cerberus-responsive.html'
+						},
+						{
+							title: 'Email (InLine)', description: '', url: '/templates/mails/FG-email-inlined.html'
+						},
+						{
+							title: 'Email', description: '', url: '/templates/mails/FG-email.html'
+						},
+						{
+							title: 'Email Marketing', description: '', url: '/templates/mails/FG-HTML-Email-Marketing-Template.html'
+						},
+						{
+							title: 'Karakil (Blog)', description: '', url: '/templates/mails/FG-karakol-blog.html'
+						},
+						{
+							title: 'Karakil (Product)', description: '', url: '/templates/mails/FG-karakol-product.html'
+						},
+						{
+							title: 'Karakil (Transactional)', description: '', url: '/templates/mails/FG-karakol-transactional.html'
+						},
+						{
+							title: 'plain re opt-in', description: '', url: '/templates/mails/FG-plain-re-opt-in.html'
+						},
+						{
+							title: 'Responsive Email', description: '', url: '/templates/mails/FG-responsive-html-email-template.html'
+						},
+						{
+							title: 'Columna Sencilla', description: '', url: '/templates/mails/FG-single-column.html'
+						},
+						{
+							title: 'Correo Marketing', description: '', url: '/templates/mails/FG-Template-Email-Marketing.html'
+						},
+						{
+							title: '3 Columnas con imagenes', description: '', url: '/templates/mails/FG-three-cols-images.html'
+						},
+						{
+							title: '2 Columnas simples', description: '', url: '/templates/mails/FG-two-cols-simple.html'
+						},
+						{
+							title: 'Wayfair (Blog)', description: '', url: '/templates/mails/FG-wayfair-blog.html'
+						},
+						{
+							title: 'Wayfair (Newsletter)', description: '', url: '/templates/mails/FG-wayfair-newsletter.html'
+						},
+						{
+							title: 'Wayfair (Transactional)', description: '', url: '/templates/mails/FG-wayfair-transactional.html'
+						},
+						{
+							title: 'Registro', description: 'register', url: '/templates/mails/register.php'
+						},
 					],
 					template_cdate_format: '[Fecha de Creacion (CDATE): %m/%d/%Y : %H:%M:%S]',
 					template_mdate_format: '[Fecha de Modificación (MDATE): %m/%d/%Y : %H:%M:%S]',
@@ -1613,35 +1621,22 @@ ul {
 						var input = document.createElement('input');
 						input.setAttribute('type', 'file');
 						input.setAttribute('accept', 'image/*');
-						
-						// Note: In modern browsers input[type="file"] is functional without 
-						// even adding it to the DOM, but that might not be the case in some older
-						// or quirky browsers like IE, so you might want to add it to the DOM
-						// just in case, and visually hide it. And do not forget do remove it
-						// once you do not need it anymore.
-
 						input.onchange = function() {
-						  var file = this.files[0];
-						  
-						  var reader = new FileReader();
-						  reader.onload = function () {
-							// Note: Now we need to register the blob in TinyMCEs image blob
-							// registry. In the next release this part hopefully won't be
-							// necessary, as we are looking to handle it internally.
-							var id = 'blobid' + (new Date()).getTime();
-							var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
-							var base64 = reader.result.split(',')[1];
-							var blobInfo = blobCache.create(id, file, base64);
-							blobCache.add(blobInfo);
-
-							// call the callback and populate the Title field with the file name
-							cb(blobInfo.blobUri(), { title: file.name });
-						  };
-						  reader.readAsDataURL(file);
+							var file = this.files[0];
+							var reader = new FileReader();
+							reader.onload = function () {
+									
+									var id = 'blobid' + (new Date()).getTime();
+									var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+									var base64 = reader.result.split(',')[1];
+									var blobInfo = blobCache.create(id, file, base64);
+									blobCache.add(blobInfo);
+									cb(blobInfo.blobUri(), { title: file.name });
+							};
+							reader.readAsDataURL(file);
 						};
-						
 						input.click();
-					  },
+					},
 				});
 			},
 			saveDraft(){
@@ -1664,7 +1659,7 @@ ul {
 					id: self.form.id,
 					subject: self.form.subject,
 					message: self.form.message,
-					from: JSON.stringify(self.form.from),
+					to: JSON.stringify(self.form.to),
 					attachments: JSON.stringify(self.form.attachments),
 					delete: 0,
 					seen: 0,
@@ -1787,11 +1782,11 @@ ul {
 					notice.update({ title: 'Cuenta de origen. OK', text: percent + '% completado.', icon: 'fa fa-check', type: 'info' });
 					
 					var delayInMilliseconds = 1000; // 1 Segundo por campo = 1000 Milisegundos
-					var fromTotal = self.form.from.length;
-					// console.log('fromTotal', fromTotal);
+					var toTotal = self.form.to.length;
+					// console.log('toTotal', toTotal);
 					// console.log('ccTotal', ccTotal);
 					
-					for (i = 0; i < fromTotal; i++) { if (self.form.from[i].label.length < 4 || !self.validateEmail(self.form.from[i].address_mail)){ self.form.from.splice(i, 1); } };
+					for (i = 0; i < toTotal; i++) { if (self.form.to[i].label.length < 4 || !self.validateEmail(self.form.to[i].address_mail)){ self.form.to.splice(i, 1); } };
 					
 					percent += 7;
 					notice.update({ title: 'Validando asunto', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
@@ -1914,8 +1909,9 @@ ul {
 
 	var router = new VueRouter({
 		routes:[
-			{ path: '/:box_id/folder/:folder', component: Home, name: 'Home', params: { folder: 'inbox' } },
-			{ path: '/:box_id/folder/:folder/', component: Home, name: 'Folder' },
+			{ path: '/:box_id/folder/:folder', component: Home, name: 'Home', params: { folder: 'inbox', page: 1, limit: 25 } },
+			{ path: '/:box_id/folder/:folder/', component: Home, name: 'Folder', params: { page: 1, limit: 25 } },
+			{ path: '/:box_id/folder/:folder/:page', component: Home, name: 'Folder-Page', params: { limit: 25 } },
 			{ path: '/:box_id/compose', component: Compose, name: 'Compose', params: { mail_id: 0 } },
 			{ path: '/:box_id/compose/:mail_id', component: Compose, name: 'Edit' },
 			{ path: '/:folder/view/:box_id/view/:mail_id-:index', component: View, name: 'View' },
@@ -1934,6 +1930,16 @@ ul {
 		router: router,
 		data: function () {
 			return {
+				labels: {
+					folders: {
+						inbox: 'Bandeja de entrada',
+						not_seen: 'Sin Leer',
+						seen: 'Leidos',
+						send: 'Enviados',
+						trash: 'Papelera',
+						draft: 'Borradores',
+					}
+				},
 				box_id: 0,
 				folder: 'inbox',
 				boxes: <?php echo json_encode($AllBoxes); ?>,
@@ -1975,19 +1981,28 @@ ul {
 				
 				ref: 0,
 				folder: 'inbox',
+				
+				list: {
+					limit: ((this.$route.params.limit != undefined && this.$route.params.limit > 0) ? this.$route.params.limit : 25),
+					page: ((this.$route.params.page != undefined && this.$route.params.page > 0) ? this.$route.params.page : 1),
+					total: 0,
+					data: []
+				}
 			};
 		},
 		computed: {
 			urlBodyEmail(){
 				var self = this;
+				
+				
 				return '/index.php?controller=site&action=My_email_body&ref=0&email_id=' + self.$route.params.mail_id;
 			},
 		},
 		mounted(){
 			var self = this;
 			self.currentBox();
-			if(self.mails.length == 0 && self.box_id > 0){
-				self.loadList(self.box_id, self.folder);
+			if(self.list.data.length == 0 && self.box_id > 0){ 
+				//self.loadList(self.box_id, self.folder);
 			}
 		},
 		created() {
@@ -2044,10 +2059,15 @@ ul {
 					}
 				})
 				.then(function (r) {
-					// // console.log('r', r);
 					if(r.data !== undefined){
 						if(r.data.error !== undefined && r.data.error == false){
+							r.data.record.to = JSON.parse(r.data.record.to);
+							
 							r.data.record.date = new Date(r.data.record.date.date);
+							if(r.data.record.draft == 1){
+								self.$router.push({ name: 'Edit', params: { mail_id: r.data.record.id } });
+								location.reload();
+							}
 							return self.mail = r.data.record;
 							// // console.log(self.email_single);
 						}
@@ -2061,14 +2081,16 @@ ul {
 			},
 			loadList(boxId, folderSelected){
 				var self = this;
-				self.mails = [];
+				self.list.page = ((self.$route.params.page != undefined && self.$route.params.page > 0) ? self.$route.params.page : 1)
+				self.list.limit = ((self.$route.params.limit != undefined && self.$route.params.limit > 0) ? self.$route.params.limit : 25)
+				
+				self.list.data = [];
 				self.box_id = boxId;
 				self.folder = folderSelected;
 				if(self.box_id > 0){
 					self.box_id = self.$route.params.box_id;
 					self.folder = self.$route.params.folder;
 				}
-				
 				
 				var folders = {
 					'inbox': [
@@ -2122,21 +2144,23 @@ ul {
 					],
 				};
 				
-				// console.log('loadList Folder:', self.folder);
-				// console.log('loadList boxId:', self.box_id);
-				
 				api.get('/api.php/records/emails', { params: {
 					filter: folders[self.folder],
 					order: 'id,desc',
+					page: self.list.page + ',' + self.list.limit
 				} })
 				.then(function (r) {
 					if(r.data !== undefined){
 						if (r.data.records){
+							self.list.total = r.data.results
 							self.mails = [];
 							r.data.records.forEach(function(mail){
 								mail.date = new Date(mail.date);
 								mail.attachments = JSON.parse(mail.attachments);
-								self.mails.push(mail);
+								// self.mails.push(mail);
+								
+								
+								self.list.data.push(mail);
 							});
 						}
 					}else{

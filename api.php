@@ -3176,7 +3176,7 @@ namespace Nyholm\Psr7Server {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     interface Cache
     {
@@ -3186,7 +3186,7 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     class CacheFactory
     {
@@ -3213,7 +3213,7 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     class MemcacheCache implements Cache
     {
@@ -3258,7 +3258,7 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     class MemcachedCache extends MemcacheCache
     {
@@ -3274,7 +3274,7 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     class NoCache implements Cache
     {
@@ -3299,7 +3299,7 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     class RedisCache implements Cache
     {
@@ -3337,7 +3337,7 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Cache {
+namespace FelipheGomez\PhpCrudApi\Cache {
 
     class TempFileCache implements Cache
     {
@@ -3483,9 +3483,9 @@ namespace Tqdev\PhpCrudApi\Cache {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Column\Reflection {
+namespace FelipheGomez\PhpCrudApi\Column\Reflection {
 
-    use Tqdev\PhpCrudApi\Database\GenericReflection;
+    use FelipheGomez\PhpCrudApi\Database\GenericReflection;
 
     class ReflectedColumn implements \JsonSerializable
     {
@@ -3696,9 +3696,9 @@ namespace Tqdev\PhpCrudApi\Column\Reflection {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Column\Reflection {
+namespace FelipheGomez\PhpCrudApi\Column\Reflection {
 
-    use Tqdev\PhpCrudApi\Database\GenericReflection;
+    use FelipheGomez\PhpCrudApi\Database\GenericReflection;
 
     class ReflectedDatabase implements \JsonSerializable
     {
@@ -3767,9 +3767,9 @@ namespace Tqdev\PhpCrudApi\Column\Reflection {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Column\Reflection {
+namespace FelipheGomez\PhpCrudApi\Column\Reflection {
 
-    use Tqdev\PhpCrudApi\Database\GenericReflection;
+    use FelipheGomez\PhpCrudApi\Database\GenericReflection;
 
     class ReflectedTable implements \JsonSerializable
     {
@@ -3916,11 +3916,11 @@ namespace Tqdev\PhpCrudApi\Column\Reflection {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Column {
+namespace FelipheGomez\PhpCrudApi\Column {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
 
     class DefinitionService
     {
@@ -4074,12 +4074,12 @@ namespace Tqdev\PhpCrudApi\Column {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Column {
+namespace FelipheGomez\PhpCrudApi\Column {
 
-    use Tqdev\PhpCrudApi\Cache\Cache;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedDatabase;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\Cache\Cache;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedDatabase;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
 
     class ReflectionService
     {
@@ -4182,12 +4182,12 @@ namespace Tqdev\PhpCrudApi\Column {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\Cache\Cache;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Cache\Cache;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
 
     class CacheController
     {
@@ -4208,15 +4208,15 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\Column\DefinitionService;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\DefinitionService;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class ColumnController
     {
@@ -4370,14 +4370,14 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\GeoJson\GeoJsonService;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\GeoJson\GeoJsonService;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class GeoJsonController
     {
@@ -4432,12 +4432,12 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
-    use Tqdev\PhpCrudApi\Record\Document\ErrorDocument;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\ResponseFactory;
+    use FelipheGomez\PhpCrudApi\Record\Document\ErrorDocument;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\ResponseFactory;
 
     class JsonResponder implements Responder
     {
@@ -4456,12 +4456,12 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\OpenApi\OpenApiService;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\OpenApi\OpenApiService;
 
     class OpenApiController
     {
@@ -4482,14 +4482,14 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\Record\RecordService;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Record\RecordService;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class RecordController
     {
@@ -4661,7 +4661,7 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Controller {
+namespace FelipheGomez\PhpCrudApi\Controller {
 
     use Psr\Http\Message\ResponseInterface;
 
@@ -4673,9 +4673,9 @@ namespace Tqdev\PhpCrudApi\Controller {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
 
     class ColumnConverter
     {
@@ -4746,10 +4746,10 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
 
     class ColumnsBuilder
     {
@@ -4855,16 +4855,16 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
-    use Tqdev\PhpCrudApi\Record\Condition\AndCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\ColumnCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\Condition;
-    use Tqdev\PhpCrudApi\Record\Condition\NoCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\NotCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\OrCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\SpatialCondition;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Record\Condition\AndCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\ColumnCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\Condition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\NoCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\NotCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\OrCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\SpatialCondition;
 
     class ConditionsBuilder
     {
@@ -5058,10 +5058,10 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
 
     class DataConverter
     {
@@ -5150,12 +5150,12 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Middleware\Communication\VariableStore;
-    use Tqdev\PhpCrudApi\Record\Condition\ColumnCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\Condition;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Middleware\Communication\VariableStore;
+    use FelipheGomez\PhpCrudApi\Record\Condition\ColumnCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\Condition;
 
     class GenericDB
     {
@@ -5470,11 +5470,11 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Database\LazyPdo;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Database\LazyPdo;
 
     class GenericDefinition
     {
@@ -5894,9 +5894,9 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
-    use Tqdev\PhpCrudApi\Database\LazyPdo;
+    use FelipheGomez\PhpCrudApi\Database\LazyPdo;
 
     class GenericReflection
     {
@@ -6065,7 +6065,7 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
     class LazyPdo extends \PDO
     {
@@ -6189,7 +6189,7 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Database {
+namespace FelipheGomez\PhpCrudApi\Database {
 
     class TypeConverter
     {
@@ -6386,7 +6386,7 @@ namespace Tqdev\PhpCrudApi\Database {
     }
 }
 
-namespace Tqdev\PhpCrudApi\GeoJson {
+namespace FelipheGomez\PhpCrudApi\GeoJson {
 
     class Feature implements \JsonSerializable
     {
@@ -6418,7 +6418,7 @@ namespace Tqdev\PhpCrudApi\GeoJson {
     }
 }
 
-namespace Tqdev\PhpCrudApi\GeoJson {
+namespace FelipheGomez\PhpCrudApi\GeoJson {
 
     class FeatureCollection implements \JsonSerializable
     {
@@ -6450,11 +6450,11 @@ namespace Tqdev\PhpCrudApi\GeoJson {
     }
 }
 
-namespace Tqdev\PhpCrudApi\GeoJson {
+namespace FelipheGomez\PhpCrudApi\GeoJson {
 
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\GeoJson\FeatureCollection;
-    use Tqdev\PhpCrudApi\Record\RecordService;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\GeoJson\FeatureCollection;
+    use FelipheGomez\PhpCrudApi\Record\RecordService;
 
     class GeoJsonService
     {
@@ -6577,7 +6577,7 @@ namespace Tqdev\PhpCrudApi\GeoJson {
     }
 }
 
-namespace Tqdev\PhpCrudApi\GeoJson {
+namespace FelipheGomez\PhpCrudApi\GeoJson {
 
     class Geometry implements \JsonSerializable
     {
@@ -6642,11 +6642,11 @@ namespace Tqdev\PhpCrudApi\GeoJson {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware\Base {
+namespace FelipheGomez\PhpCrudApi\Middleware\Base {
 
     use Psr\Http\Server\MiddlewareInterface;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
 
     abstract class Middleware implements MiddlewareInterface
     {
@@ -6688,7 +6688,7 @@ namespace Tqdev\PhpCrudApi\Middleware\Base {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware\Communication {
+namespace FelipheGomez\PhpCrudApi\Middleware\Communication {
 
     class VariableStore
     {
@@ -6709,12 +6709,12 @@ namespace Tqdev\PhpCrudApi\Middleware\Communication {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware\Router {
+namespace FelipheGomez\PhpCrudApi\Middleware\Router {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
 
     interface Router extends RequestHandlerInterface
     {
@@ -6726,17 +6726,17 @@ namespace Tqdev\PhpCrudApi\Middleware\Router {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware\Router {
+namespace FelipheGomez\PhpCrudApi\Middleware\Router {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\Cache\Cache;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\Record\PathTree;
-    use Tqdev\PhpCrudApi\RequestUtils;
-    use Tqdev\PhpCrudApi\ResponseUtils;
+    use FelipheGomez\PhpCrudApi\Cache\Cache;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Record\PathTree;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\ResponseUtils;
 
     class SimpleRouter implements Router
     {
@@ -6885,15 +6885,15 @@ namespace Tqdev\PhpCrudApi\Middleware\Router {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class AjaxOnlyMiddleware extends Middleware
     {
@@ -6913,18 +6913,18 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Communication\VariableStore;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\FilterInfo;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Communication\VariableStore;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\FilterInfo;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class AuthorizationMiddleware extends Middleware
     {
@@ -7004,15 +7004,15 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class BasicAuthMiddleware extends Middleware
     {
@@ -7118,15 +7118,15 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\ResponseFactory;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\ResponseFactory;
 
     class CorsMiddleware extends Middleware
     {
@@ -7188,16 +7188,16 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class CustomizationMiddleware extends Middleware
     {
@@ -7230,20 +7230,20 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\Condition\ColumnCondition;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\Record\OrderingInfo;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\Condition\ColumnCondition;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Record\OrderingInfo;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class DbAuthMiddleware extends Middleware
     {
@@ -7325,14 +7325,14 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
 
     class FirewallMiddleware extends Middleware
     {
@@ -7382,17 +7382,17 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class IpAddressMiddleware extends Middleware
     {
@@ -7450,17 +7450,17 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Communication\VariableStore;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Communication\VariableStore;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class JoinLimitsMiddleware extends Middleware
     {
@@ -7506,14 +7506,14 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class JwtAuthMiddleware extends Middleware
     {
@@ -7658,20 +7658,20 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Communication\VariableStore;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\Condition\ColumnCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\Condition;
-    use Tqdev\PhpCrudApi\Record\Condition\NoCondition;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Communication\VariableStore;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\Condition\ColumnCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\Condition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\NoCondition;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class MultiTenancyMiddleware extends Middleware
     {
@@ -7756,17 +7756,17 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class PageLimitsMiddleware extends Middleware
     {
@@ -7807,16 +7807,16 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
 
     class ReconnectMiddleware extends Middleware
     {
@@ -7900,17 +7900,17 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class SanitationMiddleware extends Middleware
     {
@@ -7963,18 +7963,18 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\Router;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\RequestUtils;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\Router;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\RequestUtils;
 
     class ValidationMiddleware extends Middleware
     {
@@ -8039,14 +8039,14 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Middleware {
+namespace FelipheGomez\PhpCrudApi\Middleware {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Controller\Responder;
-    use Tqdev\PhpCrudApi\Middleware\Base\Middleware;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Controller\Responder;
+    use FelipheGomez\PhpCrudApi\Middleware\Base\Middleware;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
 
     class XsrfMiddleware extends Middleware
     {
@@ -8081,10 +8081,10 @@ namespace Tqdev\PhpCrudApi\Middleware {
     }
 }
 
-namespace Tqdev\PhpCrudApi\OpenApi {
+namespace FelipheGomez\PhpCrudApi\OpenApi {
 
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\OpenApi\OpenApiDefinition;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\OpenApi\OpenApiDefinition;
 
     class OpenApiBuilder
     {
@@ -8134,9 +8134,9 @@ namespace Tqdev\PhpCrudApi\OpenApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi\OpenApi {
+namespace FelipheGomez\PhpCrudApi\OpenApi {
 
-    use Tqdev\PhpCrudApi\OpenApi\OpenApiDefinition;
+    use FelipheGomez\PhpCrudApi\OpenApi\OpenApiDefinition;
 
     class OpenApiColumnsBuilder
     {
@@ -8325,7 +8325,7 @@ namespace Tqdev\PhpCrudApi\OpenApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi\OpenApi {
+namespace FelipheGomez\PhpCrudApi\OpenApi {
 
     class OpenApiDefinition implements \JsonSerializable
     {
@@ -8371,11 +8371,11 @@ namespace Tqdev\PhpCrudApi\OpenApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi\OpenApi {
+namespace FelipheGomez\PhpCrudApi\OpenApi {
 
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Middleware\Communication\VariableStore;
-    use Tqdev\PhpCrudApi\OpenApi\OpenApiDefinition;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Middleware\Communication\VariableStore;
+    use FelipheGomez\PhpCrudApi\OpenApi\OpenApiDefinition;
 
     class OpenApiRecordsBuilder
     {
@@ -8692,10 +8692,10 @@ namespace Tqdev\PhpCrudApi\OpenApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi\OpenApi {
+namespace FelipheGomez\PhpCrudApi\OpenApi {
 
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\OpenApi\OpenApiBuilder;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\OpenApi\OpenApiBuilder;
 
     class OpenApiService
     {
@@ -8713,7 +8713,7 @@ namespace Tqdev\PhpCrudApi\OpenApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
     class AndCondition extends Condition
     {
@@ -8749,9 +8749,9 @@ namespace Tqdev\PhpCrudApi\Record\Condition {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedColumn;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedColumn;
 
     class ColumnCondition extends Condition
     {
@@ -8783,9 +8783,9 @@ namespace Tqdev\PhpCrudApi\Record\Condition {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
 
     abstract class Condition
     {
@@ -8851,7 +8851,7 @@ namespace Tqdev\PhpCrudApi\Record\Condition {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
     class NoCondition extends Condition
     {
@@ -8872,7 +8872,7 @@ namespace Tqdev\PhpCrudApi\Record\Condition {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
     class NotCondition extends Condition
     {
@@ -8890,7 +8890,7 @@ namespace Tqdev\PhpCrudApi\Record\Condition {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
     class OrCondition extends Condition
     {
@@ -8926,16 +8926,16 @@ namespace Tqdev\PhpCrudApi\Record\Condition {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Condition {
+namespace FelipheGomez\PhpCrudApi\Record\Condition {
 
     class SpatialCondition extends ColumnCondition
     {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Document {
+namespace FelipheGomez\PhpCrudApi\Record\Document {
 
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
 
     class ErrorDocument implements \JsonSerializable
     {
@@ -8976,7 +8976,7 @@ namespace Tqdev\PhpCrudApi\Record\Document {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record\Document {
+namespace FelipheGomez\PhpCrudApi\Record\Document {
 
     class ListDocument implements \JsonSerializable
     {
@@ -9017,9 +9017,9 @@ namespace Tqdev\PhpCrudApi\Record\Document {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
 
     class ColumnIncluder
     {
@@ -9088,9 +9088,9 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
-    use Tqdev\PhpCrudApi\ResponseFactory;
+    use FelipheGomez\PhpCrudApi\ResponseFactory;
 
     class ErrorCode
     {
@@ -9171,13 +9171,13 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Record\Condition\AndCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\Condition;
-    use Tqdev\PhpCrudApi\Record\Condition\NoCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\OrCondition;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Record\Condition\AndCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\Condition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\NoCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\OrCondition;
 
     class FilterInfo
     {
@@ -9227,7 +9227,7 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
     class HabtmValues
     {
@@ -9242,9 +9242,9 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
 
     class OrderingInfo
     {
@@ -9289,7 +9289,7 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
     class PaginationInfo
     {
@@ -9358,7 +9358,7 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
     class PathTree implements \JsonSerializable
     {
@@ -9438,11 +9438,11 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
-    use Tqdev\PhpCrudApi\Record\Document\ListDocument;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\Record\Document\ListDocument;
 
     class RecordService
     {
@@ -9561,14 +9561,14 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi\Record {
+namespace FelipheGomez\PhpCrudApi\Record {
 
-    use Tqdev\PhpCrudApi\Column\Reflection\ReflectedTable;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
-    use Tqdev\PhpCrudApi\Middleware\Communication\VariableStore;
-    use Tqdev\PhpCrudApi\Record\Condition\ColumnCondition;
-    use Tqdev\PhpCrudApi\Record\Condition\OrCondition;
+    use FelipheGomez\PhpCrudApi\Column\Reflection\ReflectedTable;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\Middleware\Communication\VariableStore;
+    use FelipheGomez\PhpCrudApi\Record\Condition\ColumnCondition;
+    use FelipheGomez\PhpCrudApi\Record\Condition\OrCondition;
 
     class RelationJoiner
     {
@@ -9855,42 +9855,42 @@ namespace Tqdev\PhpCrudApi\Record {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 
     use Psr\Http\Message\ResponseInterface;
     use Psr\Http\Message\ServerRequestInterface;
     use Psr\Http\Server\RequestHandlerInterface;
-    use Tqdev\PhpCrudApi\Cache\CacheFactory;
-    use Tqdev\PhpCrudApi\Column\DefinitionService;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
-    use Tqdev\PhpCrudApi\Controller\CacheController;
-    use Tqdev\PhpCrudApi\Controller\ColumnController;
-    use Tqdev\PhpCrudApi\Controller\GeoJsonController;
-    use Tqdev\PhpCrudApi\Controller\JsonResponder;
-    use Tqdev\PhpCrudApi\Controller\OpenApiController;
-    use Tqdev\PhpCrudApi\Controller\RecordController;
-    use Tqdev\PhpCrudApi\Database\GenericDB;
-    use Tqdev\PhpCrudApi\GeoJson\GeoJsonService;
-    use Tqdev\PhpCrudApi\Middleware\AuthorizationMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\BasicAuthMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\CorsMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\CustomizationMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\DbAuthMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\FirewallMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\IpAddressMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\JoinLimitsMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\JwtAuthMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\MultiTenancyMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\PageLimitsMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\ReconnectMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\Router\SimpleRouter;
-    use Tqdev\PhpCrudApi\Middleware\SanitationMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\ValidationMiddleware;
-    use Tqdev\PhpCrudApi\Middleware\XsrfMiddleware;
-    use Tqdev\PhpCrudApi\OpenApi\OpenApiService;
-    use Tqdev\PhpCrudApi\Record\ErrorCode;
-    use Tqdev\PhpCrudApi\Record\RecordService;
-    use Tqdev\PhpCrudApi\ResponseUtils;
+    use FelipheGomez\PhpCrudApi\Cache\CacheFactory;
+    use FelipheGomez\PhpCrudApi\Column\DefinitionService;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Controller\CacheController;
+    use FelipheGomez\PhpCrudApi\Controller\ColumnController;
+    use FelipheGomez\PhpCrudApi\Controller\GeoJsonController;
+    use FelipheGomez\PhpCrudApi\Controller\JsonResponder;
+    use FelipheGomez\PhpCrudApi\Controller\OpenApiController;
+    use FelipheGomez\PhpCrudApi\Controller\RecordController;
+    use FelipheGomez\PhpCrudApi\Database\GenericDB;
+    use FelipheGomez\PhpCrudApi\GeoJson\GeoJsonService;
+    use FelipheGomez\PhpCrudApi\Middleware\AuthorizationMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\BasicAuthMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\CorsMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\CustomizationMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\DbAuthMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\FirewallMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\IpAddressMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\JoinLimitsMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\JwtAuthMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\MultiTenancyMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\PageLimitsMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\ReconnectMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\Router\SimpleRouter;
+    use FelipheGomez\PhpCrudApi\Middleware\SanitationMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\ValidationMiddleware;
+    use FelipheGomez\PhpCrudApi\Middleware\XsrfMiddleware;
+    use FelipheGomez\PhpCrudApi\OpenApi\OpenApiService;
+    use FelipheGomez\PhpCrudApi\Record\ErrorCode;
+    use FelipheGomez\PhpCrudApi\Record\RecordService;
+    use FelipheGomez\PhpCrudApi\ResponseUtils;
 
     class Api implements RequestHandlerInterface
     {
@@ -10065,7 +10065,7 @@ namespace Tqdev\PhpCrudApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 
     class Config
     {
@@ -10249,7 +10249,7 @@ namespace Tqdev\PhpCrudApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 
     use Nyholm\Psr7\Factory\Psr17Factory;
     use Nyholm\Psr7Server\ServerRequestCreator;
@@ -10292,10 +10292,10 @@ namespace Tqdev\PhpCrudApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 
     use Psr\Http\Message\ServerRequestInterface;
-    use Tqdev\PhpCrudApi\Column\ReflectionService;
+    use FelipheGomez\PhpCrudApi\Column\ReflectionService;
 
     class RequestUtils
     {
@@ -10391,7 +10391,7 @@ namespace Tqdev\PhpCrudApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 
     use Nyholm\Psr7\Factory\Psr17Factory;
     use Psr\Http\Message\ResponseInterface;
@@ -10444,7 +10444,7 @@ namespace Tqdev\PhpCrudApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 
     use Psr\Http\Message\ResponseInterface;
 
@@ -10494,12 +10494,12 @@ namespace Tqdev\PhpCrudApi {
     }
 }
 
-namespace Tqdev\PhpCrudApi {
+namespace FelipheGomez\PhpCrudApi {
 	require_once 'config/settings.php';
-    use Tqdev\PhpCrudApi\Api;
-    use Tqdev\PhpCrudApi\Config;
-    use Tqdev\PhpCrudApi\RequestFactory;
-    use Tqdev\PhpCrudApi\ResponseUtils;
+    use FelipheGomez\PhpCrudApi\Api;
+    use FelipheGomez\PhpCrudApi\Config;
+    use FelipheGomez\PhpCrudApi\RequestFactory;
+    use FelipheGomez\PhpCrudApi\ResponseUtils;
 
     $config = new Config([
 		'debug' => true,
@@ -10520,6 +10520,7 @@ namespace Tqdev\PhpCrudApi {
 		'dbAuth.passwordColumn' => 'password',
 		'dbAuth.returnedColumns' => '',
 		'sanitation.handler' => function ($operation, $tableName, $column, $value) {
+			# if($tableName == 'emails_boxes' && $column == 'pass') return "";
 			if ($column['name'] == 'password'){
 				if ($operation == 'create' || $operation == 'update'){
 					return is_string($value) ? password_hash($value, PASSWORD_DEFAULT) : password_hash(strip_tags($value), PASSWORD_DEFAULT);
@@ -10532,6 +10533,13 @@ namespace Tqdev\PhpCrudApi {
 		},
 		'validation.handler' => function ($operation, $tableName, $column, $value) {
 			return ($column['name'] == 'id' && !is_numeric($value)) ? 'must be numeric' : true;
+		},
+		'authorization.columnHandler' => function ($operation, $tableName, $columnName) {
+			if($operation == 'list' || $operation == 'read'){
+				return !($tableName == 'emails_boxes' && $columnName == 'pass'); // Eliminar la contraseña de las consultas
+			} else {
+				return true;
+			}
 		},
     ]);
     $request = RequestFactory::fromGlobals();

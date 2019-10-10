@@ -695,7 +695,6 @@ class SiteController extends ControladorBase{
 			"from" => $mail->from,
 			"from_email" => $mail->from_email,
 			"to" => $mail->to,
-			"to_email" => $mail->to_email,
 			"date" => $date,
 			"size" => $mail->size,
 			"created" => $mail->created,
@@ -707,8 +706,6 @@ class SiteController extends ControladorBase{
 			"deleted" => $mail->deleted,
 			"seen" => $mail->seen,
 			"draft" => $mail->draft,
-			"new" => $mail->new,
-			"response" => $mail->response,
 		];
 		
 		$response = (object) [
