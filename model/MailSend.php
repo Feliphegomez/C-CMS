@@ -9,20 +9,39 @@ use PHPMailer\PHPMailer\Exception;
 
 class MailSend {
 	private $mail;
-	public $from_mail = "no-reply@monteverdeltda.com";
-	public $from_name = ("Portal de Clientes - Monteverde LTDA");
+	public $from_mail = MAIL_DEFAULT_FROM_EMAIL;
+	public $from_name = MAIL_DEFAULT_FROM_NAME;
 	public $to = [];
-	public $reply_mail = "atencionalcliente@monteverdeltda.com";
-	public $reply_name = ("Atencion al cliente - Monteverde Servicios Ambientales y Forestales LTDA");
-	public $subject = ("Servicios Ambientales y Forestales Monteverde");
-	public $message = "";
+	public $reply_mail = MAIL_DEFAULT_REPLY_EMAIL;
+	public $reply_name = MAIL_DEFAULT_REPLY_NAME;
+	public $subject = MAIL_DEFAULT_SUBJECT;
+	public $message = MAIL_DEFAULT_MESSAGE;
+	public $MessageID = null;
 	public $isHtml = false;
+	public $attachments = [];
 	
 	public function __construct(){
 	}
 	
+	public function addAttachments($files = false){
+		if($files !== false){
+			if(is_array($files)){
+				foreach($files as $file){
+					$this->attachments[] = $file;
+				}
+			} else {
+				$this->attachments[] = $files;
+			}
+		}
+	}
+	
 	public function setHtml($isHtml = false){
 		$this->isHtml = $isHtml;
+	}
+	
+	public function setFrom($from_email = null, $from_name = null){
+		$this->from_mail = ($from_email !== null && FelipheGomez\verifyEmail::validate($from_email)) ? $from_email : MAIL_DEFAULT_FROM_EMAIL;
+		$this->from_name = ($from_name !== null) ? $from_name : MAIL_DEFAULT_FROM_NAME;
 	}
 	
 	public function setMessage($message = null){
@@ -58,7 +77,6 @@ class MailSend {
 		}
 	}
 	
-
 	function removeElementsByTagName($tagName, $document) {
 	  $nodeList = $document->getElementsByTagName($tagName);
 	  for ($nodeIdx = $nodeList->length; --$nodeIdx >= 0; ) {
@@ -73,16 +91,16 @@ class MailSend {
 			//Server settings
 			//$this->mail->SMTPDebug = 2;                   // Enable verbose debug output
 			$this->mail->isSMTP();                         // Set mailer to use SMTP
-			$this->mail->Host        = smtp_Host;          // Specify main and backup SMTP servers
-			$this->mail->SMTPAuth    = smtp_SMTPAuth;      // Enable SMTP authentication
-			$this->mail->SMTPAutoTLS = smtp_SMTPAutoTLS;
-			$this->mail->Username    = smtp_Username;      // SMTP username
-			$this->mail->Password    = smtp_Password;      // SMTP password
-			$this->mail->SMTPSecure  = smtp_SMTPSecure;    // Enable TLS encryption, `ssl` also accepted
-			$this->mail->Port        = smtp_Port;          // TCP port to connect to
+			$this->mail->Host        = MAIL_SERVER_HOST;          // Specify main and backup SMTP servers
+			$this->mail->SMTPAuth    = MAIL_SERVER_SMTPAuth;      // Enable SMTP authentication
+			$this->mail->SMTPAutoTLS = MAIL_SERVER_SMTPAutoTLS;
+			$this->mail->Username    = MAIL_SERVER_USER;      // SMTP username
+			$this->mail->Password    = MAIL_SERVER_PASS;      // SMTP password
+			$this->mail->SMTPSecure  = MAIL_SERVER_SMTPSecure;    // Enable TLS encryption, `ssl` also accepted
+			$this->mail->Port        = MAIL_SERVER_PORT;          // TCP port to connect to
 			$this->mail->AddCustomHeader(
 				"List-Unsubscribe:", 
-				"<mailto:unsubscribe@micuenta.monteverdeltda.com?subject=Unsubscribe>, <https://micuenta.monteverdeltda.com/index.php?controller?site&action=unsubscribe>"
+				MAIL_DEFAULT_LIST_UNSUBSCRIBE
 			);
 			
 			//Recipients
@@ -92,26 +110,21 @@ class MailSend {
 			}
 			$this->mail->addReplyTo($this->reply_mail, $this->reply_name);
 			# $this->mail->addCC('cc@example.com');
-			# $this->mail->addBCC('bcc@example.com');
+			if(MAIL_DEFAULT_BCC !== false && MAIL_DEFAULT_BCC !== null){ $this->mail->addBCC(MAIL_DEFAULT_BCC); } // Copia de respaldo de envíos
 
 			// Attachments
-			# $this->mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-			# $this->mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+			foreach($this->attachments as $fileAttach){
+				$this->mail->addAttachment($fileAttach);					// Add attachments
+				# $this->mail->addAttachment('/tmp/image.jpg', 'new.jpg');	// Optional name
+			}
 
 			// Content
 			$this->mail->isHTML($this->isHtml);                                  // Set email format to HTML
 			$this->mail->Subject = $this->subject;
 			$this->mail->Body    = $this->message;
-			
-			// create a new DomDocument object
-			$doc = new DOMDocument();
-			$doc->loadHTML($this->message);
-			$this->removeElementsByTagName('script', $doc);
-			$this->removeElementsByTagName('style', $doc);
-			$this->removeElementsByTagName('link', $doc);
-			
-			$this->mail->AltBody = strip_tags($doc->saveHtml());
+			$this->mail->AltBody = strip_tags($this->message);
 			$this->mail->send();
+			$this->MessageID = $this->mail->getLastMessageID();
 			return true;
 		} catch (Exception $e) {
 			return false;

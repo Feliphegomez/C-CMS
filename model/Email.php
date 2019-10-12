@@ -161,7 +161,9 @@ class Email extends EntidadBase {
 		if(count($list) == 0){ return []; }
 		$list = implode(',', $list);
 		
-		$sql = "SELECT * FROM emails WHERE seen='0' AND box IN ({$list}) ";
+		$sql = "SELECT * FROM emails WHERE 
+				`status`='unread' 
+			AND box IN ({$list}) ";
         return $this->FetchAllObject($sql);
 	}
 	

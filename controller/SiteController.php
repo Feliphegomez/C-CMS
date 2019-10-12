@@ -236,10 +236,11 @@ class SiteController extends ControladorBase{
 			"table" => $table
         ]);
 	}
-
+	
+	// media - Subir Archivo
 	public function actionUploadFile(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$ds          = DIRECTORY_SEPARATOR;
 		$storeFolder = 'uploads';
 		$files_detect = !isset($_FILES['file']) ? false : true;
@@ -491,6 +492,7 @@ class SiteController extends ControladorBase{
     
 	// Login - Manejador de Cierre de sesion
 	public function actionLogout(){
+		if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
         $this->theme['default'] = 'demo-login';
         global $global_session;
         $global_session->close();
@@ -652,7 +654,7 @@ class SiteController extends ControladorBase{
 	
 	// Emails - Manejador de correo electronico individual
 	public function actionMy_email_id(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$mailBoxes = ($this->user->getEmailBoxes());
 		for($i = 0; $i < count($mailBoxes); $i++){
 			if($mailBoxes[$i]->actived == true){
@@ -724,6 +726,7 @@ class SiteController extends ControladorBase{
 	
 	// Emails - Manejador de Body para Email = iframe
 	public function actionMy_email_body(){
+		if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$box = !isset($_GET['ref']) ? null : $_GET['ref'];
 		$email_id = !isset($_GET['email_id']) ? null : $_GET['email_id'];
 		$model = new Email($this->adapter);
@@ -906,7 +909,7 @@ class SiteController extends ControladorBase{
 			"table" => $table
         ]);*/
 	}
-
+	
 	public function actionVerificar_email(){
 		$error = null;
 		$returnData = [];
@@ -925,7 +928,7 @@ class SiteController extends ControladorBase{
 			//$mail->Debug= false; 
 			//$mail->Debugoutput= 'html';
 			// Set email address for SMTP request
-			$mail->setEmailFrom('no-reply@monteverdeltda.com');
+			$mail->setEmailFrom($returnData['email']);
 			// Email to check
 			$email = $returnData['email'];
 			
@@ -937,6 +940,146 @@ class SiteController extends ControladorBase{
 				$returnData['message'] = 'El correo electrónico &lt;' . $email . '&gt; es válido, ¡pero no existe!'; 
 			}else{ 
 				$returnData['message'] = 'El correo electrónico &lt;' . $email . '&gt; no es valido y no existe!'; 
+			}
+		}
+			
+		echo json_encode($returnData);
+		return json_encode($returnData);
+		exit();
+	}
+	
+	// Emails - Montaje para Test de Email 
+	/*
+		URL:/index.php?controller=site&action=testerMail&address_mail={address_mail}
+		var @address_mail = string
+	*/
+	public function actionTesterMail(){
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$error = null;
+		$returnData = [];
+		$returnData['error'] = true;
+		$returnData['email'] = !isset($_GET['address_mail']) ? null : $_GET['address_mail'];
+		$returnData['message'] = '';
+		
+		if($returnData['email'] == null){
+			$returnData['message'] = 'No se detecto correo para verificar.';
+		}else{
+			// Initialize library class
+			$mail = new FelipheGomez\VerifyEmail();
+			$mail->setEmailFrom($returnData['email']);
+			$email = $returnData['email'];
+			
+			// Check if email is valid and exist
+			if(FelipheGomez\verifyEmail::validate($email)){
+				$mail = new MailSend();
+				$mail->setSubject("¡Mensaje de pruebas desde " . MAIL_DEFAULT_FROM_NAME . "!");
+				$mail->addTo($email, 'Test FG');
+				$mail->setHtml(false);
+				$mail->setMessage("Esto es un correo de pruebas generado desde " . BUSSINES_NAME_LG);
+				$returnData['MailSend'] = $mail->sendMail();
+			}else{ 
+				$returnData['message'] = 'El correo electrónico &lt;' . $email . '&gt; no es valido y no existe!'; 
+			}
+		}
+			
+		echo json_encode($returnData);
+		return json_encode($returnData);
+		exit();
+	}
+
+	// Emails - Manejador para Envio de Email
+	public function actionSendMail(){
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$error = null;
+		$returnData = [];
+		$returnData['error'] = true;
+		$returnData['message'] = '';
+		
+		$mail_id = isset($_REQUEST['mail_id']) ? $_REQUEST['mail_id'] : 0;
+		$box_id = isset($_REQUEST['box_id']) ? $_REQUEST['box_id'] : 0;
+		
+		
+		if($mail_id <= 0 || $box_id <= 0){
+			$returnData['message'] = 'Los parametros no existen.';
+		}else{
+			$emailBase = new Email($this->adapter);
+			
+			$sql = "SELECT * FROM {$emailBase->getTableUse()} WHERE id=? AND box=?";
+			$data = [$mail_id, $box_id];
+			$items = $emailBase->getSQL($sql, $data);
+				
+			if(isset($items[0])){
+				$emailInfo = (object) $items[0];
+				$emailverify = new FelipheGomez\VerifyEmail();
+				$from_email = $emailInfo->from_email;
+				$emailverify->setEmailFrom($from_email);
+				if($emailverify->check($from_email)){
+					// Crear Correo
+					$mail = new MailSend();
+					// Habilitar HTML
+					$mail->setHtml(true);
+					// Definir Destinatario
+					$mail->setFrom($emailInfo->from_email, $emailInfo->from);
+					// Asunto
+					$mail->setSubject($emailInfo->subject);
+					// Añadir Direcciones de envío
+					$addresses = json_decode($emailInfo->to);
+					foreach($addresses as $to_mail){
+						if(FelipheGomez\verifyEmail::validate($to_mail->address_mail)){ 
+							$mail->addTo($to_mail->address_mail, $to_mail->label); // Validar correo a@b.c
+						}
+					}
+					// Mensaje
+					if(isset($emailInfo->message)){
+						$mail->setMessage(($emailInfo->message));
+					}
+					// Adjuntos
+					$attachments = json_decode($emailInfo->attachments);
+					foreach($attachments as $fileAttachment){
+						if(isset($fileAttachment->targetPath)){
+							$mail->addAttachments($fileAttachment->targetPath);
+						}
+					}
+					/*
+					*/
+					// Modificar ID del Mensaje
+					/*
+					preg_match_all('/[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i', $from_email, $domain_search);
+					$domain = ($domain_search[0]);
+					$subID = base64_encode("CelesteSamael");					
+					$dateUTC = ((idate("U") - 1000000000) . uniqid());
+					$createMessageID = "<" . md5("FG-{$domain[0]}" . $subID) . '-' . $dateUTC . '@' . $domain[0];
+					*/
+					
+					$resultSend = $mail->sendMail();
+					if($resultSend == true){
+						$idMessage = $mail->MessageID;
+						// $idMessage
+						// $update = $emailBase->updateBy($mail_id, 'message_id', $idMessage);
+						
+						$returnData['error'] = false;
+						$returnData['message'] = 'Mensaje enviado.';
+					} else {
+						$returnData['message'] = 'Error enviado el mensaje.';
+					}
+					/*
+					$resultSend = $mail->sendMail();
+					if($resultSend == true){
+						$idMessage = $mail->MessageID;
+						$returnData['message'] = 'Mensaje enviado. ID: ' . $idMessage;
+					} else {
+						$returnData['message'] = 'Error enviado el mensaje.';
+					}
+					*/
+				}elseif(FelipheGomez\verifyEmail::validate($from_email)){ 
+					$returnData['message'] = 'El correo electrónico de envio &lt;' . $from_email . '&gt; es válido, ¡pero no existe!'; 
+				}else{ 
+					$returnData['message'] = 'El correo electrónico de envio &lt;' . $from_email . '&gt; no es valido y no existe!'; 
+				}
+				
+				
+			} else {
+				$returnData['message'] = 'Los parametros no coinciden.';
 			}
 		}
 			

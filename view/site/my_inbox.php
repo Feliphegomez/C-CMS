@@ -131,7 +131,7 @@ ul.labels-info li a i {
     padding: 0 22px;
 }
 .inbox-head {
-    background: none repeat scroll 0 0 #41cac0;
+    background: none repeat scroll 0 0 #34495e;
     border-radius: 0 4px 0 0;
     color: #fff;
     min-height: 80px;
@@ -374,15 +374,9 @@ ul {
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<div class="navbar-brand" style="height:auto;zoom:0.7;">
+						<div class="navbar-brand" style="height:100px;max-height:100px;zoom:0.7;">
 							<div class="mail-box">
 								<div class="user-name">
-									<font :title="myBox.user">
-										<i class="fa fa-envelope"></i> 
-										{{ myBox.label }}
-										<br /> <font style="zoom:0.7;">{{ myBox.user }}</font>
-									</font>
-									
 									<div class="btn-group mail-dropdown pull-right">
 										<a class="mail-dropdown pull-right dropdown-toggle" href="javascript:;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 											<i class="fa fa-chevron-down"></i>
@@ -396,6 +390,12 @@ ul {
 											<li class="divider"></li>
 										</ul>
 									</div>
+									
+									<font :title="myBox.user">
+										<i class="fa fa-envelope"></i> 
+										{{ myBox.label }}
+										<br /> <font style="zoom:0.7;">{{ myBox.user }}</font>
+									</font>
 								</div>
 							</div>
 							<div class="clearfix"></div>
@@ -431,7 +431,8 @@ ul {
 							<router-link :to="{ name: 'Folder', params: { folder: 'inbox' } }" tag="li">
 								<a>
 									<i class="fa fa-inbox"></i>
-									Bandeja Entrada
+									<!-- // Bandeja Entrada -->
+									Inbox
 								</a>
 							</router-link>
 							<router-link :to="{ name: 'Folder', params: { folder: 'not_seen' } }" tag="li">
@@ -472,9 +473,6 @@ ul {
 								</a>
 							</router-link>
 							-->
-							
-							
-							
 						</ul>
 
 						<!-- // 
@@ -510,8 +508,8 @@ ul {
 				</nav>
 			</div>
 			<div class="col-lg-10 col-md-9 col-sm-8 col-xs-12">
-				<aside class="lg-side" style="overflow-y:auto; zoom: 0.8;"> <!-- // max-height:calc(80vh);min-height: calc(80vh); -->
-					<div style="overflow-y:auto; max-height:100%;min-height:100%;" class="col-sm-12 mail_view" style="overflow:auto;max-height:calc(80vh);min-height: calc(80vh);">
+				<aside class="lg-side" style="zoom: 0.8;"> 
+					<div style="" class="mail_view" style="max-height:calc(80vh);min-height: calc(80vh);">
 						<router-view :key="$route.fullPath"></router-view><!-- //  :change="currentBox()" -->
 					</div>
 				</aside>
@@ -535,6 +533,20 @@ ul {
 				</form>
 			</div>
 		-->
+			<div class="inbox-head">
+				<h3>
+					<template v-if="$root.folder != undefined">{{ $root.labels.folders[$root.folder] }}</template>
+				</h3>
+				
+				<!--
+				<form action="#" class="pull-right position">
+					<div class="input-append">
+						<input type="text" class="sr-input" placeholder="No habilitado">
+						<button class="btn sr-btn" type="button"><i class="fa fa-search"></i></button>
+					</div>
+				</form>
+				-->
+			</div>
 		<div class="inbox-body">
 			<div class="mail-option">
 				<div class="col-xs-7">
@@ -617,19 +629,24 @@ ul {
 					<tr v-for="(mail, index_mail) in $root.list.data" :class="mail.status" :key="index_mail" v-if="$root.list.data.length !== null && $root.list.data.length > 0">
 						<template v-if="mail.id !== undefined && mail.id > 0">
 							<router-link tag="td" class="inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
-								<input type="checkbox" class="mail-checkbox" />
-							</router-link>
-							<router-link tag="td" class="inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
+								<!-- // <input type="checkbox" class="mail-checkbox" /> -->
+								<template v-if="mail.seen !== undefined && mail.seen === 1 && mail.draft === 0 && mail.trash === 0">
+									<i class="fa fa-circle-o"></i>
+								</template>
+								<template v-else-if="mail.seen !== undefined && mail.seen === 0 && mail.draft === 0 && mail.trash === 0">
+									<i class="fa fa-circle"></i>
+								</template>
+								
+								<template v-if="mail.draft !== undefined && mail.draft === 1">
+									<i class="fa fa-pencil"></i> 
+								</template>
+								
 								<template v-if="mail.recent !== undefined && mail.recent === 1">
 									<i class="fa fa-asterisk"></i>
 								</template>
 								
 								<template v-if="mail.answered !== undefined && mail.answered === 1">
 									<i class="fa fa-share"></i> 
-								</template>
-								
-								<template v-if="mail.draft !== undefined && mail.draft === 1">
-									<i class="fa fa-edit"></i> 
 								</template>
 								<template v-if="mail.deleted !== undefined && mail.deleted === 1">
 									<i class="fa fa-trash"></i> 
@@ -642,7 +659,7 @@ ul {
 							</router-link>
 							<router-link tag="td" class="view-message dont-show" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
 								<template v-if="mail.from !== undefined && mail.from !== undefined">
-									{{ mail.from }} &lt;{{ mail.from_email }}&gt;
+									{{ mail.from_email }}
 								</template>
 							</router-link>
 							<router-link tag="td" class="view-message inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
@@ -715,7 +732,7 @@ ul {
 							</div>
 									
 							<div class="btn-group">
-								<button class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Responder</button>
+								<!-- // <button class="btn btn-sm btn-primary" type="button"><i class="fa fa-reply"></i> Responder</button> -->
 								<!-- // <button class="btn btn-sm btn-default" type="button" ><i class="fa fa-share"></i></button> -->
 								<!-- // <button @click="printMail()" class="btn btn-sm btn-default" type="button" ><i class="fa fa-print"></i></button> -->
 								<!-- // <button class="btn btn-sm btn-default" type="button" ><i class="fa fa-trash-o"></i></button> -->
@@ -731,6 +748,12 @@ ul {
 								<a @click="$root.changeFolder(mail.id, $root.ref, 'seen')" class="btn btn-sm btn-success" aria-expanded="false">
 									<i class="fa fa-check-circle"></i> Marcar como leído
 								</a>
+							</div>
+							
+							<div class="btn-group" v-if="mail.seen == 0 && mail.draft == 1 && mail.deleted == 0 && mail.send !== 0">
+								<router-link class="btn mini blue" :to="{ name: 'Edit', params: { folder: 'draft', box_id: $route.params.box_id, index: $route.params.index, mail_id: $route.params.mail_id } }" title="Seguir Editando">
+									<i class="fa fa-edit"></i> Seguir editando
+								</router-link>
 							</div>
 						</div>
 						<div class="col-xs-5">
@@ -759,32 +782,34 @@ ul {
 					
 					<div class="inbox-body">
 						<div class="mail_heading row">
-							<div class="col-md-8">
+							<div class="col-xs-8">
 								<h2>{{ mail.subject }}</h2>
-								De: <strong>{{ mail.from }}</strong> <span>({{ mail.from_email }})</span>
+								<strong>De: </strong> <span>{{ mail.from_email }}</span><br>
+								<strong>Para : </strong> <span v-for="(to, mail_to_index) in mail.to">{{ to.label }} &lt;{{ to.address_mail }}&gt;</span>
 							</div>
-							<div class="col-md-4 text-right">
-								<p class="date"> 
+							<div class="col-xs-4 text-right">
+								<p class="date pull-right"> 
 									{{ mail.date.toMessageFormat() }} 
 								</p>
-							</div>
-							<div class="col-md-12">
-								<h4 style="padding: 2em;margin: 2em;font-size:1px;"> </h4>
-								<div class="clearfix"></div>
 							</div>
 						</div>
 						<div class="sender-info">
 							<div class="row">
 								<div class="col-md-12">
 									<!-- // <strong>{{ mail.from }}</strong>
-									<span>({{ mail.from_email }})</span> -->Para 
-									<strong v-for="(to, mail_to_index) in mail.to">{{ to.label }} &lt;{{ to.address_mail }}&gt;</strong>
+									<span>({{ mail.from_email }})</span> -->
+									
 									<!-- // <a class="sender-dropdown"><i class="fa fa-chevron-down"></i></a> -->
 								</div>
 							</div>
 						</div>
 						<div class="mail-option">
 							<ul class="unstyled inbox-pagination">
+								<li>
+									<router-link class="np-btn" v-if="mail.seen == 0 && mail.draft == 1 && mail.deleted == 0 && mail.send !== 0" :to="{ name: 'Edit', params: { folder: 'draft', box_id: $route.params.box_id, mail_id: $route.params.mail_id } }" title="Seguir Editando">
+										<i class="fa fa-pencil"></i> 
+									</router-link>
+								</li>
 								<li>
 									<a class="np-btn" aria-expanded="false" type="button" @click="printMail()">
 										<i class="fa fa-print"></i> 
@@ -807,20 +832,30 @@ ul {
 						<!-- Archivos Adjuntos -->
 						<template v-if="mail.attachments !== undefined">									
 							<div class="" v-if="mail.attachments.length > 0">
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h3 class="panel-title">
-											<i class="fa fa-paperclip"></i> Archivos Adjuntos ({{ mail.attachments.length }})
-										</h3>
-									</div>
-									<ul class="list-group">
-										<a :href="attachment.path_short" download="" class="list-group-item " v-for="(attachment, index) in mail.attachments">
-											{{ attachment.name }}
-											<b style="color:olivedrab;">Clic para descargar</b>
+								
+								<!-- start accordion -->
+								<div class="accordion" id="accordion" role="tablist" aria-multiselectable="false">
+									<div class="panel panel-default">
+										<a class="panel-heading" role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+											<h4 class="panel-title">
+												<i class="fa fa-paperclip"></i> Archivos Adjuntos ({{ mail.attachments.length }}) (Clic para expandir)
+											</h4>
 										</a>
-										
-									</ul>
+										<div id="collapseOne" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="headingOne">
+											<div class="panel-body">
+												
+												<ul class="list-group">
+													<a :href="attachment.path_short" download="" class="list-group-item " v-for="(attachment, index) in mail.attachments">
+														{{ attachment.name }}
+														<b style="color:olivedrab;">Clic para descargar</b>
+													</a>
+													
+												</ul>
+											</div>
+										</div>
+									</div>
 								</div>
+								<!-- end of accordion -->
 							</div>
 							<div v-else="">Este correo no contiene archivos adjuntos.</div>
 							<div class="ln_solid"></div>
@@ -851,10 +886,10 @@ ul {
 								</p>
 								<div class="row">
 									<div v-for="(attachment, index) in mail.attachments">
-										<div class="col-sm-2 col-xs-1" style="zoom:0.9;overflow-x: hidden;border: 0.3px dotted #666;padding: 0.3em;">
-											<div class="atch-thumb">
+										<div class="col-lg-2 col-md-2 col-sm-3 col-xs-4" style="zoom:0.9;overflow: hidden;border: 0px dotted #666;padding: 0.3em;min-height: 300px;max-height: 300px;">
+											<a class="atch-thumb" :href="attachment.path_short" target="_blank" style="cursor:pointer;">
 												<!-- // <img src="/public/assets/images/inbox.png" alt="img" /> -->
-												<center>
+												<center class="col-xs-12">
 													<template v-if="[
 														'ai', 'avi', 'css', 'csv', 'dbf', 'doc', 'dwg', 'exe', 'fla', 'flash', 'html'
 														, 'iso', 'jpg', 'js', 'json', 'mp3', 'mp4', 'png', 'ppt', 'psd', 'rtf', 'svg', 'txt', 'xls', 'xml', 'zip'
@@ -888,30 +923,38 @@ ul {
 														</template>
 													</template>
 												</center>
+											</a>
+											<div class="col-xs-12 text-center">
+												<div class="file-name">
+													<!-- // {{ attachment.name.split(/(\d)/).join(' ') }} -->
+													<!-- // {{ attachment.name.split(/([\w\d])/).join('_').replace(/(#\w{10})[\w\d]+/g, '$1')  }} -->
+													{{ attachment.name.replace(/(#\w{10})[\w\d]+/g, '$1') }}
+												</div>
 											</div>
-											<div class="file-name">
-												<!-- // {{ attachment.name.split(/(\d)/).join(' ') }} -->
-												<!-- // {{ attachment.name.split(/([\w\d])/).join('_').replace(/(#\w{10})[\w\d]+/g, '$1')  }} -->
-												{{ attachment.name.replace(/(#\w{10})[\w\d]+/g, '$1') }}
-											</div>
-											<span class="pull-right"> 
-												<template v-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) < 1024">
-													<b>{{ parseInt(attachment.filesize/1024) }}</b> KB 
-												</template>
-												<template v-else-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) > 1024">
-													<b>{{ parseInt(Math.round(attachment.filesize/1024)/1024) }}</b> MB 
-												</template>
-												<template v-else>
-													<b>{{ attachment.filesize }}</b> B 
-												</template>
+											<span class="col-xs-12">
+												<div class="pull-right">
+													<template v-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) < 1024">
+														<b>{{ parseInt(attachment.filesize/1024) }}</b> KB 
+													</template>
+													<template v-else-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) > 1024">
+														<b>{{ parseInt(Math.round(attachment.filesize/1024)/1024) }}</b> MB 
+													</template>
+													<template v-else>
+														<b>{{ attachment.filesize }}</b> B 
+													</template>
+												</div>
 											</span>
-											<div class="links" style="cursor:pointer" >
-												<a :href="attachment.path_short" target="_blank"><b>Ver</b></a> - <a :href="attachment.path_short" download=""><b>Descargar</b></a>
+											<div class="col-xs-12 text-right" style="cursor:pointer" >
+												<div class="" style="cursor:pointer" >
+													<a :href="attachment.path_short" class="col-xs-4 btn btn-sm btn-default pull-left" target="_blank">
+														Ver
+													</a>
+													<a :href="attachment.path_short" class="col-xs-5 btn btn-sm btn-primary pull-right" download="">
+														Bajar
+													</a>
+												</div>
 											</div>
 										</div>
-										<template v-if="[5,11,17,23,29].includes(index)">
-											<div class="col-xs-12 clearfix"><hr height="15px"></div>
-										</template>
 									</div>
 								</div>
 							</div>
@@ -935,8 +978,15 @@ ul {
 		</div>
 		<div class="inbox-body">
 			<div class="mail-option">
+				<div class="btn-group pull-left">
+					<router-link :to="{ name: 'Folder', params: { box_id: $route.params.box_id, folder: 'draft' } }" tag="a" class="btn mini blue" aria-expanded="false" type="button">
+						<i class=" fa fa-times"></i>
+					</router-link>
+				</div>
 				<div class="btn-group pull-right">
-					<router-link :to="{ name: 'Home', params: { box_id: $route.params.box_id, folder: 'inbox' } }" tag="a" class="btn mini blue" aria-expanded="false" type="button">
+					<router-link 
+					:to="{ name: 'View-Single', params: { box_id: $route.params.box_id, index: $route.params.index, mail_id: $route.params.mail_id, folder: 'draft' } }"
+					tag="a" class="btn mini blue" aria-expanded="false" type="button">
 						<i class=" fa fa-times"></i>
 					</router-link>
 				</div>
@@ -946,14 +996,12 @@ ul {
 					</a>
 				</div>
 			</div>
-			<div class="mail-option">
-			</div>
 		</div>
 		<div class="inbox-body">
 			<div class="row">
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<form 
-						@submit="validateMail"
+						@submit="saveDraft"
 						method="POST"
 						action="javascript:return false;" 
 						id="create-mail"
@@ -999,9 +1047,9 @@ ul {
 						</div>
 						<div class="ln_solid"></div>
 						
-						<div class="form-group">
+						<div class="">
 							<div id="alerts"></div>
-							<textarea v-model="form.message" name="editor-message" id="editor-message"></textarea>
+							<textarea v-model="form.message" name="editor-message" id="editor-message">{{form.message}}</textarea>
 							<div class="clearfix"><hr /></div>
 						</div>
 						<div class="ln_solid"></div>
@@ -1012,63 +1060,21 @@ ul {
 								<span class="btn green fileinput-button">
 									<i class="fa fa-plus fa fa-white"></i>
 									<span>Adjuntar Archivo(s)</span>
-									<input type="file" name="files[]" multiple="">
+									<input id="file-attachments" v-on:change="openFileAtt()" type="file" name="file[]" multiple="">
 								</span>
-								<button class="btn btn-send" type="submit">Enviar</button>
+								
+								<button class="btn btn-send" type="button" @click="validateMail">Enviar</button>
 							</div>
 							<div class="clearfix"></div>
 						</div>
+						<hr>
+						{{ form.attachments }}
 						<div class="clearfix"></div>
 					</form>
-				
-				
-					<div class="col-md-12 col-sm-12 col-xs-12">
-						{{ form }}
-					</div>
 				</div>
 			</div>
 			<div class="clearfix"></div>
 		</div>
-			
-		<!-- // 
-			<form role="form" class="form-horizontal">
-				<div class="form-group">
-					<label class="col-lg-2 control-label">To</label>
-					<div class="col-lg-10">
-						<input type="text" placeholder="" id="inputEmail1" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-2 control-label">Cc / Bcc</label>
-					<div class="col-lg-10">
-						<input type="text" placeholder="" id="cc" class="form-control">
-					</div>
-				</div>
-			  <div class="form-group">
-				  <label class="col-lg-2 control-label">Subject</label>
-				  <div class="col-lg-10">
-					  <input type="text" placeholder="" id="inputPassword1" class="form-control">
-				  </div>
-			  </div>
-			  <div class="form-group">
-				  <label class="col-lg-2 control-label">Message</label>
-				  <div class="col-lg-10">
-					  <textarea rows="10" cols="30" class="form-control" id="" name=""></textarea>
-				  </div>
-			  </div>
-
-			  <div class="form-group">
-				  <div class="col-lg-offset-2 col-lg-10">
-					  <span class="btn green fileinput-button">
-						<i class="fa fa-plus fa fa-white"></i>
-						<span>Attachment</span>
-						<input type="file" name="files[]" multiple="">
-					  </span>
-					  <button class="btn btn-send" type="submit">Send</button>
-				  </div>
-			  </div>
-		  </form>
-		-->
 	</div>
 </template>
 
@@ -1200,12 +1206,6 @@ ul {
 			indexPrev = (Number(self.$route.params.index) - 1);
 			indexNext = (Number(self.$route.params.index) + 1);
 			self.index = indexCurr + 1;
-			$('.emails').tagsInput({
-				height: 'auto',
-				width: 'auto',
-				//itemValue: 'address_mail',
-				//itemText: 'label',
-			});
 			
 			// http://micuenta.monteverdeltda.com/api.php/records/emails_boxes
 		},
@@ -1301,6 +1301,7 @@ ul {
 			},
 			resizeIframe() {
 				obj = document.getElementById("printf");
+				// obj = document.getElementById(($(".tox-edit-area__iframe")[0].id)) // OTROS
 				obj.contentWindow.document.body.style.overflowX = "auto";
 				obj.contentWindow.document.body.style.overflowY = "hidden";
 				wInDoc = obj.contentWindow.document.body.scrollWidth;
@@ -1398,7 +1399,8 @@ ul {
 					from: self.$root.myBox.label,
 					from_email: self.$root.myBox.user,
 					box: self.form.box,
-					to: "[{ label: '', address_mail: '', valid: null }]",
+					to: JSON.stringify([{ "label": "", "address_mail": "" }]),
+					status: 'drafting',
 					draft: 1,
 					send: 0,
 					new: 0,
@@ -1412,8 +1414,11 @@ ul {
 				.then(function (r) {
 					console.log(r);
 					if(r.data > 0){
-						self.$router.push({ name: 'Edit', params: { mail_id: r.data } })
-						location.reload();
+						// self.$router.push({ name: 'Edit', params: { mail_id: r.data } })
+						self.$router.push({ name: 'Edit', params: { mail_id: r.data, box_id: self.form.box, folder: 'draft', folder: 'draft', index: 0 } })
+						
+						//location.reload();
+						// self.loadTiny();
 					} else {
 						self.$router.push({ name: 'Home' })
 					};
@@ -1422,74 +1427,98 @@ ul {
 					
 				});
 			} else {
-				
 				api.get('/api.php/records/emails/' + self.mail_id, {
 					params: {
 						
 					}
 				})
 				.then(function (r) {
-					if(r.data.id > 0){
+					if(r.data.id > 0 && r.data.status == 'drafting'){
 						r.data.to = JSON.parse(r.data.to);
 						r.data.attachments = JSON.parse(r.data.attachments);
 						self.form = r.data;
+						
+						if(self.form.to.length == 0){ self.form.to.push([{ "label": "nombre", "address_mail": "correo@sincorreo.com" }]); }
+						
+						self.loadTiny();
+						//if(self.$route.params.mail_id != self.mail.id){
 					} else {
 						self.$router.push({ name: 'Home' })
 					};
 				})
 				.catch(function (error) {
-					
+					console.error('error 1111', error);
 				});
 				
-				if(self.form.to.length == 0){
-					self.form.to.push({ label: 'nombre', address_mail: 'correo@sincorreo.com', valid: null });
-				}
-				self.loadTiny();
 			}
-			
+		
 		},
 		created() {},
 		methods: {
 			loadTiny(){
+				console.log('loadTiny');
 				var self = this;
+				for (var i = tinymce.editors.length - 1 ; i > -1 ; i--) {
+					var ed_id = tinymce.editors[i].id;
+					tinyMCE.execCommand("mceRemoveEditor", true, ed_id);
+				}
 				var usersRequest = null;
 				var userRequest = {};
+				
+				$("#editor-message")
+					.html(self.form.message)
+					.val(self.form.message);
 				tinymce.init({
+					language: 'es_MX',
+					//theme: 'modern',
 					selector: 'textarea#editor-message',
-					themes: 'advanced',
-					height: 'calc(80vh)',
+					//themes: 'advanced',
+					height: 'calc(60vh)',
 					elementpath: false,
+					image_caption: true,
 					image_title: true,
 					convert_urls: true,
 					automatic_uploads: true,
 					file_picker_types: 'image',
+					icons: 'material',
+					// toolbar_drawer: 'floating',
+					relative_urls : false,
+					remove_script_host : false,
+					document_base_url : location.protocol + '//' + location.hostname,
+					//skin: "feliphegomez-mv",
+					plugins: 'print preview fullpage powerpaste searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help save',
+					/*
 					plugins: [
-						'fullpage save template importcss preview image imagetools advcode colorpicker media table',
-						'advlist autolink lists link charmap print preview anchor textcolor',
+						'save template importcss preview image imagetools media table',
+						'advlist autolink lists link charmap print preview anchor code powerpaste',
 						'searchreplace visualblocks fullscreen',
-						'insertdatetime contextmenu help wordcount'
-					],
+						'insertdatetime wordcount fullpage help'
+					],*/
 					external_plugins: {
-						'powerpaste': '/public/assets/vendors/tinymce/plugins/powerpaste/plugin.js'
+						// 'powerpaste': '/public/assets/vendors/tinymce/plugins/powerpaste/plugin.js'
 					},
-					paste_as_text: true,
-					powerpaste_allow_local_images: false,
+					// paste_as_text: true,
+					powerpaste_allow_local_images: true,
 					powerpaste_word_import: "clean",
 					powerpaste_html_import: "merge",
 					image_advtab: true,
 					visualblocks_default_state: false,
 					end_container_on_empty_block: true,
 					importcss_append: true,
-					menubar: "format edit tools table",
+					menubar: "file edit insert format table tools",
 					paste_postprocess: function(editor, fragment) {
-						var textnode = document.createTextNode("Added Text");
-						fragment.node.appendChild(textnode);
+						// var textnode = document.createTextNode("Added Text");
+						// fragment.node.appendChild(textnode);
 					},
-					toolbar: 'fullpage visualblocks template code preview save | ' + 'insertfile pastetext undo redo | styleselect formatselect removeformat | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | insert link image imagetools'+ '| bullist numlist outdent indent | help',
+					toolbar1: 'template save preview | '
+						+ 'insertfile pastetext undo redo | '
+						+ 'insert link image imagetools | '
+						+ 'fullpage code fullscreen help',
+					toolbar2: 'styleselect formatselect removeformat | '
+						+ 'visualblocks bold italic strikethrough forecolor backcolor | '
+						+ 'alignleft aligncenter alignright alignjustify | '
+						+ 'bullist numlist outdent indent ',
 					save_enablewhendirty: true,
-					save_oncancelcallback: function () {
-						console.log('Save canceled');
-					},
 					save_onsavecallback: function () {
 						self.saveDraft();
 					},
@@ -1582,7 +1611,7 @@ ul {
 					fullpage_fontsizes : '13px,14px,15px,18pt,xx-large',
 					fullpage_default_font_family: "'Times New Roman', Georgia, Serif;",
 					fullpage_default_langcode: "es-CO",
-					fullpage_default_title: "Tienes un mensaje de Monteverde Servicios Ambientales y Forestales LTDA",
+					fullpage_default_title: self.form.subject,
 					// fullpage_default_text_color: "blue",
 					fullpage_hide_in_source_view: true,
 					style_formats: [
@@ -1617,7 +1646,7 @@ ul {
 							]
 						}
 					],
-					file_picker_callback: function(cb, value, meta) {
+					/*file_picker_callback: function(cb, value, meta) {
 						var input = document.createElement('input');
 						input.setAttribute('type', 'file');
 						input.setAttribute('accept', 'image/*');
@@ -1625,7 +1654,6 @@ ul {
 							var file = this.files[0];
 							var reader = new FileReader();
 							reader.onload = function () {
-									
 									var id = 'blobid' + (new Date()).getTime();
 									var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
 									var base64 = reader.result.split(',')[1];
@@ -1637,11 +1665,142 @@ ul {
 						};
 						input.click();
 					},
+					*/
+					images_upload_handler: function (blobInfo, success, failure) {
+						var xhr, formData;
+						xhr = new XMLHttpRequest();
+						xhr.withCredentials = false;
+						xhr.open('POST', '/index.php?controller=site&action=UploadFile');
+						xhr.onload = function() {
+						  var json;
+						  if (xhr.status != 200) { failure('HTTP Error: ' + xhr.status); return; }
+						  // jsonResponse = JSON.parse(xhr.response);
+						  jsonResponse = JSON.parse(xhr.responseText);
+						  if(jsonResponse.error == false && jsonResponse.files.length > 0){
+							  json = jsonResponse.files[0];
+							  json.location = location.protocol + '//' + location.hostname + json.path_short;
+							  
+						  } else {
+							  failure('Error Subuendi el/los archivos: ');
+						  }
+						  
+						  if (!json || typeof json.location != 'string') {
+							failure('Invalid JSON: ' + xhr.responseText);
+							return;
+						  }
+						  success(json.location);
+						};
+						formData = new FormData();
+						formData.append('file', blobInfo.blob(), blobInfo.filename());
+						xhr.send(formData);
+					  },
 				});
+			},
+			addFileInEmail(file_id, mail_id){
+				var xhr, formData;
+				xhr = new XMLHttpRequest();
+				xhr.open('POST', '/api.php/records/emails_attachments');
+				xhr.onload = function() {
+				  var json;
+				  if (xhr.status != 200) { failure('HTTP Error: ' + xhr.status); return; }
+				  // jsonResponse = JSON.parse(xhr.response);
+				  jsonResponse = JSON.parse(xhr.responseText);
+				  if(jsonResponse.data !== undefined && jsonResponse.data > 0){
+					  json = true;
+				  } else {
+					  console.error('Error enlazando el archivo: ');
+					  json = false;
+				  }
+				  return json;
+				};
+				formData = new FormData();
+				formData.append('email', mail_id);
+				formData.append('attachment', file_id);
+				xhr.send(formData);
+			},
+			openFileAtt(){
+				var self = this;
+				var input = document.getElementById('file-attachments');
+				var file = input.files[0];
+				var reader = new FileReader();
+				/*
+				reader.onload = function () {
+					console.log('openFileAtt => file', file);
+					var xhr, formData;
+					xhr = new XMLHttpRequest();
+					xhr.withCredentials = false;
+					xhr.open('POST', '/index.php?controller=site&action=UploadFile');
+					xhr.onload = function() {
+					  var json;
+					  if (xhr.status != 200) { failure('HTTP Error: ' + xhr.status); return; }
+					  // jsonResponse = JSON.parse(xhr.response);
+					  jsonResponse = JSON.parse(xhr.responseText);
+					  if(jsonResponse.error == false && jsonResponse.files.length > 0){
+						  console.log('jsonResponse', jsonResponse);
+						  if(jsonResponse.error == false){
+							  json = jsonResponse.files[0];
+							  self.form.attachments.push(json);
+							  enlace = self.addFileInEmail(json.id, self.mail_id);
+							  console.log('enlace', enlace);
+							  // json.id
+						  }
+					  } else {
+						  console.error('Error subiendo el/los archivos: ');
+					  }
+					  
+					  if (!json || typeof json.error == true) {
+						console.error('Invalid JSON: ' + xhr.responseText);
+						return;
+					  }
+					  self.saveDraft();
+					  // success(json.location);
+					  return json;
+					};
+					formData = new FormData();
+					formData.append('file', file);
+					xhr.send(formData);
+					
+					
+				};
+				reader.readAsDataURL(file);
+				*/
+			},
+			addAttachments(){				
+				// input = $("#file-attachments");
+				
+				
+				var file = input.files[0];
+				var reader = new FileReader();
+				reader.onload = function () {
+						var id = 'blobid' + (new Date()).getTime();
+						var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+						var base64 = reader.result.split(',')[1];
+						var blobInfo = blobCache.create(id, file, base64);
+						blobCache.add(blobInfo);
+						// cb(blobInfo.blobUri(), { title: file.name });
+				};
+				reader.readAsDataURL(file);
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				return;
+				var file = {};
+				file.name = elm.val();
+				
+				var id = 'blobid' + (new Date()).getTime();
+				var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+				var blobInfo = blobCache.create(id, file);
+				
 			},
 			saveDraft(){
 				var self = this;
-				message = tinyMCE.activeEditor.getContent();
+				message = (tinyMCE.activeEditor.getContent());
 				// doc = tinyMCE.activeEditor.getDoc();
 				self.form.message = message;
 				console.log('Guardando Mensaje actual ', self.form);
@@ -1661,6 +1820,8 @@ ul {
 					message: self.form.message,
 					to: JSON.stringify(self.form.to),
 					attachments: JSON.stringify(self.form.attachments),
+					create_by: <?= $this->user->id; ?>,
+					status: 'drafting',
 					delete: 0,
 					seen: 0,
 					recent: 0,
@@ -1671,7 +1832,7 @@ ul {
 						Notice.update({
 							title: 'Guardado!',
 							text: 'Se guardo con éxito el mensaje.',
-							icon: 'fa fa-times',
+							icon: 'fa fa-check',
 							hide: true,
 							shadow: true,
 						});
@@ -1709,7 +1870,6 @@ ul {
 					if(error.response.data){ return error.response.data; } else { return error.response; };
 				});
 			},
-			// validateMailAddress(address_mail){
 			validateMailAddress(list, index){
 				var self = this;
 				var checkEmail = new PNotify({
@@ -1752,106 +1912,178 @@ ul {
 					console.error(error.response);
 				});
 			},
-			validateMail(){
-				// console.log("Validando correo");
+			saveEndCallback(cb){
 				var self = this;
+				console.log('Guardando mensaje actual para ser enviado.');
+				message = (tinyMCE.activeEditor.getContent());
+				self.form.message = message;
+				
+				api.put('/api.php/records/emails/' + self.form.id, {
+					id: self.form.id,
+					subject: self.form.subject,
+					message: self.form.message,
+					to: JSON.stringify(self.form.to),
+					attachments: JSON.stringify(self.form.attachments),
+					create_by: <?= $this->user->id; ?>,
+					status: 'send',
+					send: 1,
+					draft: 0,
+					delete: 0,
+					seen: 0,
+					recent: 0,
+				})
+				.then(cb)
+				.catch(cb);
+			},
+			validateMail(){
+				console.log("Validando correo para ser enviado");
+				var self = this;
+				//self.saveDraft();
+				
 				var percent = 0;
+				var form = {};
 				var notice = new PNotify({
-					text: 'Please Wait',
+					//styling: "bootstrap3",
+					text: 'Confirme que desee enviar el correo electronico?.',
 					icon: 'fa fa-spinner fa-pulse',
+					type: 'notice',
+					width: '200px',
 					hide: false,
 					shadow: false,
-					width: '200px',
-					//styling: "bootstrap3",
-					modules: {
-					  Buttons: {
+					buttons: {
 						closer: false,
 						sticker: false
-					  },
+					},
+					confirm: {
+						confirm:true
 					}
-				});
-				  
-				var form = {};
-				// form.box = 0;
-				form.box = self.$route.params.box_id;
-				
-				try {
-					percent += 7;
-					notice.update({ title: 'Validando cuenta de origen', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
-					if(form.box <= 0){ throw new excepcionForm("No existe el remitente o no tienes permisos para enviar con esta cuenta."); }
-					notice.update({ title: 'Cuenta de origen. OK', text: percent + '% completado.', icon: 'fa fa-check', type: 'info' });
-					
-					var delayInMilliseconds = 1000; // 1 Segundo por campo = 1000 Milisegundos
-					var toTotal = self.form.to.length;
-					// console.log('toTotal', toTotal);
-					// console.log('ccTotal', ccTotal);
-					
-					for (i = 0; i < toTotal; i++) { if (self.form.to[i].label.length < 4 || !self.validateEmail(self.form.to[i].address_mail)){ self.form.to.splice(i, 1); } };
-					
-					percent += 7;
-					notice.update({ title: 'Validando asunto', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
-					selfContinue = self.form.subject == "" ? false : true;
-					if(selfContinue == false){
-						throw new excepcionForm("Cancelamos el envio por que no el correo no tiene asunto.");
-					}else{
-						console.log('Validando mensje');
-						notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
-						self.form.message = tinyMCE.activeEditor.getContent();
-						htmlBody = $(self.form.message);
-						if(htmlBody.length <= 5){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
-						notice.update({ title: 'Espere...', text: 'Estamos enviando el/los mensaje(s).', icon: 'fa fa-spinner fa-pulse', type: 'warning' });
-						
-						
-						
-						/*
-						notice.update({
+				}).get()
+					.on('pnotify.confirm', function() {
+						//alert('Ok, cool.');
+						var notice = new PNotify({
+							//styling: "bootstrap3",
 							text: 'Confirme que desee enviar el correo electronico?.',
-							type: 'notice',
-							icon: false,
+							icon: 'fa fa-spinner fa-pulse',
+							//type: 'notice',
+							width: '200px',
+							hide: false,
+							shadow: false,
 							buttons: {
 								closer: false,
 								sticker: false
 							},
-							confirm: {
-								confirm:true
-							}
-						});
-						notice.on('pnotify.confirm', function() {
-							alert('Ok, cool.');
-						});
-						notice.on('pnotify.cancel', function() {
-							alert('Oh ok. Chicken, I see.');
-						});*/
-						self.pNotify()
-						.confirm({
-							title: 'Confirm',
-							text: 'Do you really want to remove this item?'
 						})
-						.then(function onConfirm() {
-							alert('Removido!');
-						},function onCancel() {
-							alert('Cancelado!');
-						});
-					}
-				} 
-				catch(e){
-					// console.log(e);
-					if (e.name === 'excepcionForm') {
-						// console.log("Manejar error de Formulario.");
-						// console.log(e.message);
-						var options = {};
-						options.error = 'success';
-						options.text = e.message;
-						options.icon = 'fa fa-times';
-						options.hide = true;
-						options.type = 'error';
-						options.shadow = true;
-						options.modules = { Buttons: { closer: true, sticker: true } };
-						notice.update(options);
-					} else {
-						// console.log("Manejar otros errores");
-					}
-				}
+						
+						form.box = self.$route.params.box_id;
+						try {
+							percent += 7;
+							notice.update({ title: 'Validando cuenta de origen', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+							if(form.box <= 0){ throw new excepcionForm("No existe el remitente o no tienes permisos para enviar con esta cuenta."); }
+							notice.update({ title: 'Cuenta de origen. OK', text: percent + '% completado.', icon: 'fa fa-check', type: 'info' });
+							
+							var delayInMilliseconds = 1000; // 1 Segundo por campo = 1000 Milisegundos
+							var toTotal = self.form.to.length;
+							// console.log('toTotal', toTotal);
+							// console.log('ccTotal', ccTotal);
+							
+							for (i = 0; i < toTotal; i++) { if (self.form.to[i].label.length < 4 || !self.validateEmail(self.form.to[i].address_mail)){ self.form.to.splice(i, 1); } };
+							
+							percent += 7;
+							notice.update({ title: 'Validando asunto', text: percent + '% completado.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+							selfContinue = self.form.subject == "" ? false : true;
+							if(selfContinue == false){
+								throw new excepcionForm("Cancelamos el envio por que no el correo no tiene asunto.");
+							}else{
+								console.log('Validando mensje');
+								notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'warning' });
+								self.form.message = tinyMCE.activeEditor.getContent();
+								htmlBody = $(self.form.message);
+								if(htmlBody.length <= 5){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
+								notice.update({ title: 'Espere...', text: 'Estamos guardando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+								
+								self.saveEndCallback(function(resultSave){
+									console.log('resultSave', resultSave);
+									if(resultSave.data > 0){
+										notice.update({ title: 'Espere un poco más...', text: 'Estamos colocando el mensaje en cola.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
+										setTimeout(function(){
+											notice.update({ title: 'Enviando Mensaje', text: 'Enviando el mensaje...', icon: 'fa fa-spinner fa-pulse', type: 'warning' });
+											self.$root.sendCallback(self.mail_id, self.form.box, function(resultSend){
+												if(resultSend.error !== undefined && resultSend.error == false){
+													notice.update({ title: 'Éxito!', text: 'Mensaje Enviado con éxito.', icon: 'fa fa-check', type: 'success', hide: true, shadow: true, buttons: { closer: true, sticker: true }, });
+													self.$router.push({ name: 'View-Single', params: { mail_id: self.$route.params.mail_id, box_id: self.$route.params.box_id, index: self.$route.params.index, folder: 'send' } });
+												}else{
+													notice.update({ title: 'Error!', text: 'Ocurrio un error enviando el correo, revise en "Enviados" en caso de no ver el mensaje contacte con soporte.', icon: 'fa fa-times', type: 'danger', hide: false, shadow: false, buttons: { closer: true, sticker: true }, });
+												}
+											});
+										}, 2000);
+									}
+								});
+								
+								
+								
+								// 
+								
+								/*
+								notice.update({
+									text: 'Confirme que desee enviar el correo electronico?.',
+									type: 'notice',
+									icon: false,
+									buttons: {
+										closer: false,
+										sticker: false
+									},
+									confirm: {
+										confirm:true
+									}
+								});
+								notice.on('pnotify.confirm', function() {
+									alert('Ok, cool.');
+								});
+								notice.on('pnotify.cancel', function() {
+									alert('Oh ok. Chicken, I see.');
+								});*/
+								
+								/*
+								self.pNotify()
+								.confirm({
+									title: 'Todo listo!',
+									text: 'Confirma que deseas enviar el correo electronico.'
+								})
+								.then(function onConfirm() {
+									alert('Removido!');
+								},function onCancel() {
+									alert('Cancelado!');
+								});
+								*/
+							}
+						} 
+						catch(e){
+							// console.log(e);
+							if (e.name === 'excepcionForm') {
+								// console.log("Manejar error de Formulario.");
+								// console.log(e.message);
+								var options = {};
+								options.error = 'success';
+								options.text = e.message;
+								options.icon = 'fa fa-times';
+								options.hide = true;
+								options.type = 'error';
+								options.shadow = true;
+								options.modules = { Buttons: { closer: true, sticker: true } };
+								notice.update(options);
+							} else {
+								console.log("Manejar otros errores");
+								console.error(e);
+							}
+						}
+					})
+					.on('pnotify.cancel', function() {
+						// alert('Oh ok. Chicken, I see.');
+					});
+			},
+			validateMailOld(){
+				// form.box = 0;
+				
 			},
 			pNotify() {
 				var defaultSettings = {
@@ -1909,13 +2141,16 @@ ul {
 
 	var router = new VueRouter({
 		routes:[
-			{ path: '/:box_id/folder/:folder', component: Home, name: 'Home', params: { folder: 'inbox', page: 1, limit: 25 } },
-			{ path: '/:box_id/folder/:folder/', component: Home, name: 'Folder', params: { page: 1, limit: 25 } },
+			{ path: '/:box_id/', component: Home, name: 'Home', params: { limit: 25 } },
+			{ path: '/:box_id/folder/inbox', component: Home, name: 'Inbox', params: { limit: 25 } },
+			{ path: '/:box_id/folder/:folder/1', component: Home, name: 'Folder', params: { limit: 25 } },
 			{ path: '/:box_id/folder/:folder/:page', component: Home, name: 'Folder-Page', params: { limit: 25 } },
 			{ path: '/:box_id/compose', component: Compose, name: 'Compose', params: { mail_id: 0 } },
-			{ path: '/:box_id/compose/:mail_id', component: Compose, name: 'Edit' },
+			
 			{ path: '/:folder/view/:box_id/view/:mail_id-:index', component: View, name: 'View' },
 			{ path: '/:box_id/folder/:folder/view/:mail_id-:index', component: View, name: 'View-Single' },
+			
+			{ path: '/:box_id/folder/edit/:folder/:mail_id-:index/', component: Compose, name: 'Edit' },
 			/*
 			{ path: '/', component: Home, name: 'Home' },
 			{ path: '/folder/:folder/', component: Home, name: 'Folder' },
@@ -2049,35 +2284,55 @@ ul {
 				});
 			},
 			loadMail(){
+				console.log('loadMail');
 				var self = this;
-				api.get('/index.php', {
-					params: {
-						"controller": "site",
-						"action": "my_email_id",
-						"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : 0,
-						"message_id": self.$route.params.mail_id
-					}
-				})
-				.then(function (r) {
-					if(r.data !== undefined){
-						if(r.data.error !== undefined && r.data.error == false){
-							r.data.record.to = JSON.parse(r.data.record.to);
-							
-							r.data.record.date = new Date(r.data.record.date.date);
-							if(r.data.record.draft == 1){
-								self.$router.push({ name: 'Edit', params: { mail_id: r.data.record.id } });
-								location.reload();
-							}
-							return self.mail = r.data.record;
-							// // console.log(self.email_single);
+				
+				// console.log('box_id', self.$route.params.box_id);
+				// console.log('mail_id', self.$route.params.mail_id);
+				if(self.$route.params.mail_id != self.mail.id){
+					console.log('cargar');
+					
+					api.get('/index.php', {
+						params: {
+							"controller": "site",
+							"action": "my_email_id",
+							"ref": self.$route.params.box_id >= 0 ? self.$route.params.box_id : 0,
+							"message_id": self.$route.params.mail_id
 						}
-					}else{
-						// console.log('error');
-					}
-				})
-				.catch(function (error) {
-					// console.log(error);
-				});
+					})
+					.then(function (r) {
+						if(r.data !== undefined){
+							if(r.data.error !== undefined && r.data.error == false){
+								var infoEmail = r.data.record;
+								//console.log('infoEmail', infoEmail);
+								
+								r.data.record.to = JSON.parse(r.data.record.to);
+								r.data.record.date = new Date(r.data.record.date.date);
+								
+								if(r.data.record.draft == 1 && self.$route.name == 'Edit'){
+									console.log('borrador');
+									// self.$router.push({ name: 'Edit', params: { mail_id: r.data.record.id } });
+									// Verificado - 
+									// location.reload();
+									 // self.loadTiny();
+								}
+								self.mail = r.data.record;
+								//console.log('/loadMail', self.mail);
+								// // console.log(self.email_single);
+							}
+						}else{
+							// console.log('error');
+							console.log('/loadMail');
+						}
+					})
+					.catch(function (error) {
+						// console.log(error);
+						console.error('/loadMail', error);
+					});
+				} else {
+					console.log('No cargar');
+				}
+				return self.mail;
 			},
 			loadList(boxId, folderSelected){
 				var self = this;
@@ -2170,6 +2425,23 @@ ul {
 				.catch(function (error) {
 					// console.log(error);
 				});
+			},
+			sendCallback(mail_id, box_id, cb){
+				var self = this;
+				var xhr, formData;
+				xhr = new XMLHttpRequest();
+				xhr.withCredentials = false;
+				xhr.open('POST', '/index.php?controller=site&action=SendMail');
+				xhr.onload = function() {
+				  var json;
+				  if (xhr.status != 200) { console.error('HTTP Error: ' + xhr.status); return; }
+				  jsonResponse = JSON.parse(xhr.responseText);
+				  cb(jsonResponse);
+				};
+				formData = new FormData();
+				formData.append('mail_id', mail_id);
+				formData.append('box_id', box_id);
+				xhr.send(formData);
 			},
 		}
 	}).$mount('#app');

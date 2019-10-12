@@ -14,9 +14,6 @@ define('CORE_PATH', dirname(CONFIG_PATH . '../') . '/core');
 
 ini_set('memory_limit', '128M');
 
-# define('TYPE_SYNC_EMAILS', 'SINCE '. date('d-M-Y',strtotime("-1 day")));
-define('TYPE_SYNC_EMAILS', 'UNSEEN');
-#define('TYPE_SYNC_EMAILS', 'ALL');
 
 spl_autoload_register(function($className){
 		$namespace = str_replace("\\","/", __NAMESPACE__);

@@ -264,16 +264,24 @@ class FG_IMAP extends EntidadBase{
 					$v = !isset($b[0]) ? $v : $b[0];
 				} 
 				else if($k === 'from'){
-					$r["{$k}_email"] = $v;
+					// $r["{$k}_email"] = $v;
+					$original_email = $v;
 					preg_match('/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i', $v, $b);
 					$b[0] = !isset($b[0]) ? $v : $b[0];
-					$v = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
+					$label = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
+					preg_match_all('/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i', $b[0], $matches);
+					$address_mail = ($matches[0]);
+					$r["{$k}_email"] = $address_mail[0];
+					$v = $label;
 				} else if($k === 'udate'){
 				} else if($k === 'to'){
+					$original_email = $v;
 					preg_match('/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i', $v, $b);
 					$b[0] = !isset($b[0]) ? $v : $b[0];
-					$name = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
-					$r['to'][] = (object) ['label' => $name, 'address_mail' => $v];
+					$label = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
+					preg_match_all('/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i', $b[0], $matches);
+					$address_mail = ($matches[0]);
+					$r['to'][] = (object) ['label' => $label, 'address_mail' => $address_mail[0]];
 				} else if($k === 'subject'){
 				} else if($k === 'date'){
 					//$v = date("Y-m-d H:i:s", $v);
