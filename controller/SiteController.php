@@ -17,7 +17,7 @@ class SiteController extends ControladorBase{
     }
     
     public function actionHome_users(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
         /*
         $this->render("home_users", [
             "title" => "Principal Usuario",
@@ -158,7 +158,7 @@ class SiteController extends ControladorBase{
 	
 	public function actionAccounts_create(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$model = new Account($this->adapter);
         $formulario = $model->createForm('','POST',0,"verifique sus datos.", "Espere...");
 		
@@ -199,7 +199,7 @@ class SiteController extends ControladorBase{
 
 	public function actionAccounts_master(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$table = isset($_GET['table']) ? $_GET['table'] : false;
 		if ($table == false) { $this->goHome(); }
 		
@@ -226,7 +226,7 @@ class SiteController extends ControladorBase{
 	
 	public function actionTable_Master_Vue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$table = isset($_GET['table']) ? $_GET['table'] : false;
 		if ($table == false) { $this->goHome(); }
 		
@@ -346,7 +346,7 @@ class SiteController extends ControladorBase{
 	}
 	
 	public function addScripts_GA(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		// https://console.developers.google.com/apis/credentials/oauthclient/507571280579-rir2jneap7141vh6g66kr87ep44qmpph.apps.googleusercontent.com?project=gapi-1470725186645
 		// https://console.developers.google.com/apis/credentials/consent?project=gapi-1470725186645&duration=P1D
 		
@@ -361,7 +361,7 @@ class SiteController extends ControladorBase{
 	
 	// Usuarios
 	public function actionUsersMaster(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
         $query = new Usuario($this->adapter);
         $allusers = $query->getAll();
 		
@@ -501,7 +501,7 @@ class SiteController extends ControladorBase{
 	
 	// Permisos - Manejador de Permisos PHP LISTA
 	public function actionAdminPermissionsList(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
         $error = Null;
         $model = new PermissionsItems($this->adapter);
         $allpermissions = $model->getAll();
@@ -514,7 +514,7 @@ class SiteController extends ControladorBase{
 	
 	// Permisos - Manejador de Permisos PHP CREAR
 	public function actionAdminPermissionsCreate(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
         $error = Null;
         $model = new PermissionsItems($this->adapter);
 		$model->generateFormCreate();
@@ -559,7 +559,7 @@ class SiteController extends ControladorBase{
 	// Permisos - Manejador de Permisos VUE
 	public function actionAdminPermissionsVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Permisos",
@@ -571,7 +571,7 @@ class SiteController extends ControladorBase{
 	// Permisos - Manejador de Permisos VUE
 	public function actionAdminPermissionsGroupVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Grupos de Permisos",
@@ -583,7 +583,7 @@ class SiteController extends ControladorBase{
 	// Usuarios - Manejador de Usuarios VUE
 	public function actionAdminUsersVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Usuarios",
@@ -595,7 +595,7 @@ class SiteController extends ControladorBase{
 	// Menus - Manejador de Menús
 	public function actionAdminMenusVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Menús",
@@ -630,7 +630,7 @@ class SiteController extends ControladorBase{
 	
 	// Emails - Manejador de Inbox Email
 	public function actionMy_email(){
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$AllBoxes = $this->user->getEmailBoxes();
 		$this->render("my_inbox", [
 			"title"    =>"Correos electronico",
@@ -763,7 +763,7 @@ class SiteController extends ControladorBase{
 	// Emails - Manejador de cuentas de correo electronico (boxes)
 	public function actionAdminEmailsBoxesVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Cuentas de correo",
@@ -775,7 +775,7 @@ class SiteController extends ControladorBase{
 	// Emails - Manejador de cuentas de correo electronico (attachments)
 	public function actionAdminEmailsAttachmentsVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Usuarios",
@@ -787,7 +787,7 @@ class SiteController extends ControladorBase{
 	// Emails - Manejador de cuentas de correo electronico (emails in user)
 	public function actionAdminEmailsBoxesInUserVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Usuarios",
@@ -867,7 +867,7 @@ class SiteController extends ControladorBase{
 	// Media - Manejador de Multimedia
 	public function actionAdminMediaVue(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("vue_table", [
             "title" => "Usuarios",
@@ -878,7 +878,7 @@ class SiteController extends ControladorBase{
 
 	public function actionMy_profile(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$this->render("my_profile", [
             "title" => "Mi Perfil",
             "subtitle" => "",
@@ -887,7 +887,7 @@ class SiteController extends ControladorBase{
 	
 	public function actionMy_accounts(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$this->render("my_accounts", [
             "title" => "Mis Cuentas",
             "subtitle" => "",
@@ -896,7 +896,7 @@ class SiteController extends ControladorBase{
 	
 	public function actionMy_calendar(){
 		$error = null;
-        if ($this->isGuest){ $this->goHome(); }
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$this->render("my_calendar", [
             "title" => "Mi Calendario",
             "subtitle" => "Mi Calendario",
@@ -1087,6 +1087,17 @@ class SiteController extends ControladorBase{
 		echo json_encode($returnData);
 		return json_encode($returnData);
 		exit();
+	}
+
+	// Budgets - Manejador para administrador
+	public function actionBudgets_admin(){
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+	
+		$this->render("budgets_admin", [
+			"title" => "Presupuestos",
+			"subtitle" => "Master",
+			"table" => "budgets"
+		]);
 	}
 
 }
