@@ -1020,6 +1020,8 @@ class SiteController extends ControladorBase{
 					$mail->setHtml(true);
 					// Definir Destinatario
 					$mail->setFrom($emailInfo->from_email, $emailInfo->from);
+					// Definir la cuenta de respuesta
+					$mail->setReply($emailInfo->from_email, $emailInfo->from);
 					// Asunto
 					$mail->setSubject($emailInfo->subject);
 					// Añadir Direcciones de envío
@@ -1036,9 +1038,8 @@ class SiteController extends ControladorBase{
 					// Adjuntos
 					$attachments = json_decode($emailInfo->attachments);
 					foreach($attachments as $fileAttachment){
-						if(isset($fileAttachment->targetPath)){
-							$mail->addAttachments($fileAttachment->targetPath);
-						}
+						if(isset($fileAttachment->targetPath)){ $mail->addAttachments($fileAttachment->targetPath); }
+						if(isset($fileAttachment->path_full)){ $mail->addAttachments($fileAttachment->path_full); }
 					}
 					/*
 					*/

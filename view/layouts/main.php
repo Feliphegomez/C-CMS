@@ -93,7 +93,7 @@
 								foreach($mailBoxes as $box){
 									$box = is_array($box) ? (object) $box : $box;
 									
-									$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/folder/inbox"]], 
+									$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/folder/inbox/1"]], 
 										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label
 									, ['sub_menu'], ["title" => $box->user]);
 								}
@@ -168,8 +168,8 @@
 										, # PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
 												PHPStrap\Util\Html::tag('span', 
 														#PHPStrap\Util\Html::tag('span', $mail->from)
-														PHPStrap\Util\Html::tag('span', "<b>{$mail->from}</b>")
-														. PHPStrap\Util\Html::tag('span', "", ['time'])
+														PHPStrap\Util\Html::tag('span', "{$mail->subject}")
+														. PHPStrap\Util\Html::tag('span', "<b>" . (( strlen($mail->from) <= 2) ? "Anon" : $mail->from ) . " <" . (( strlen($mail->from_email) <= 2) ? "Anon" : $mail->from_email ) . "></b>", ['time'])
 													)
 												. PHPStrap\Util\Html::tag('span', cortar_string(strip_tags($mail->subject), 25), ['message'])
 											, []
@@ -181,7 +181,7 @@
 						
 						
                         <?php 
-							$inboxSuccess = ($this->checkPermission('my:account') == true) ? PHPStrap\Util\Html::tag('li', 
+							$inboxSuccess = ($this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
 								FelipheGomez\Url::a(
 										'javascript:void(0)'
 										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . (count($mails) > 0 ? PHPStrap\Util\Html::tag('span', count($mails)==100 ? "+" . count($mails) : count($mails), ['badge bg-green']) : "")

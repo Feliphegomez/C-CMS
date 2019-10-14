@@ -561,7 +561,7 @@ ul {
 						<li><span> {{ ((($root.list.limit * $root.list.page) - $root.list.limit) + 1) }} - {{ ((($root.list.limit * $root.list.page) + $root.list.limit) - $root.list.limit) }}</span></li>
 						<li><span></span></li>
 						<li>
-							<router-link v-if="$root.list.page > 1" accesskey="b" class="np-btn" :key="'list-page-' + $root.list.page" v-bind:to="{ name: 'Folder-Page', params: { page: ($root.list.page - 1) } }">
+							<router-link v-if="$root.list.page > 1" accesskey="b" class="np-btn" :key="'list-page-' + $root.list.page" v-bind:to="{ name: 'Folder-Page', params: { page: ($root.list.page - 1), folder: $route.params.folder } }">
 								<i class="fa fa-angle-left pagination-left"></i>
 							</router-link>
 							<a accesskey="b" class="np-btn" style="cursor:no-drop;" v-else>
@@ -569,7 +569,7 @@ ul {
 							</a>
 						</li>
 						<li>
-							<router-link v-if="(($root.list.page * $root.list.limit) + 1) < $root.list.total && ($root.list.total + 1) > $root.list.limit" accesskey="n" class="np-btn" :key="'list-page-' + $root.list.page" v-bind:to="{ name: 'Folder-Page', params: { page: ($root.list.page + 1) } }">
+							<router-link v-if="(($root.list.page * $root.list.limit) + 1) < $root.list.total && ($root.list.total + 1) > $root.list.limit" accesskey="n" class="np-btn" :key="'list-page-' + $root.list.page" v-bind:to="{ name: 'Folder-Page', params: { page: ($root.list.page + 1), folder: $route.params.folder } }">
 								<i class="fa fa-angle-right pagination-left"></i>
 							</router-link>
 							<a accesskey="n" class="np-btn" style="cursor:no-drop;" v-else>
@@ -630,21 +630,28 @@ ul {
 						<template v-if="mail.id !== undefined && mail.id > 0">
 							<router-link tag="td" class="inbox-small-cells" v-bind:to="{ name: 'View-Single', params: { box_id: mail.box, index: index_mail, mail_id: mail.id, folder: folder } }">
 								<!-- // <input type="checkbox" class="mail-checkbox" /> -->
-								<template v-if="mail.seen !== undefined && mail.seen === 1 && mail.draft === 0 && mail.trash === 0">
-									<i class="fa fa-circle-o"></i>
+								<template v-if="mail.status !== undefined && mail.status == 'read'">
+									<i title="Leido" class="fa fa-circle-o"></i>
 								</template>
-								<template v-else-if="mail.seen !== undefined && mail.seen === 0 && mail.draft === 0 && mail.trash === 0">
-									<i class="fa fa-circle"></i>
+								<template v-else-if="mail.status !== undefined && mail.status == 'unread'">
+									<i title="No leido" class="fa fa-circle"></i>
 								</template>
-								
-								<template v-if="mail.draft !== undefined && mail.draft === 1">
-									<i class="fa fa-pencil"></i> 
+								<template v-else-if="mail.status !== undefined && mail.status == 'drafting'">
+									<i title="Borrador" class="fa fa-pencil"></i>
+								</template>
+								<template v-else-if="mail.status !== undefined && mail.status == 'send'">
+									<i title="Enviado" class="fa fa-check"></i>
+								</template>
+								<template v-else-if="mail.status !== undefined && mail.status == 'to_send'">
+									<i title="Enviando" class="fa fa-spinner"></i>
+								</template>
+								<template v-else>
+									<i :title="mail.status" class="fa fa-times"></i>
 								</template>
 								
 								<template v-if="mail.recent !== undefined && mail.recent === 1">
 									<i class="fa fa-asterisk"></i>
 								</template>
-								
 								<template v-if="mail.answered !== undefined && mail.answered === 1">
 									<i class="fa fa-share"></i> 
 								</template>
@@ -1068,7 +1075,92 @@ ul {
 							<div class="clearfix"></div>
 						</div>
 						<hr>
-						{{ form.attachments }}
+						
+						<!-- Archivos Adjuntos -->
+						<template v-if="form.attachments !== undefined">
+							<div class="ln_solid"></div>
+							<div class="clearfix"></div>
+							<div class="attachment" v-if="form.attachments.length > 0">
+								<p>
+									<span><i class="fa fa-paperclip"></i> {{ form.attachments.length }} Archivos Adjuntos </span>
+									<!-- — <a href="#">Download all attachments</a> | <a href="#">View all images</a> -->
+								</p>
+								<div class="row">
+									<div v-for="(attachment, index) in form.attachments">
+										<div class="col-lg-2 col-md-2 col-sm-3 col-xs-4" style="zoom:0.9;overflow: hidden;border: 0px dotted #666;padding: 0.3em;min-height: 300px;max-height: 300px;">
+											<a class="atch-thumb" :href="attachment.path_short" target="_blank" style="cursor:pointer;">
+												<!-- // <img src="/public/assets/images/inbox.png" alt="img" /> -->
+												<center class="col-xs-12">
+													<template v-if="[
+														'ai', 'avi', 'css', 'csv', 'dbf', 'doc', 'dwg', 'exe', 'fla', 'flash', 'html'
+														, 'iso', 'jpg', 'js', 'json', 'mp3', 'mp4', 'png', 'ppt', 'psd', 'rtf', 'svg', 'txt', 'xls', 'xml', 'zip'
+													].includes((attachment.name.split('.')[(attachment.name.split('.').length - 1)]))">													
+														<img :src="'/public/assets/icons/136517-file-types/svg/' + attachment.name.split('.')[(attachment.name.split('.').length - 1)] + '.svg'" :alt="attachment.name.split('.')[(attachment.name.split('.').length - 1)]" />
+													</template>
+													<template v-else>
+														<template v-if="['xls', 'xlsx'].includes((attachment.name.split('.')[(attachment.name.split('.').length - 1)]))">													
+															<img src="/public/assets/icons/136517-file-types/svg/xls.svg" alt="XLS" />
+														</template>
+														<template v-else-if="attachment.filetype === 'PDF'">
+															<img src="/public/assets/icons/136517-file-types/svg/pdf.svg" alt="PDF" />
+														</template>
+														<template v-else-if="attachment.filetype === 'X-ICON'">
+															<img width="100%" :src="attachment.path_short" alt="X-ICON" />
+														</template>
+														<template v-else-if="attachment.filetype === 'MP4'">
+															<img src="/public/assets/icons/136517-file-types/svg/mp4.svg" alt="MP4" />
+														</template>
+														<template v-else-if="attachment.filetype === 'ZIP'">
+															<img src="/public/assets/icons/136517-file-types/svg/ZIP.svg" alt="ZIP" />
+														</template>
+														<template v-else-if="attachment.filetype === 'POSTSCRIPT'">
+															<img src="/public/assets/icons/136517-file-types/svg/search.svg" alt="POSTSCRIPT" />
+														</template>
+														<template v-else-if="attachment.filetype.search('VND.EXCEL') >= 0">
+															<img src="/public/assets/icons/136517-file-types/svg/xls.svg" alt="XLS" />
+														</template>
+														<template v-else>
+															<img src="/public/assets/icons/136517-file-types/svg/file.svg" alt="NO DETECTADO" />
+														</template>
+													</template>
+												</center>
+											</a>
+											<div class="col-xs-12 text-center">
+												<div class="file-name">
+													<!-- // {{ attachment.name.split(/(\d)/).join(' ') }} -->
+													<!-- // {{ attachment.name.split(/([\w\d])/).join('_').replace(/(#\w{10})[\w\d]+/g, '$1')  }} -->
+													{{ attachment.name.replace(/(#\w{10})[\w\d]+/g, '$1') }}
+												</div>
+											</div>
+											<span class="col-xs-12">
+												<div class="pull-right">
+													<template v-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) < 1024">
+														<b>{{ parseInt(attachment.filesize/1024) }}</b> KB 
+													</template>
+													<template v-else-if="attachment.filesize > 1024 && Math.round(attachment.filesize/1024) > 1024">
+														<b>{{ parseInt(Math.round(attachment.filesize/1024)/1024) }}</b> MB 
+													</template>
+													<template v-else>
+														<b>{{ attachment.filesize }}</b> B 
+													</template>
+												</div>
+											</span>
+											<div class="col-xs-12 text-right" style="cursor:pointer" >
+												<div class="" style="cursor:pointer" >
+													<a :href="attachment.path_short" class="col-xs-4 btn btn-sm btn-default pull-left" target="_blank">
+														Ver
+													</a>
+													<a :href="attachment.path_short" class="col-xs-5 btn btn-sm btn-primary pull-right" download="">
+														Bajar
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</template>
+						<!-- / Archivos Adjuntos -->
 						<div class="clearfix"></div>
 					</form>
 				</div>
@@ -1486,7 +1578,7 @@ ul {
 					remove_script_host : false,
 					document_base_url : location.protocol + '//' + location.hostname,
 					//skin: "feliphegomez-mv",
-					plugins: 'print preview fullpage powerpaste searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help save',
+					plugins: 'print preview fullpage powerpaste code searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern help save',
 					/*
 					plugins: [
 						'save template importcss preview image imagetools media table',
@@ -1505,17 +1597,17 @@ ul {
 					visualblocks_default_state: false,
 					end_container_on_empty_block: true,
 					importcss_append: true,
-					menubar: "file edit insert format table tools",
+					menubar: "file edit insert format table tools view code",
 					paste_postprocess: function(editor, fragment) {
 						// var textnode = document.createTextNode("Added Text");
 						// fragment.node.appendChild(textnode);
 					},
-					toolbar1: 'template save preview | '
+					toolbar1: 'save | template preview fullscreen | '
 						+ 'insertfile pastetext undo redo | '
 						+ 'insert link image imagetools | '
-						+ 'fullpage code fullscreen help',
+						+ 'fullpage code help',
 					toolbar2: 'styleselect formatselect removeformat | '
-						+ 'visualblocks bold italic strikethrough forecolor backcolor | '
+						+ 'visualblocks | sizeselect | bold italic | fontselect |  fontsizeselect | strikethrough forecolor backcolor | '
 						+ 'alignleft aligncenter alignright alignjustify | '
 						+ 'bullist numlist outdent indent ',
 					save_enablewhendirty: true,
@@ -1611,9 +1703,9 @@ ul {
 					fullpage_fontsizes : '13px,14px,15px,18pt,xx-large',
 					fullpage_default_font_family: "'Times New Roman', Georgia, Serif;",
 					fullpage_default_langcode: "es-CO",
-					fullpage_default_title: self.form.subject,
+					fullpage_default_title: (self.form.subject !== undefined && self.form.subject !== "") ? self.form.subject : "",
 					// fullpage_default_text_color: "blue",
-					fullpage_hide_in_source_view: true,
+					fullpage_hide_in_source_view: false,
 					style_formats: [
 						{
 							title: 'Headers',
@@ -1723,13 +1815,13 @@ ul {
 				var input = document.getElementById('file-attachments');
 				var file = input.files[0];
 				var reader = new FileReader();
-				/*
 				reader.onload = function () {
 					console.log('openFileAtt => file', file);
 					var xhr, formData;
 					xhr = new XMLHttpRequest();
 					xhr.withCredentials = false;
 					xhr.open('POST', '/index.php?controller=site&action=UploadFile');
+					
 					xhr.onload = function() {
 					  var json;
 					  if (xhr.status != 200) { failure('HTTP Error: ' + xhr.status); return; }
@@ -1756,14 +1848,12 @@ ul {
 					  // success(json.location);
 					  return json;
 					};
+					
 					formData = new FormData();
 					formData.append('file', file);
 					xhr.send(formData);
-					
-					
 				};
 				reader.readAsDataURL(file);
-				*/
 			},
 			addAttachments(){				
 				// input = $("#file-attachments");
@@ -1780,14 +1870,6 @@ ul {
 						// cb(blobInfo.blobUri(), { title: file.name });
 				};
 				reader.readAsDataURL(file);
-				
-				
-				
-				
-				
-				
-				
-				
 				
 				return;
 				var file = {};
@@ -1835,6 +1917,12 @@ ul {
 							icon: 'fa fa-check',
 							hide: true,
 							shadow: true,
+							modules: {
+							  Buttons: {
+								closer: false,
+								sticker: false
+							  }
+							}
 						});
 					} else {
 						Notice.update({
@@ -1998,7 +2086,7 @@ ul {
 								notice.update({ title: 'Validando mensaje', text: 'Estamos revisando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'warning' });
 								self.form.message = tinyMCE.activeEditor.getContent();
 								htmlBody = $(self.form.message);
-								if(htmlBody.length <= 5){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
+								if(htmlBody.length <= 2){ throw new excepcionForm("Cancelamos el envio por que el mensaje está vácio."); };
 								notice.update({ title: 'Espere...', text: 'Estamos guardando el mensaje.', icon: 'fa fa-spinner fa-pulse', type: 'info' });
 								
 								self.saveEndCallback(function(resultSave){
@@ -2073,6 +2161,7 @@ ul {
 								notice.update(options);
 							} else {
 								console.log("Manejar otros errores");
+								notice.update({ title: 'Error!', text: 'Ocurrio un error, pero se identificó, revise los datos y vuelva a intentarlo, si continua contacte con soporte.', icon: 'fa fa-times', type: 'danger', hide: false, shadow: false, buttons: { closer: true, sticker: true }, });
 								console.error(e);
 							}
 						}
@@ -2267,7 +2356,7 @@ ul {
 					if(r.data !== undefined){
 						if(r.data.error !== undefined && r.data.error == false){
 							//self.loadList(box_id, self.folder);
-							self.loadMail();
+							self.loadMail(true);
 							return true;
 						}else{
 							// console.error('error');
@@ -2283,14 +2372,13 @@ ul {
 					return false;
 				});
 			},
-			loadMail(){
-				console.log('loadMail');
+			loadMail(force = false){
 				var self = this;
 				
 				// console.log('box_id', self.$route.params.box_id);
 				// console.log('mail_id', self.$route.params.mail_id);
-				if(self.$route.params.mail_id != self.mail.id){
-					console.log('cargar');
+				if(self.$route.params.mail_id != self.mail.id || force == true){
+					console.log('Cargar.');
 					
 					api.get('/index.php', {
 						params: {
@@ -2322,7 +2410,7 @@ ul {
 							}
 						}else{
 							// console.log('error');
-							console.log('/loadMail');
+							console.error('/loadMail');
 						}
 					})
 					.catch(function (error) {
@@ -2347,6 +2435,9 @@ ul {
 					self.folder = self.$route.params.folder;
 				}
 				
+				if(self.folder == "" || self.folder == undefined){
+					self.folder = 'inbox';
+				}
 				var folders = {
 					'inbox': [
 						'box,eq,' + self.$route.params.box_id,
