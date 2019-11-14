@@ -10528,7 +10528,7 @@ namespace FelipheGomez\PhpCrudApi {
 					return is_string($value) ? strip_tags($value) : $value;
 				}
 			} else {
-				return is_string($value) ? ($value) : $value;
+				return is_string($value) ? ($value) : (string) $value;
 			}
 		},
 		'validation.handler' => function ($operation, $tableName, $column, $value) {

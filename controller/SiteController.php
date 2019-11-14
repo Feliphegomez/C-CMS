@@ -197,26 +197,24 @@ class SiteController extends ControladorBase{
 		*/
 	}
 
+	// Cuentas - Master
 	public function actionAccounts_master(){
 		$error = null;
         if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		$table = isset($_GET['table']) ? $_GET['table'] : false;
-		if ($table == false) { $this->goHome(); }
-		
-		$this->render("vue_table", [
-            "title" => "Cuentas",
-            "subtitle" => "Todas las cuentas",
-			"table" => $table
+		$this->render("accounts_master", [
+            "title" => "Master Cuentas",
         ]);
-		
-		/*
-		$this->render("vue_master", [
-            "title" => "Cuentas",
-            "subtitle" => "Todas las cuentas",
-			"table" => $table
-        ]);*/
 	}
 
+	// Servicios - Master
+	public function actionServices_master(){
+		$error = null;
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$this->render("services_master", [
+            "title" => "Master Servicios",
+        ]);
+	}
+	
 	public function actionCalendar_Master(){
 		$this->render("calendar_master", [
             "title" => "Calendario",
@@ -1099,5 +1097,5 @@ class SiteController extends ControladorBase{
 			"table" => "budgets"
 		]);
 	}
-
+	
 }
