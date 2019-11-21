@@ -1098,4 +1098,14 @@ class SiteController extends ControladorBase{
 		]);
 	}
 	
+	// Manejador para la biblioteca garden
+	public function actionGarden(){
+		$error = null;
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$this->render("libraries_garden", [
+            "title" => "Bilbiotecas",
+            "subtitle" => "Plantas y Especies",
+        ]);
+	}
+	
 }

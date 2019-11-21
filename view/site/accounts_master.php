@@ -1,3 +1,14 @@
+<style>
+.circle-color {
+	position: relative;
+	margin: 0 auto;
+	width: 25px;
+	height: 25px;
+	border-radius: 9999px;
+	background-color: HSL(45,100%,50%);
+}
+</style>
+
 <div class="page-title">
 	<div class="title_left">
 		<h3><?= isset($title) ? $title : ""; ?> <small> <?= isset($subtitle) ? $subtitle : ""; ?></small></h3>
@@ -64,7 +75,6 @@
 						<h2>Ver <small>Cuenta</small></h2>
 						<ul class="nav navbar-right panel_toolbox">
 							<!-- // <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li> -->
-
 							<li><a @click="load" class="refresh"><i class="glyphicon glyphicon-refresh"></i></a></li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
@@ -589,7 +599,7 @@
 						</div>
 					</div>
 					<!-- // Sedes -->
-					<!-- Usuarios -->
+					<!-- Solicitudes -->
 					<div class="tab-pane panel" id="tab-requests">
 						<div class="x_panel">
 							<div class="x_title">
@@ -603,9 +613,6 @@
 											<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 										</router-link>
 									</li>
-
-
-
 									<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
@@ -621,9 +628,102 @@
 								{{ record.requests }}
 								<hr>
 							</div>
+							<div class="x_content">
+								<!-- start project list -->
+								<table class="table table-striped projects">
+									<thead>
+										<tr>
+											<th style="width: 1%">#</th>
+											<th colspan="2">Estado Actual</th>
+											<!-- <th>Creada por</th> -->
+											<!-- // <th style="width: 20%">Project Name</th> -->
+											<th>Fecha Creación</th>
+											<th>Última Actualización</th>
+											<th style="width: 20%">#Edit</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template v-if="record.requests.length > 0">
+											<tr v-for="(request, request_index) in record.requests">
+												<td>{{ request.id }}</td>
+												<td><div :title="request.status.description" class="circle-color" :style="'background-color:#' + request.status.color"></div></td>
+												<td>
+													<button :title="request.status.description" type="button" class="btn btn-xs"  :style="'color: #FFFFFF;background-color:#' + request.status.color">
+														{{ request.status.name }}
+													</button>
+												</td>
+												<td>{{ request.created }}</td>
+												<td>{{ request.updated }}</td>
+												
+												<!-- //
+												<td>
+													<ul class="list-inline">
+														<li>
+															<img src="/public/assets/images/user.png" class="avatar" :title="request.create_by.names + ' ' + request.create_by.surname" :alt="request.create_by.names + ' ' + request.create_by.surname">
+															{{ request.create_by.names }} {{ request.create_by.surname }}
+														</li>
+													</ul>
+												</td>
+												-->
+												<!-- //
+												<td>
+													<a>Pesamakini Backend UI</a>
+													<br />
+													<small>Created {{ request.created }}</small>
+												</td>
+												-->.
+												<!-- //
+												<td>
+													<ul class="list-inline">
+														<li>
+															<img src="/public/assets/images/user.png" class="avatar" alt="Avatar">
+														</li>
+														<li>
+															<img src="/public/assets/images/user.png" class="avatar" alt="Avatar">
+														</li>
+														<li>
+														<img src="/public/assets/images/user.png" class="avatar" alt="Avatar">
+														</li>
+														<li>
+														<img src="/public/assets/images/user.png" class="avatar" alt="Avatar">
+														</li>
+													</ul>
+												</td>
+												-->
+												<!-- //
+												<td class="project_progress">
+													<div class="progress progress_sm">
+														<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="57"></div>
+													</div>
+													<small>57% Complete</small>
+												</td>
+												-->
+												
+												<td>
+													<router-link  v-bind:to="{ name: 'View-Requests', params: { account_id: request.account, request_id: request.id } }" class="btn btn-primary btn-xs">
+														<i class="fa fa-folder"></i> Abrir 
+													</router-link>
+													<!-- // <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a> -->
+													<!-- // <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a> -->
+													<!-- // <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a> -->
+												</td>
+											</tr>
+										</template>
+										<template v-else>
+											<tr>
+												<td colspan="6">
+													No hay solicitudes.
+												</td>
+											</tr>
+										</template>
+									</tbody>
+								</table>
+								<!-- end project list -->
+
+							</div>
 						</div>
 					</div>
-					<!-- // Usuarios -->
+					<!-- // Solicitudes -->
 					<!-- Usuarios -->
 					<div class="tab-pane panel" id="tab-users">
 						<div class="x_panel">
@@ -1653,10 +1753,10 @@
 				</div>
 
 				<div class="col-md-4 col-sm-4 col-xs-4">
-
 					<div class="x_panel">
 						<div class="x_title">
 							<h2>Contacto(s) <small>(*)</small></h2>
+							<!-- //
 							<ul class="nav navbar-right panel_toolbox">
 								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 								<li class="dropdown">
@@ -1668,6 +1768,7 @@
 								</li>
 								<li><a class="close-link"><i class="fa fa-close"></i></a></li>
 							</ul>
+							-->
 							<div class="clearfix"></div>
 						</div>
 						<div class="x_content">
@@ -1686,7 +1787,7 @@
 														<ul class="list-unstyled">
 															<li><i class="fa fa-building"></i> Direccion: {{ contact.address }}</li>
 															<li><i class="fa fa-phone"></i> Tel. Fijo #: {{ contact.phone }} - {{ contact.mobile }}</li>
-															<li><i class="fa fa-phone"></i> Tel. Mòvil: {{ contact.mobile }}</li>
+															<li><i class="fa fa-phone"></i> Tel. Móvil: {{ contact.mobile }}</li>
 														</ul>
 													</div>
 												</div>
@@ -1737,10 +1838,10 @@
 							</div>
 						</div>
 					</div>
-					
 					<div class="x_panel">
 						<div class="x_title">
 							<h2>Direccion(es) <small>(*)</small></h2>
+							<!-- //
 							<ul class="nav navbar-right panel_toolbox">
 								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 								<li class="dropdown">
@@ -1752,6 +1853,7 @@
 								</li>
 								<li><a class="close-link"><i class="fa fa-close"></i></a></li>
 							</ul>
+							-->
 							<div class="clearfix"></div>
 						</div>
 						<div class="x_content">
@@ -1779,6 +1881,7 @@
 					<div class="x_panel">
 						<div class="x_title">
 							<h2><i class="fa fa-bars"></i> Servicios <small></small></h2>
+							<!-- //
 							<ul class="nav navbar-right panel_toolbox">
 								<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 								<li class="dropdown">
@@ -1790,6 +1893,7 @@
 								</li>
 								<li><a class="close-link"><i class="fa fa-close"></i></a></li>
 							</ul>
+							-->
 							<div class="clearfix"></div>
 						</div>
 						<div class="x_content">
@@ -1806,16 +1910,13 @@
 									<div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
 										<p></p>
 									</div>
-									
 									<div v-for="(category, category_index) in options.services" role="tabpanel" class="tab-pane fade" :id="'tab_services' + category.id" :aria-labelledby="'categories-services' + category.id">
 										<template v-if="category.description !== null && category.description !== undefined">
 											<p>{{ category.description }}</p>
 										</template>
 										<template v-else>
 											<p>Esta categoria no tiene descripcion.</p>
-										</template>
-										
-										
+										</template>										
 										<template v-if="category.services.length > 0">
 											<ul class="to_do">
 												<li v-for="(service, service_index) in category.services">
@@ -1824,7 +1925,7 @@
 															<div class="icheckbox_flat-green" style="position: relative;">
 																<input name="services[]" v-model="form.services" :value="service" type="checkbox" class="" style="border: 0px solid #00000000;">
 															</div> 
-															{{ service.name }} - {{ service.medition.code }}
+															{{ service.name }} (<b>{{ service.medition.name }}</b>)
 														</p>
 													</template>
 												</li>
@@ -1835,23 +1936,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="x_panel">
-						<div class="x_title">
-							<h2>Vista Previa <small></small></h2>
-							<div class="clearfix"></div>
-						</div>
-						<div class="x_content">
-							{{ form }}
-						</div>
-						<div class="x_content">
-							{{ options.account }}
-						</div>
-					</div>
 					
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
 								<h2>Solicitud <small>Vista Previa</small></h2>
+								<!-- //
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
 									<li class="dropdown">
@@ -1863,153 +1953,167 @@
 									</li>
 									<li><a class="close-link"><i class="fa fa-close"></i></a></li>
 								</ul>
+								-->
 								<div class="clearfix"></div>
 							</div>
 							<div class="x_content">
 								<section class="content invoice">
-									<!-- title row -->
 									<div class="row">
 										<div class="col-xs-12 invoice-header">
 											<h1>
 												<i class="fa fa-globe"></i> 
 												Solicitud.
-												<small class="pull-right">Date: 16/08/2016</small>
+												<small class="pull-right">Fecha : 16/08/2016</small>
 											</h1>
 										</div>
-										<!-- /.col -->
 									</div>
-									<!-- info row -->
+									
 									<div class="row invoice-info">
 										<div class="col-sm-4 invoice-col">
-											From
+											Creada por:
 											<address>
-												<strong>Iron Admin, Inc.</strong>
-												<br>795 Freedom Ave, Suite 600
-												<br>New York, CA 94107
-												<br>Phone: 1 (804) 123-9876
-												<br>Email: ironadmin.com
+												<!-- // <strong><?= BUSSINES_NAME_LG; ?></strong> -->
+												<strong><?= BUSSINES_NAME_MD; ?></strong>
+												<br><?= BUSSINES_ADDRESS; ?>
+												<br><?= BUSSINES_PHONE; ?> - <?= BUSSINES_MOBILE; ?>
+												<br><?= BUSSINES_EMAIL; ?>
+												<br>
+												<br><strong><?= "{$this->user->names} {$this->user->surname}"; ?></strong>
+												<br>Tel: <?= $this->user->phone; ?>
+												<br>Móvil: <?= $this->user->mobile; ?>
+												<br>Email: <?= $this->user->email; ?>
 											</address>
 										</div>
-										<!-- /.col -->
 										<div class="col-sm-4 invoice-col">
-											To
+											Para: 
 											<address>
-												<strong>John Doe</strong>
-												<br>795 Freedom Ave, Suite 600
-												<br>New York, CA 94107
-												<br>Phone: 1 (804) 123-9876
-												<br>Email: jon@ironadmin.com
+												<strong>{{ options.account.names }} {{ options.account.surname }}</strong>
+												<br>{{ options.account.address.minsize }}
+												<br>Tel. Fijo: {{ options.account.phone }}
+												<br>Tel. Móvil: {{ options.account.mobile }}
+												<br>Email: {{ options.account.email }}
 											</address>
 										</div>
-										<!-- /.col -->
-										
 										<div class="col-sm-4 invoice-col">
-											<b>Invoice #007612</b>
+											<b>Solicitud # 00000000-000000</b>
 											<br>
+											<!-- // <br> <b>Order ID:</b> 4F3S8J -->
+											<!-- // <br> <b>Payment Due:</b> 2/22/2014 -->
 											<br>
-											<b>Order ID:</b> 4F3S8J
-											<br>
-											<b>Payment Due:</b> 2/22/2014
-											<br>
-											<b>Account:</b> 968-34567
+											<b>Cliente:</b> {{ options.account.id }}
 										</div>
-										<!-- /.col -->
 									</div>
-									<!-- /.row -->
-
-								  <!-- Table row -->
-								  <div class="row">
-									<div class="col-xs-12 table">
-										<table class="table table-striped">
-											<thead>
-												<tr>
-													<th>Qty</th>
-													<th>Product</th>
-													<th>Serial #</th>
-													<th style="width: 59%">Description</th>
-													<th>Subtotal</th>
-												</tr>
-											</thead>
+									
+									<div class="row">
+										<div class="col-xs-12">
+											<p class="lead">Transcripcion:</p>
+											<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+												<template v-if="form.description !== null && form.description.length > 2">
+													{{ form.description }}
+												</template>
+												<template v-else>
+													No se ha escrito nada en la solicitud
+												</template>
+											</p>
+										</div>
+									
+										<div class="col-xs-12 table">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+														<!-- // <th style="width: 15%">Qty</th> -->
+														<th>Servicio</th>
+														<th>Codigo</th>
+														<th style="width: 37%">Descripción</th>
+														<th>T. Medición</th>
+													</tr>
+												</thead>
 												<tbody>
-													<tr>
-														<td>1</td>
-														<td>Call of Duty</td>
-														<td>455-981-221</td>
-														<td>El snort testosterone trophy driving gloves handsome gerry Richardson helvetica tousled street art master testosterone trophy driving gloves handsome gerry Richardson
-														</td>
-														<td>$64.50</td>
-													</tr>
-													<tr>
-														<td>1</td>
-														<td>Need for Speed IV</td>
-														<td>247-925-726</td>
-														<td>Wes Anderson umami biodiesel</td>
-														<td>$50.00</td>
-													</tr>
-													<tr>
-														<td>1</td>
-														<td>Monsters DVD</td>
-														<td>735-845-642</td>
-														<td>Terry Richardson helvetica tousled street art master, El snort testosterone trophy driving gloves handsome letterpress erry Richardson helvetica tousled</td>
-														<td>$10.70</td>
-													</tr>
-													<tr>
-														<td>1</td>
-														<td>Grown Ups Blue Ray</td>
-														<td>422-568-642</td>
-														<td>Tousled lomo letterpress erry Richardson helvetica tousled street art master helvetica tousled street art master, El snort testosterone</td>
-														<td>$25.99</td>
-													</tr>
+													<template v-if="form.services.length > 0">
+														<tr v-for="(service, service_index) in form.services">
+															<!-- //
+															<td>
+																<input width="" class="form-control" value="1.00" v-model="service.qty" type="number" step="0.01" />
+															</td>
+															-->
+															<td>{{ service.name }}</td>
+															<td>{{ service.category }}-{{ service.medition.id }}-{{ service.id }}</td>
+															<td>{{ service.description }}</td>
+															<td :title="service.medition.name">{{ service.medition.code }}</td>
+														</tr>
+													</template>
+													<template v-else>
+														<tr>
+															<td colspan="6">
+																No se han seleccionado servicios.
+															</td>
+														</tr>
+													</template>
 												</tbody>
 											</table>
 										</div>
-										<!-- /.col -->
 									</div>
-									<!-- /.row -->
-								  
+									
 									<div class="row">
-										<!-- accepted payments column -->
-										<div class="col-xs-6">
-											<p class="lead">Payment Methods:</p>
-											<img src="/public/assets/images/visa.png" alt="Visa">
-											<img src="/public/assets/images/mastercard.png" alt="Mastercard">
-											<img src="/public/assets/images/american-express.png" alt="American Express">
-											<img src="/public/assets/images/paypal.png" alt="Paypal">
-											<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
-												Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem plugg dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
-											</p>
+										<div class="col-xs-7">
+											<p class="lead">Persona(s) de Contacto(s):</p>
+											<template v-if="form.contact == 0 || form.contact == null || form.contact == undefined">
+												<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">No se a selecciona contacto principal.</p>
+											</template>
+											<template v-if="form.contacts.length > 0">
+												<table class="table table-striped">
+													<thead>
+														<tr>
+															<th></th>
+															<th>Contacto</th>
+															<th>Tel. Fijo</th>
+															<th>Tel. Móvil</th>
+														</tr>
+													</thead>
+													
+													<tr v-for="(contact, contact_index) in form.contacts">
+														<td>
+															<i v-if="form.contact === contact.id" class="fa fa-star"></i>
+														</td>
+														<td>{{ contact.names }} {{ contact.surname }}</td>
+														<td>{{ contact.phone }}</td>
+														<td>{{ contact.mobile }}</td>
+													</tr>
+												</table>
+											</template>
+											<template v-else>
+													<tr>
+														<td colspan="6">
+															<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">No se han seleccionado contactos.</p>
+														</td>
+													</tr>
+												</table>
+											</template>
 										</div>
-										<!-- /.col -->
-										<div class="col-xs-6">
-											<p class="lead">Amount Due 2/22/2014</p>
+										<div class="col-xs-5">
+											<p class="lead">Direccion(es)</p>
 											<div class="table-responsive">
 												<table class="table">
 													<tbody>
-														<tr>
-															<th style="width:50%">Subtotal:</th>
-															<td>$250.30</td>
-														</tr>
-														<tr>
-															<th>Tax (9.3%)</th>
-															<td>$10.34</td>
-														</tr>
-														<tr>
-															<th>Shipping:</th>
-															<td>$5.80</td>
-														</tr>
-														<tr>
-															<th>Total:</th>
-															<td>$265.24</td>
-														</tr>
+														<template v-if="form.addresses.length > 0">
+															<tr v-for="(address, address_index) in form.addresses">
+																<!-- // <th style="width:20%">Codigo: {{ address.id }}</th> -->
+																<td>{{ address.minsize }}</td>
+															</tr>
+														</template>
+														<template v-else>
+															<tr>
+																<td colspan="2">
+																	No se han seleccionado direcciones.
+																</td>
+															</tr>
+														</template>
 													</tbody>
 												</table>
 											</div>
 										</div>
-										<!-- /.col -->
 									</div>
-									<!-- /.row -->
 									
-									<!-- this row will not appear when printing -->
 									<div class="row no-print">
 										<div class="col-xs-12">
 											<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Print</button>
@@ -2025,9 +2129,21 @@
 				
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<div class="pull-right">
-						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addresses-modal">
+						<button type="button" class="btn btn-primary" @click="createRequest">
 							<i class="fa fa-search"></i>
-							Guardar y buscar agenda
+							Crear Solicitud
+						</button>
+					</div>
+				</div>
+				<div class="col-md-7 col-sm-7 col-xs-7">
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-nav" href="#tab4" data-toggle="tab">
+							<div class="visible">
+								<router-link  v-bind:to="{ name: 'Create' }">
+									<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+									Regresar
+								</router-link>
+							</div>
 						</button>
 					</div>
 				</div>
@@ -2036,7 +2152,218 @@
 	</div>
 </template>
 
+<template id="view-request">
+	<div>
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="col-xs-3">
+					<div class="x_panel">
+						<div class="x_title">
+							<h2>Estado<small>Actual</small></h2>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content">
+							<div class="col-xs-4">
+								<div class="circle-color" style="'background-color: ' + record.status.color"></div>
+							</div>
+							<div class="col-xs-8">
+								{{ record.status.name }}
+							</div>
+						</div>
+					</div>
+					
+					<div class="x_panel">
+						<div class="x_title">
+							<h2>Calendario<small>Agenda</small></h2>
+							<div class="clearfix"></div>
+						</div>
+						<div class="x_content">
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-9">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Visor de Solicitudes<small>Gestión</small></h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li>
+										<router-link  v-bind:to="{ name: 'View', params: { account_id: $route.params.account_id } }">
+											<span class="fa fa-close" aria-hidden="true"></span>
+										</router-link>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<section class="content invoice">
+									<div class="row">
+										<div class="col-xs-12 invoice-header">
+											<h1>
+												<i class="fa fa-globe"></i> 
+												Solicitud
+												<small class="pull-right">Fecha: {{ record.created }}</small>
+											</h1>
+										</div>
+									</div>
+									
+									<div class="row invoice-info">
+										<div class="col-sm-4 invoice-col">
+											Creada por:
+											<address>
+												<strong><?= BUSSINES_NAME_MD; ?></strong>
+												<br><?= BUSSINES_ADDRESS; ?>
+												<br><?= BUSSINES_PHONE; ?> - <?= BUSSINES_MOBILE; ?>
+												<br><?= BUSSINES_EMAIL; ?>
+												<br>
+												<br><strong>{{ record.create_by.names }} {{ record.create_by.surname }}</strong>
+												<br>Tel: {{ record.create_by.phone }}
+												<br>Móvil: {{ record.create_by.mobile }}
+												<br>Email: {{ record.create_by.email }}
+											</address>
+										</div>
+										
+										<div class="col-sm-4 invoice-col">
+											Para: 
+											<address>
+												<strong>{{ record.account.names }}</strong>
+												<br>{{ record.account.address.minsize }}
+												<br>Tel. Fijo: {{ record.account.phone }}
+												<br>Tel. Móvil: {{ record.account.mobile }}
+												<br>Email: {{ record.account.email }}
+											</address>
+										</div>
+										
+										<div class="col-sm-4 invoice-col">
+											<b>Solicitud # 00000000-{{ record.id }}</b>
+											<br>
+											<br>
+											<b>Cliente:</b> {{ record.account.id }}
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-xs-12">
+											<p class="lead">Transcripcion:</p>
+											<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+												<template v-if="record.description !== null && record.description.length > 2">
+													{{ record.description }}
+												</template>
+												<template v-else>
+													No se ha escrito nada en la solicitud
+												</template>
+											</p>
+										</div>
+										
+										<div class="col-xs-12 table">
+											<table class="table table-striped">
+												<!-- //
+												<thead>
+													<tr>
+														<th>Servicio</th>
+														<th>Codigo</th>
+														<th style="width: 37%">Descripción</th>
+														<th>T. Medición</th>
+													</tr>
+												</thead>
+												<tbody>
+													<template v-if="record.requests_services.length > 0">
+														<tr v-for="(service, service_index) in record.requests_services">
+															<td>{{ service.service.name }}</td>
+															<td>{{ service.service.category }}-{{ service.service.medition.id }}-{{ service.service.id }}</td>
+															<td>{{ service.service.description }}</td>
+															<td :title="service.medition.name">{{ service.service.medition.code }}</td>
+														</tr>
+													</template>
+													<template v-else>
+														<tr>
+															<td colspan="6">
+																No se han seleccionado servicios.
+															</td>
+														</tr>
+													</template>
+												</tbody>												
+												-->
+											</table>
+										</div>
+									</div>
+									
+									<div class="row">
+										<div class="col-xs-7">
+											<p class="lead">Persona(s) de Contacto(s):</p>
+											<template v-if="record.requests_contacts.length > 0">
+												<table class="table table-striped">
+													<thead>
+														<tr>
+															<th></th>
+															<th>Contacto</th>
+															<th>Tel. Fijo</th>
+															<th>Tel. Móvil</th>
+														</tr>
+													</thead>
+													
+													<tr v-for="(contact, contact_index) in record.requests_contacts">
+														<td>
+															<i v-if="record.contact.id === contact.contact.id" class="fa fa-star"></i>
+														</td>
+														<td>{{ contact.contact.names }} {{ contact.contact.surname }}</td>
+														<td>{{ contact.contact.phone }}</td>
+														<td>{{ contact.contact.mobile }}</td>
+													</tr>
+												</table>
+											</template>
+											<template v-else>
+													<tr>
+														<td colspan="6">
+															<p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">Solicitud sin contactos.</p>
+														</td>
+													</tr>
+												</table>
+											</template>
+										</div>
+										
+										<div class="col-xs-5">
+											<p class="lead">Direccion(es)</p>
+											<div class="table-responsive">
+												<table class="table">
+													<tbody>
+														<template v-if="record.requests_addresses.length > 0">
+															<tr v-for="(address, address_index) in record.requests_addresses">
+																<td>{{ address.address.minsize }}</td>
+															</tr>
+														</template>
+														<template v-else>
+															<tr>
+																<td colspan="2">
+																	No se han seleccionado direcciones.
+																</td>
+															</tr>
+														</template>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-12 col-sm-12 col-xs-12">
+					{{ record }}
+			</div>
+		</div>
+	</div>
+</template>
+
 <script>
+function FormException(error, aviso){
+	this.name = error;
+	this.message = aviso;
+};
+
 var api = axios.create({
 	baseURL: '/api.php',
    withCredentials: true
@@ -2330,7 +2657,7 @@ var View = Vue.extend({
 				})
 				.then(function (b) {
 					if(b.data > 0){
-						 Notice.update({
+						Notice.update({
 							type: 'success',
 							title: 'Contacto enlazado!',
 							text: 'Se guardo con éxito.',
@@ -2806,6 +3133,8 @@ var View = Vue.extend({
 						'accounts_contacts,contacts,geo_citys',
 						'accounts_headquarters,addresses',
 						'requests',
+						'requests,requests_status',
+						'requests,users',
 					]
 				}
 			}).then(function (response) {
@@ -3664,7 +3993,6 @@ var CreateRequest = Vue.extend({
 	},
 	methods: {
 		newRequest(){
-
 		},
 		loadOptions(){
 			var self = this;
@@ -3746,6 +4074,7 @@ var CreateRequest = Vue.extend({
 			api.get('/records/accounts/' + self.$route.params.account_id, {
 				params: {
 					join: [
+						'addresses',
 						'accounts_types',
 						'economic_activities',
 						'identifications_types',
@@ -3760,7 +4089,360 @@ var CreateRequest = Vue.extend({
 			});
 			
 		},
+		createRequest(){
+			var self = this;
+			console.log('createRequest');
+			
+			var Notice = new PNotify({
+				styling: "bootstrap3",
+				text: 'Estamos revisando la solicitud...',
+				icon: 'fa fa-spinner fa-pulse',
+				hide: false,
+				shadow: false,
+				width: '200px',
+			});
+			try {
+				// Validar Descripción
+				if(self.form.description.length > 5){
+					// Validando contactos.
+					if(self.form.contacts.length > 0){
+						// Validando si hay contacto favorito
+						if(self.form.contact > 0){
+							// Buscar contacto en la lista de los seleccionados.
+							resultado = self.form.contacts.find( contact => contact.id === self.form.contact ) !== undefined;
+							contactInList = (resultado == true) ? true : false;
+							// Validando contacto in lista.
+							if(contactInList == true){
+								// Validar Direcciones
+								if(self.form.addresses.length > 0){
+									// Validar Servicios
+									if(self.form.services.length > 0){
+										Notice.update({
+											type: 'info',
+											title: 'Solicitud Validada!',
+											text: 'Se va a guardar la solicitud en el sistema, espere...',
+											icon: 'fa fa-spinner fa-pulse',
+											hide: false,
+											shadow: false,
+										});
+										
+										api.post('/records/requests', {
+											account: parseInt(self.$route.params.account_id),
+											contact: self.form.contact,
+											description: self.form.description,
+											create_by: <?= $this->user->id; ?>,
+											update_by: <?= $this->user->id; ?>,
+										})
+										.then(function (a) {
+											if(a.data > 0){
+												var request_id = a.data; // ID de la solicitud
+												
+												Notice.update({
+													type: 'info',
+													title: 'En proceso!',
+													text: 'Enlazando contactos, espere...',
+													icon: 'fa fa-spinner fa-pulse',
+													hide: false,
+													shadow: false,
+												});
+												
+												sends = [];
+												self.form.contacts.forEach(function(contact){
+													sends.push({
+														request: request_id,
+														contact: contact.id
+													});
+												});
+												
+												api.post('/records/requests_contacts', sends)
+												.then(function (a) {
+													if(a.data.length > 0){
+														Notice.update({
+															type: 'info',
+															title: 'En proceso!',
+															text: a.data.length + ' Contacto(s) agregado(s), espere...',
+															icon: 'fa fa-spinner fa-pulse',
+															hide: false,
+															shadow: false,
+														});
+													}
+													
+													sends = [];
+													self.form.addresses.forEach(function(address){
+														sends.push({
+															request: request_id,
+															address: address.id
+														});
+													});
+													
+													api.post('/records/requests_addresses', sends)
+													.then(function (a) {
+														if(a.data.length > 0){
+															Notice.update({
+																type: 'info',
+																title: 'En proceso!',
+																text: a.data.length + ' Direccion(es) agregada(s), espere...',
+																icon: 'fa fa-spinner fa-pulse',
+																hide: false,
+																shadow: false,
+															});
+														}
+														
+														sends = [];
+														self.form.services.forEach(function(service){
+															sends.push({
+																request: request_id,
+																service: service.id
+															});
+														});
+														
+														api.post('/records/requests_services', sends)
+														.then(function (a) {
+															if(a.data.length > 0){
+																Notice.update({
+																	type: 'info',
+																	title: 'En proceso!',
+																	text: a.data.length + ' Servicio(s) agregado(s), espere...',
+																	icon: 'fa fa-spinner fa-pulse',
+																	hide: false,
+																	shadow: false,
+																});
+															}
+															
+															
+															Notice.update({
+																type: 'success',
+																title: 'Solicitud Creada!',
+																text: 'Se creo con éxito.',
+																icon: 'fa fa-check',
+																hide: true,
+																shadow: true,
+																modules: {
+																  Buttons: {
+																	closer: false,
+																	sticker: false
+																  }
+																}
+															});
+															
+															self.$router.push({ name:'View-Requests', params: { account_id: self.$route.params.account_id, request_id: request_id } });
+															
+															
+														});
+													});
+												});
+												
+											}
+										})
+										.catch(function (e) {
+											console.error(e);
+											console.log(e.response);
+
+											Notice.update({
+												type: 'error',
+												title: 'Error enlazado el contacto',
+												text: (e.response.data.message != undefined) ? e.response.data.code + ' | ' + e.response.data.message : 'Error',
+												icon: 'fa fa-times',
+												hide: true,
+												shadow: true,
+											});
+										});
+									} else {
+										throw new FormException('Error', "Seleccione almenos un (1) servicios.");
+									}
+								} else {
+									throw new FormException('Error', "Seleccione almenos una (1) dirección.");
+								}
+							} else {
+								throw new FormException('Error', "El contacto principal/favorito no esta en la lista de contactos.");
+							}
+						}  else {
+							throw new FormException('Error', "Seleccione el contacto principal/favorito.");
+						}
+					} else {
+						throw new FormException('Error', "Seleccione almenos un (1) contacto.");
+					}
+				} else {
+					throw new FormException('Error', "Falta la solicitud transcrita del cliente.");
+				}
+			
+			} catch(e){
+				console.log('error', e);
+				console.error(e);
+				if(e.message !== undefined && e.name !== undefined){
+				
+					Notice.update({
+						type: 'error',
+						title: e.name,
+						text: e.message,
+						icon: 'fa fa-times',
+						hide: true,
+						shadow: true,
+						modules: {
+						  Buttons: {
+							closer: false,
+							sticker: false
+						  }
+						}
+					});
+				}
+			}
+		},
 	}
+});
+
+var ViewRequest = Vue.extend({
+	template: '#view-request',
+	data(){
+		return {
+			record: {
+				"id": this.$route.params.request_id,
+				"account": {
+					"id": this.$route.params.account_id,
+					"type": {
+						"id": 0,
+						"name": ""
+					},
+					"economic_activity": 0,
+					"identification_type": {
+						"id": 0,
+						"name": "",
+						"code": ""
+					},
+					"identification_number": "",
+					"names": "",
+					"surname": "",
+					"email": "",
+					"phone": "",
+					"mobile": "",
+					"birthday": "",
+					"gender": "",
+					"address": {
+						"id": 0,
+						"department": 0,
+						"city": 0,
+						"via_principal": 0,
+						"via_principal_number": "",
+						"via_principal_letter": "",
+						"via_principal_quadrant": "",
+						"via_secondary_number": "",
+						"via_secondary_letter": "",
+						"via_secondary_quadrant": "",
+						"via_end_number": "",
+						"via_end_extra": "",
+						"minsize": "",
+						"complete": ""
+					},
+					"create_by": 0,
+					"create": "",
+					"update_by": 0,
+					"updated": ""
+				},
+				"contact": {
+					"id": 0,
+					"identification_type": 0,
+					"identification_number": "",
+					"names": "",
+					"surname": "",
+					"email": "",
+					"phone": "",
+					"mobile": "",
+					"birthday": "",
+					"address": "",
+					"department": "",
+					"city": "",
+					"create": "",
+					"updated": ""
+				},
+				"status": {
+					"id": 1,
+					"name": "",
+					"description": "",
+					"color": "",
+					"porcentage": ""
+				},
+				"description": "",
+				"created": "",
+				"create_by": {
+					"id": 0,
+					"username": "",
+					"password": "",
+					"identification_type": 0,
+					"identification_number": "",
+					"names": "",
+					"surname": "",
+					"phone": "",
+					"mobile": "",
+					"address": "",
+					"department": 0,
+					"city": 0,
+					"email": "",
+					"avatar": 0,
+					"permissions": 0,
+					"registered": "",
+					"updated": "",
+					"last_connection": ""
+				},
+				"updated": "",
+				"update_by": {
+					"id": 0,
+					"username": "",
+					"password": "",
+					"identification_type": 0,
+					"identification_number": "",
+					"names": "",
+					"surname": "",
+					"phone": "",
+					"mobile": "",
+					"address": "",
+					"department": 0,
+					"city": 0,
+					"email": "",
+					"avatar": 0,
+					"permissions": 0,
+					"registered": "",
+					"updated": "",
+					"last_connection": ""
+				},
+				"requests_addresses": [],
+				"requests_contacts": [],
+				"requests_services": []
+			},
+		};
+	},
+	mounted(){
+		var self = this;
+		self.load();
+	},
+	methods: {
+		load(){
+			var self = this;
+			api.get('/records/requests/' + self.$route.params.request_id, {
+				params: {
+					join: [
+						"accounts,identifications_types",
+						"accounts,accounts_types",
+						"accounts,addresses",
+						"contacts",
+						"requests_status",
+						"users",
+						
+						"requests_addresses,addresses",
+						"requests_contacts,contacts",
+						"requests_contacts,contacts_types",
+						"requests_services,services",
+					]
+				}
+			}).then(function (response) {
+				if(response.data.id && response.data.id > 0){
+					self.record = response.data;
+				}
+			}).catch(function (error) {
+			  console.log(error);
+			});
+			
+		},
+	},
 });
 
 var router = new VueRouter({
@@ -3768,8 +4450,9 @@ var router = new VueRouter({
 	routes:[
 		{ path: '/', component: List, name: 'List' },
 		{ path: '/create', component: Create, name: 'Create' },
-		{ path: '/view/:account_id/requests/create', component: CreateRequest, name: 'Create-Request' },
 		{ path: '/view/:account_id', component: View, name: 'View' },
+		{ path: '/view/:account_id/requests/create', component: CreateRequest, name: 'Create-Request' },
+		{ path: '/view/:account_id/requests/view/:request_id', component: ViewRequest, name: 'View-Requests' },
 	]
 });
 
