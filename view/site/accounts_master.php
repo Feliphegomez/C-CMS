@@ -405,9 +405,9 @@
 							<div class="x_content">
 								<template v-if="record.accounts_contacts !== undefined && record.accounts_contacts !== null">
 									<template v-if="record.accounts_contacts.length > 0">
-										<div class="col-md-12">
-											<div class="x_panel">
-												<div class="x_content">
+										<div class="col-xs-12">
+											<div class="">
+												<div class="">
 													<div class="row">
 														<!--
 															<div class="col-md-12 col-sm-12 col-xs-12 text-center">
@@ -482,7 +482,7 @@
 																			<button @click="removeContactInAccount(contact.id)" type="button" class="btn btn-danger btn-xs pull-left">
 																				<i class="fa fa-times"> </i> Quitar
 																			</button>
-																			<button @click="loadContactInModal(contact.contact.id)" type="button" class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#view-contacts-modal">
+																			<button @click="loadContactInModal(contact)" type="button" class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#view-contacts-modal">
 																				<i class="fa fa-user"> </i> Ver
 																			</button>
 																		</div>
@@ -613,21 +613,10 @@
 											<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 										</router-link>
 									</li>
-									<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-									<li class="dropdown">
-										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-										<ul class="dropdown-menu" role="menu">
-											<li><a href="#">Settings 1</a></li>
-											<li><a href="#">Settings 2</a></li>
-										</ul>
-									</li>
 								</ul>
 								<div class="clearfix"></div>
 							</div>
-							<div class="x_content">
-								{{ record.requests }}
-								<hr>
-							</div>
+							
 							<div class="x_content">
 								<!-- start project list -->
 								<table class="table table-striped projects">
@@ -721,6 +710,11 @@
 								<!-- end project list -->
 
 							</div>
+							
+							<div class="x_content">
+								{{ record.requests }}
+								<hr>
+							</div>
 						</div>
 					</div>
 					<!-- // Solicitudes -->
@@ -789,9 +783,18 @@
 									<div class="tab-pane active" id="home">
 										<form class="form" action="javascript:false;" v-on:submit="saveContactModal" method="post" id="registrationForm">
 											<div class="form-group">
+												<div class="col-xs-12">
+													<label for="first_name"><h4>Relacion / Parentesco</h4></label>
+													<select class="form-control" v-model="edit.contact.type" name="contact_identification_identification_type" id="contact_identification_type" required="true">
+														<option value="0">Seleccione una opcion</option>
+														<option v-for="(item, index_item) in options.contacts_types" :key="item.id" :value="item.id">{{ item.name }}</option>
+													</select>
+												</div>
+											</div>
+											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Tipo Documento</h4></label>
-													<select class="form-control" v-model="contactModal.identification_type" name="contact_identification_identification_type" id="contact_identification_type" required="true">
+													<select class="form-control" v-model="edit.contact.contact.identification_type" name="contact_identification_identification_type" id="contact_identification_type" required="true">
 														<option value="">Seleccione una opcion</option>
 														<option v-for="(item, index_item) in options.identifications_types" :key="item.id" :value="item.id">{{ item.name }}</option>
 													</select>
@@ -800,43 +803,43 @@
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4># Documento</h4></label>
-													<input type="text" class="form-control" name="contact_identification_number" id="contact_identification_number" placeholder="Numero documento de identidad" title="Ingrese el numero de documento de identificación." v-model="contactModal.identification_number">
+													<input type="text" class="form-control" name="contact_identification_number" id="contact_identification_number" placeholder="Numero documento de identidad" title="Ingrese el numero de documento de identificación." v-model="edit.contact.contact.identification_number">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Nombres</h4></label>
-													<input type="text" class="form-control" name="contact_names" id="contact_names" placeholder="Nombres" title="Ingrese el/los nombre(s) completo." v-model="contactModal.names">
+													<input type="text" class="form-control" name="contact_names" id="contact_names" placeholder="Nombres" title="Ingrese el/los nombre(s) completo." v-model="edit.contact.contact.names">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Apellidos</h4></label>
-													<input type="text" class="form-control" name="contact_surname" id="contact_surname" placeholder="Apellidos" title="Ingrese el/los apellidos." v-model="contactModal.surname">
+													<input type="text" class="form-control" name="contact_surname" id="contact_surname" placeholder="Apellidos" title="Ingrese el/los apellidos." v-model="edit.contact.contact.surname">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Correo Electronico</h4></label>
-													<input type="email" class="form-control" name="contact_email" id="contact_email" placeholder="" title="Ingrese el correo electronico." v-model="contactModal.email">
+													<input type="email" class="form-control" name="contact_email" id="contact_email" placeholder="" title="Ingrese el correo electronico." v-model="edit.contact.contact.email">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Telefono Fijo</h4></label>
-													<input type="text" class="form-control" name="contact_" id="contact_" placeholder="" title="Ingrese el teléfono fijo." v-model="contactModal.phone">
+													<input type="text" class="form-control" name="contact_" id="contact_" placeholder="" title="Ingrese el teléfono fijo." v-model="edit.contact.contact.phone">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Telefono Móvil</h4></label>
-													<input type="text" class="form-control" name="contact_mobile" id="contact_mobile" placeholder="Telefono Celular / Movil" title="Ingrese el teléfono móvil." v-model="contactModal.mobile">
+													<input type="text" class="form-control" name="contact_mobile" id="contact_mobile" placeholder="Telefono Celular / Movil" title="Ingrese el teléfono móvil." v-model="edit.contact.contact.mobile">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Fecha de cumpleaños</h4></label>
-													<input type="text" class="form-control" name="contact_birthdayEdit" id="contact_birthdayEdit" placeholder="" title="Cumpleaños." v-model="contactModal.birthday">
+													<input type="date" class="form-control" name="contact_birthdayEdit" id="contact_birthdayEdit" placeholder="" title="Cumpleaños." v-model="edit.contact.contact.birthday">
 													Formato: AÑO-MES-DÍA
 												</div>
 											</div>
@@ -844,7 +847,7 @@
 												<div class="col-xs-6">
 													<label for="mobile"><h4>Departamento</h4></label>
 
-													<select class="form-control" v-model="contactModal.department" @change="loadCitysModal(contactModal.department)">
+													<select class="form-control" v-model="edit.contact.contact.department" @change="loadCitysModal(edit.contact.contact.department)">
 														<option value="">Seleccione una opcion</option>
 														<option v-for="(item, index_item) in options.geo_departments" :key="item.id" :value="item.id">{{ item.name }}</option>
 													</select>
@@ -853,7 +856,7 @@
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="email"><h4>Ciudad</h4></label>
-													<select class="form-control" v-model="contactModal.city">
+													<select class="form-control" v-model="edit.contact.contact.city">
 														<option value="">Seleccione una opcion</option>
 														<option v-for="(item, index_item) in options.geo_citysModal" :key="item.id" :value="item.id">{{ item.name }}</option>
 													</select>
@@ -862,7 +865,7 @@
 											<div class="form-group">
 												<div class="col-xs-12">
 													<label for="email"><h4>Dirección</h4></label>
-													<textarea type="text" class="form-control">{{ contactModal.address }}</textarea>
+													<textarea v-model="edit.contact.contact.address" type="text" class="form-control">{{ edit.contact.contact.address }}</textarea>
 												</div>
 											</div>
 
@@ -924,6 +927,15 @@
 									<div class="tab-pane active" id="home">
 										<form class="form" action="javascript:false;" v-on:submit="createContactModalAndInclude" method="post" id="registrationForm">
 											<div class="form-group">
+												<div class="col-xs-12">
+													<label for="first_name"><h4>Relacion / Parentesco</h4></label>
+													<select class="form-control" v-model="news.contact.type" name="contact_identification_identification_type" id="contact_identification_type" required="true">
+														<option value="0">Seleccione una opcion</option>
+														<option v-for="(item, index_item) in options.contacts_types" :key="item.id" :value="item.id">{{ item.name }}</option>
+													</select>
+												</div>
+											</div>
+											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Tipo Documento (*)</h4></label>
 													<select class="form-control" v-model="contactModalCreate.identification_type" name="contact_identification_identification_type" id="contact_identification_type" required="true">
@@ -972,7 +984,7 @@
 											<div class="form-group">
 												<div class="col-xs-6">
 													<label for="first_name"><h4>Fecha de cumpleaños</h4></label>
-													<input type="text" class="form-control" name="contact_birthday" id="contact_birthday" placeholder="" title="Cumpleaños." v-model="contactModalCreate.birthday">
+													<input type="date" class="form-control" name="contact_birthday" id="contact_birthday" placeholder="" title="Cumpleaños." v-model="contactModalCreate.birthday">
 													Formato: AÑO-MES-DÍA
 												</div>
 											</div>
@@ -1053,10 +1065,6 @@
 							<div class="row">
 								<ul class="nav nav-tabs">
 									<li class="active"><a data-toggle="tab" href="#home">Contacto</a></li>
-									<!-- //
-										<li><a data-toggle="tab" href="#messages">Menu 1</a></li>
-										<li><a data-toggle="tab" href="#settings">Menu 2</a></li>
-									-->
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane active" id="home">
@@ -1078,18 +1086,36 @@
 											</div>
 
 											<div class="form-group">
-												<div class="col-xs-2">
-													<button class="btn btn-sm btn-info" type="submit">
+												<div class="col-xs-12">
+													<br />
+													<button class="btn btn-sm btn-info pull-right" type="submit">
 														<i class="glyphicon glyphicon-search"></i>
 														Buscar
 													</button>
-													<br />
-													<button @click="includeContactModalSearch" class="btn btn-sm btn-success" type="button" v-if="contactModalSearch.id !== null && contactModalSearch.id !== undefined && contactModalSearch.id > 0">
-														<i class="glyphicon glyphicon-ok"></i>
-														Añadir
-													</button>
 												</div>
 											</div>
+											
+											<template v-if="contactModalSearch.id !== null && contactModalSearch.id !== undefined && contactModalSearch.id > 0">
+												<div class="form-group">
+													<div class="col-xs-12">
+														<label for="first_name"><h4>Relacion / Parentesco</h4></label>
+														<select class="form-control" v-model="search.contact.type" name="contact_identification_identification_type" id="contact_identification_type" required="true">
+															<option value="0">Seleccione una opcion</option>
+															<option v-for="(item, index_item) in options.contacts_types" :key="item.id" :value="item.id">{{ item.name }}</option>
+														</select>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<div class="col-xs-12">
+														<br />
+														<button @click="includeContactModalSearch" class="btn btn-sm btn-success pull-right" type="button">
+															<i class="glyphicon glyphicon-ok"></i>
+															Añadir
+														</button>
+													</div>
+												</div>
+											</template>
 										</form>
 											<div class="form-group">
 												<div class="col-xs-6">
@@ -2115,11 +2141,13 @@
 									</div>
 									
 									<div class="row no-print">
+										<!-- //
 										<div class="col-xs-12">
 											<button class="btn btn-default" onclick="window.print();"><i class="fa fa-print"></i> Print</button>
 											<button class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment</button>
 											<button class="btn btn-primary pull-right" style="margin-right: 5px;"><i class="fa fa-download"></i> Generate PDF</button>
 										</div>
+										-->
 									</div>
 								</section>
 							</div>
@@ -2164,7 +2192,7 @@
 						</div>
 						<div class="x_content">
 							<div class="col-xs-4">
-								<div class="circle-color" style="'background-color: ' + record.status.color"></div>
+								<div class="circle-color" :style="'background-color: #' + record.status.color"></div>
 							</div>
 							<div class="col-xs-8">
 								{{ record.status.name }}
@@ -2172,14 +2200,25 @@
 						</div>
 					</div>
 					
-					<div class="x_panel">
+					<div class="x_panel" >
 						<div class="x_title">
 							<h2>Calendario<small>Agenda</small></h2>
+							<ul class="nav navbar-right panel_toolbox">
+								<template v-if="record.status.calendar_enabled == 1">
+									<li>
+										<a class="fa fa-plus" data-toggle="modal" data-target=".bs-study-modal-lg">
+											<span class="" aria-hidden="true"></span>
+										</a>
+									</li>
+								</template>
+							</ul>
 							<div class="clearfix"></div>
 						</div>
 						<div class="x_content">
+							<div id='my-calendar-home'></div>
 						</div>
 					</div>
+					
 				</div>
 				<div class="col-xs-9">
 					<div class="col-md-12 col-sm-12 col-xs-12">
@@ -2350,11 +2389,21 @@
 					</div>
 				</div>
 			</div>
-			
-			<div class="col-md-12 col-sm-12 col-xs-12">
-					{{ record }}
+		</div>
+		
+		<div class="modal fade bs-study-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+						<h4 class="modal-title" id="myModalLabel">Agendar Visita Técnica</h4>
+					</div>
+					<div class="modal-body">
+					</div>
+				</div>
 			</div>
 		</div>
+		
 	</div>
 </template>
 
@@ -2535,6 +2584,7 @@ var View = Vue.extend({
 				geo_citysModal: [],
 				geo_types_vias: [],
 				geo_types_quadrants: [],
+				contacts_types: [],
 			},
 			record: {
 				id: this.$route.params.account_id,
@@ -2557,6 +2607,8 @@ var View = Vue.extend({
 			},
 			contactModal: {
 				id: 0,
+				id_ref: 0,
+				type: 0,
 				identification_type: 0,
 				identification_number: '',
 				names: '',
@@ -2630,6 +2682,57 @@ var View = Vue.extend({
 				minsize: '',
 				complete: '',
 			},
+		
+			news: {
+				contact: {
+					type: 0,
+				}
+			},
+			edit: {
+				contact: {
+					id: 0,
+					account: this.$route.params.account_id,
+					type: 0,
+					contact: {
+						id: 0,
+						type: 0,
+						identification_type: 0,
+						identification_number: '',
+						names: '',
+						surname: '',
+						email: '',
+						phone: '',
+						mobile: '',
+						birthday: '',
+						address: '',
+						department: 0,
+						city: 0,
+					},
+				}
+			},
+			search: {
+				type: 0,
+				contact: {
+					id: 0,
+					account: this.$route.params.account_id,
+					type: 0,
+					contact: {
+						id: 0,
+						type: 0,
+						identification_type: 0,
+						identification_number: '',
+						names: '',
+						surname: '',
+						email: '',
+						phone: '',
+						mobile: '',
+						birthday: '',
+						address: '',
+						department: 0,
+						city: 0,
+					},
+				}
+			},
 		};
 	},
 	mounted: function () {
@@ -2652,7 +2755,7 @@ var View = Vue.extend({
 			if(self.contactModalSearch.id > 0){
 				api.post('/records/accounts_contacts', {
 					account: self.$route.params.account_id,
-					type: 1,
+					type: self.search.contact.type,
 					contact: self.contactModalSearch.id
 				})
 				.then(function (b) {
@@ -2884,7 +2987,7 @@ var View = Vue.extend({
 
 									api.post('/records/accounts_contacts', {
 										account: self.$route.params.account_id,
-										type: 1,
+										type: self.news.contact.type,
 										contact: a.data
 									})
 									.then(function (b) {
@@ -2962,22 +3065,25 @@ var View = Vue.extend({
 				});
 			}
 		},
-		loadContactInModal(contact_id){
+		loadContactInModal(contact){
 			var self = this;
-			api.get('/records/contacts/' + contact_id, {
-				params: {
-				}
-			})
-			.then(function (a) {
-				if(a.data.id !== undefined){
-					self.contactModal = a.data;
-					self.loadCitysModal(self.contactModal.department);
-				}
-			})
-			.catch(function (e) {
-				console.error(e);
-				console.log(e.response);
-			});
+			if (contact !== undefined && contact !== null){
+				self.edit.contact.id = contact.id;
+				self.edit.contact.type = contact.type.id;
+				
+				api.get('/records/contacts/' + contact.contact.id, { params: {} })
+				.then(function (a) {
+					if(a.data.id !== undefined){
+						self.edit.contact.contact = a.data;
+						self.edit.contact.contact = a.data;
+						self.loadCitysModal(self.edit.contact.contact.department);
+					}
+				})
+				.catch(function (e) {
+					console.error(e);
+					console.log(e.response);
+				});
+			}
 		},
 		saveContactModal(){
 			var self = this;
@@ -2991,8 +3097,24 @@ var View = Vue.extend({
 				shadow: false,
 				width: '200px',
 			});
-
-			api.put('/records/contacts/' + self.contactModal.id, self.contactModal)
+			
+			api.put('/records/accounts_contacts/' + self.edit.contact.id, {
+				id: self.edit.contact.id,
+				account: self.$route.params.account_id,
+				type: self.edit.contact.type,
+				contact: self.edit.contact.contact.id,
+			})
+			.then(function (a) {
+				if(a.data > 0){
+					self.load();
+				}
+			})
+			.catch(function (e) {
+				console.error(e);
+				console.log(e.response);
+			});
+			
+			api.put('/records/contacts/' + self.edit.contact.contact.id, self.edit.contact.contact)
 			.then(function (a) {
 				if(a.data > 0){
 					self.load();
@@ -3112,7 +3234,11 @@ var View = Vue.extend({
 								if(a.data.records !== undefined){ self.options.geo_types_vias = a.data.records; }
 								api.get('/records/geo_types_quadrants/', { params: {} }).then(function (a) {
 									if(a.data.records !== undefined){ self.options.geo_types_quadrants = a.data.records; }
-									self.load();
+									
+									api.get('/records/contacts_types/', { params: {} }).then(function (a) {
+										if(a.data.records !== undefined){ self.options.contacts_types = a.data.records; }
+										self.load();
+									});
 								});
 							});
 						});
@@ -4408,13 +4534,107 @@ var ViewRequest = Vue.extend({
 				"requests_contacts": [],
 				"requests_services": []
 			},
+			events: [],
 		};
 	},
 	mounted(){
 		var self = this;
+		self.loadCalendar();
 		self.load();
 	},
 	methods: {
+		loadCalendar(){
+			var self = this;
+			var calendar = $('#my-calendar-home').fullCalendar({
+				timeZone: 'UTC',
+				height: 420,
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,listMonth'
+				},
+				selectable: false,
+				selectHelper: true,
+				/*
+				select: function(start, end, allDay) {
+					$('#fc_create').click();
+					started = start;
+					ended = end;
+					$(".antosubmit").on("click", function() {
+						var title = $("#title").val();
+						if (end) {
+							ended = end;
+						}
+						categoryClass = $("#event_type").val();
+						if (title) {
+							calendar.fullCalendar('renderEvent', {
+								title: title,
+								start: started,
+								end: end,
+								allDay: allDay
+							},
+								true // make the event "stick"
+							);
+						}
+
+						$('#title').val('');
+						calendar.fullCalendar('unselect');
+						$('.antoclose').click();
+						return false;
+					});
+				},*/
+				/*
+				eventClick: function(calEvent, jsEvent, view) {
+					self.selected = calEvent.request;
+
+					$('#fc_edit').click();
+					$('#title2').val(calEvent.title);
+					categoryClass = $("#event_type").val();
+					$(".antosubmit2").on("click", function() {
+						bootbox.confirm({
+							message: "Deseas cambiar el titulo del evento?.<br><hr>",
+							locale: 'es',
+							callback: function (rM) {
+								if(rM == true){
+									api.put('/records/events/' + calEvent.id, {
+										id: calEvent.id,
+										title: $("#title2").val()
+									})
+									.then(rd => {
+										if(rd.data != undefined && rd.data > 0){
+											calEvent.title = $("#title2").val();
+											calendar.fullCalendar('updateEvent', calEvent);
+											$('.antoclose2').click();
+										}
+									});
+								}
+							}
+						});
+
+					});
+					$(".antosubmit3").on("click", function() {
+						$('.antoclose2').click();
+						api.get('/records/events/' + calEvent.id, {
+							params: {
+							}
+						})
+						.then(response => {
+							if(response.data != undefined && response.data.request > 0){
+								location.replace('/micuenta/calendar#/view/' + response.data.id);
+							}else{
+								console.log("Error encontrando la solicitud.");
+							}
+						});
+					});
+					calendar.fullCalendar('unselect');
+				},
+				*/
+				editable: false,
+				events: self.events,
+				plugins: [ 'list', 'timeGrid', 'month' ],
+				defaultView: 'month',
+			});
+		},
 		load(){
 			var self = this;
 			api.get('/records/requests/' + self.$route.params.request_id, {

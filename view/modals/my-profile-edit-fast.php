@@ -5,7 +5,7 @@
 ?>
 
 <div class="modal fade bs-my-profile-editor-fast-info-basic-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
@@ -25,7 +25,7 @@
 </div>
 
 <div class="modal fade bs-my-profile-editor-fast-access-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
+	<div class="modal-dialog modal-md">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
@@ -34,10 +34,6 @@
 			<div class="modal-body">
 				<?= $formAccess; ?>
 				<hr>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
 			</div>
 		</div>
 	</div>

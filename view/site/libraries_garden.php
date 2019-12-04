@@ -241,11 +241,11 @@
 							<div class="x_title">
 								Página: {{ page }}
 								<ul class="nav navbar-right panel_toolbox">
-									<li>
-										<router-link :to="{ name: 'Create' }">
-											<i class="fa fa-plus"></i>
-										</router-link>
-									</li>
+									<?= 
+										(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden_create') == true)) ? 
+											"<li><router-link :to=\"{ name: 'Create' }\"><i class=\"fa fa-plus\"></i></router-link></li>"
+										: "";
+									?>
 								</ul>
 								<div class="clearfix"></div>
 							</div>
@@ -373,9 +373,20 @@
 					<div class="x_title">
 						<h2>{{ record.name_botanico }}</h2>
 						<ul class="nav navbar-right panel_toolbox">
-							<li><a accesskey="d" @click="deleteThis()"><i class="fa fa-trash"></i></a></li>
-							<li><router-link accesskey="e" class="close-link" :to="{ name: 'Edit-Details', params: { garden_id: record.id } }"><i class="fa fa-edit"></i></router-link></li>
-							<li><router-link accesskey="c" class="close-link" :to="{ name: 'Home' }"><i class="fa fa-close"></i></router-link></li>
+							<?= (($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden_delete') == true)) ? 
+								"<li><a accesskey=\"d\" @click=\"deleteThis()\"><i class=\"fa fa-trash\"></i></a></li>"
+								: "";
+							?>
+							<?= 
+								(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden_edit') == true)) ? 
+									"<li><router-link accesskey=\"e\" class=\"close-link\" :to=\"{ name: 'Edit-Details', params: { garden_id: record.id } }\"><i class=\"fa fa-edit\"></i></router-link></li>"
+								: "";
+							?>
+							<?= 
+								(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden') == true)) ? 
+									"<li><router-link accesskey=\"c\" class=\"close-link\" :to=\"{ name: 'Home' }\"><i class=\"fa fa-close\"></i></router-link></li>"
+								: "";
+							?>
 						</ul>
 						<div class="clearfix"></div>
 					</div>
@@ -543,7 +554,6 @@
 							</div>
 							-->
 						</div>
-						
 					</div>
 				</div>
 			</div>
@@ -1068,11 +1078,6 @@
 </template>
 
 <script>
-function FormException(error, aviso){
-	this.name = error;
-	this.message = aviso;
-};
-
 var api = axios.create({
 	baseURL: '/api.php',
    withCredentials: true
@@ -1084,6 +1089,12 @@ api.interceptors.response.use(function (response) {
   }
   return response;
 });
+
+function FormException(error, aviso){
+	this.name = error;
+	this.message = aviso;
+};
+
 
 var Home = Vue.extend({
 	template: '#home',
@@ -2211,10 +2222,26 @@ var Edit = Vue.extend({
 var router = new VueRouter({
 	linkActiveClass: 'active',
 	routes:[
-		{ path: '/', component: Home, name: 'Home' },
-		{ path: '/create', component: Create, name: 'Create' },
-		{ path: '/view/:garden_id', component: SingleDetails, name: 'Single-Details' },
-		{ path: '/edit/:garden_id', component: Edit, name: 'Edit-Details' },
+		<?= 
+			(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden') == true)) ? 
+				"{ path: '/', component: Home, name: 'Home' },"
+			: "";
+		?>
+		<?= 
+			(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden_create') == true)) ? 
+				"{ path: '/create', component: Create, name: 'Create' },"
+			: "";
+		?>
+		<?= 
+			(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden') == true)) ? 
+				"{ path: '/view/:garden_id', component: SingleDetails, name: 'Single-Details' },"
+			: "";
+		?>
+		<?= 
+			(($this->checkPermission('libraries:garden_admin') == true) || ($this->checkPermission('libraries:garden_edit') == true)) ? 
+				"{ path: '/edit/:garden_id', component: Edit, name: 'Edit-Details' },"
+			: "";
+		?>
 	]
 });
 

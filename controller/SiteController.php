@@ -23,11 +23,12 @@ class SiteController extends ControladorBase{
             "title" => "Principal Usuario",
 			"description" => $this->user
         ]);*/
-		
+		/*
         $this->render("debug_user", [
             "title" => "Principal Usuario",
 			"description" => $this->user
-        ]);
+        ]);*/
+        $this->actionMy_profile();
     }
 	
 	public function actionTest(){
@@ -1102,10 +1103,70 @@ class SiteController extends ControladorBase{
 	public function actionGarden(){
 		$error = null;
         if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
 		$this->render("libraries_garden", [
             "title" => "Bilbiotecas",
             "subtitle" => "Plantas y Especies",
         ]);
+	}
+	
+	// Manejador para candidatos / aspirantes
+	public function actionCandidates_list(){
+        if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$error = null;		
+		$this->render("candidates", [
+            "title" => "Candidatos / Aspirantes",
+            "subtitle" => "",
+        ]);
+	}
+	
+	// Candidatos - Search Return IDs
+	public function actionSearchCandidates(){
+        if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$error = isset($_GET['searchText']) ? false : true;
+		$text = isset($_GET['searchText']) ? $_GET['searchText'] : "";
+		$items = [];
+		$returning = (object) [
+			'error' 	=> $error,
+			'text' => $text,
+			'records' => $items,
+		];
+		
+		if ($error === false){
+			// "Busqueda 1"
+			$sql = "SELECT * FROM `candidates` 
+			WHERE 
+				`identification_number` LIKE '%{$text}%' 
+				OR `names` LIKE '%{$text}%' 
+				OR `surname` LIKE '%{$text}%' 
+				OR `address` LIKE '%{$text}%' 
+				OR `salary` LIKE '%{$text}%' 
+				OR `email` LIKE '%{$text}%' 
+				OR `phone` LIKE '%{$text}%' 
+				OR `mobile` LIKE '%{$text}%' 
+				OR `notes` LIKE '%{$text}%'";
+			$conn = new EntidadBase('candidates', $this->adapter);
+			$data = $conn->getSQL($sql);
+			foreach($data as $candidate){
+				$candidate = is_array($candidate) ? (object) $candidate : $candidate;
+				$returning->records[] = $candidate->id;
+			}
+			// "Busqueda 2" - Dentro de experiencia
+			$sql2 = "SELECT * FROM `candidates_experience` 
+			WHERE 
+				`business` LIKE '%{$text}%' 
+				OR `position` LIKE '%{$text}%' 
+				OR `functions` LIKE '%{$text}%' ";
+			$conn2 = new EntidadBase('candidates_experience', $this->adapter);
+			$data2 = $conn2->getSQL($sql2);
+			foreach($data2 as $experience){
+				$experience = is_array($experience) ? (object) $experience : $experience;
+				$returning->records[] = $experience->candidate;
+			}
+		}
+		$returning->records = array_unique($returning->records);		
+		echo json_encode($returning);
+		return json_encode($returning);
 	}
 	
 }

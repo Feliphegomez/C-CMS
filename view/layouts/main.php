@@ -15,6 +15,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?= $title; ?></title>
         <?= $this->head(); ?>
+		<script>
+		/*
+			var api = axios.create({
+				baseURL: '/api.php',
+			   withCredentials: true
+			});
+
+			api.interceptors.response.use(function (response) {
+			  if (response.headers['x-xsrf-token']) {
+				document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
+			  }
+			  return response;
+			});*/
+		</script>
     </head>
     <body class="nav-md">
         <div class="container body">
@@ -31,15 +45,13 @@
                             . PHPStrap\Util\Html::clearfix(); ?>
                             <!-- menu profile quick info -->
                              <?php
-                                $profile_pic = PHPStrap\Util\Html::tag('div', 
-                                    PHPStrap\Media::image('/public/assets/images/img.jpg', '...', ['img-circle profile_img'])
-                                , ['profile_pic']);
+                                $profile_pic = PHPStrap\Util\Html::tag('div', PHPStrap\Media::image('/public/assets/images/img.jpg', '...', ['img-circle profile_img']), ['profile_pic']);
                                 $profile_info = PHPStrap\Util\Html::tag('div', 
                                     PHPStrap\Util\Html::tag('span', 'Bienvend@, ')
                                     . PHPStrap\Util\Html::tag('h2', $this->user->username)
                                 , ['profile_info']);
                             ?>
-                            <?= PHPStrap\Util\Html::tag('div', $profile_pic . $profile_info . PHPStrap\Util\Html::clearfix(), ['profile clearfix']); ?>
+                            <?php /* PHPStrap\Util\Html::tag('div', $profile_pic . $profile_info . PHPStrap\Util\Html::clearfix(), ['profile clearfix']); */ ?>
                             <!-- /menu profile quick info -->
                         <br />
                         <!-- sidebar menu -->
@@ -212,7 +224,8 @@
 										PHPStrap\Util\Html::tag('li', 
 											FelipheGomez\Url::a(
 												'javascript:void(0)'
-												, PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...') . "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
+												//, PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...') . "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
+												, "{$this->user->username} " . PHPStrap\Util\Html::tag('span', '', ["fa fa-angle-down"])
 												, ['user-profile dropdown-toggle']
 												, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
 											)

@@ -10526,6 +10526,7 @@ namespace FelipheGomez\PhpCrudApi {
 					return is_string($value) ? password_hash($value, PASSWORD_DEFAULT) : password_hash(strip_tags($value), PASSWORD_DEFAULT);
 				} else {
 					return is_string($value) ? strip_tags($value) : $value;
+					// return "";
 				}
 			} else {
 				return is_string($value) ? ($value) : (string) $value;
