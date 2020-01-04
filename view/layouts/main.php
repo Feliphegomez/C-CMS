@@ -38,7 +38,7 @@
                         <?= 
                             PHPStrap\Util\Html::tag('div', 
                                     FelipheGomez\Url::a('/'
-                                        , PHPStrap\Util\Html::tag('i', '', ['fa fa-leaf']) . PHPStrap\Util\Html::tag('span', 'C&CMS')
+                                        , PHPStrap\Util\Html::tag('i', '', [ BUSSINES_ICON ]) . PHPStrap\Util\Html::tag('span', BUSSINES_NAME_SM)
                                         , ['site_title'])
                                 , ['navbar nav_title']
                                 , ['style' => 'border: 0;']) 

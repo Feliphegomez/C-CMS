@@ -336,8 +336,7 @@
 										<div class="card-body">
 											<div class="row">
 												<div class="col-sm-12">
-
-													<div class="col-md-12 col-sm-12 col-xs-12 form-group">
+													<div class="col-xs-12 form-group">
 														<label class="control-label col-xs-12">Dirección</label>
 														<div class="col-sm-12">
 															<div class="input-group">
@@ -350,12 +349,6 @@
 																</span>
 															</div>
 														</div>
-
-														<!-- //
-														<div class="col-xs-12">
-															<textarea v-model="form.address" type="text" id="form-create-type" required="required" class="form-control">{{ form.address }}</textarea>
-														</div>
-														-->
 													</div>
 													<div class="clearfix"></div>
 												</div>

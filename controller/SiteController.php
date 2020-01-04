@@ -1125,7 +1125,7 @@ class SiteController extends ControladorBase{
         if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$error = isset($_GET['searchText']) ? false : true;
 		$text = isset($_GET['searchText']) ? $_GET['searchText'] : "";
-		$items = [];
+		$items = array();
 		$returning = (object) [
 			'error' 	=> $error,
 			'text' => $text,
@@ -1147,9 +1147,13 @@ class SiteController extends ControladorBase{
 				OR `notes` LIKE '%{$text}%'";
 			$conn = new EntidadBase('candidates', $this->adapter);
 			$data = $conn->getSQL($sql);
+			$records1 = [];
 			foreach($data as $candidate){
 				$candidate = is_array($candidate) ? (object) $candidate : $candidate;
-				$returning->records[] = $candidate->id;
+				//$returning->records[] = $candidate->id;
+				if(!isset($records1[$candidate->id])){
+					$records1[] = $candidate->id;
+				}
 			}
 			// "Busqueda 2" - Dentro de experiencia
 			$sql2 = "SELECT * FROM `candidates_experience` 
@@ -1159,14 +1163,242 @@ class SiteController extends ControladorBase{
 				OR `functions` LIKE '%{$text}%' ";
 			$conn2 = new EntidadBase('candidates_experience', $this->adapter);
 			$data2 = $conn2->getSQL($sql2);
+			$records2 = [];
 			foreach($data2 as $experience){
 				$experience = is_array($experience) ? (object) $experience : $experience;
-				$returning->records[] = $experience->candidate;
+				if(!isset($records2[$experience->candidate])){
+					$records2[] = $experience->candidate;
+				}
 			}
 		}
-		$returning->records = array_unique($returning->records);		
+		$returning->records = array_merge(array_unique(array_merge($records1, $records2)), array());
 		echo json_encode($returning);
 		return json_encode($returning);
+	}
+	
+	// Reporte fotográfico - Nuevo
+	public function actionPhotographic_report(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_report", [
+            "title" => "Reporte fotográfico",
+            "subtitle" => "",
+        ]);
+	}
+	
+	// 
+	public function actionTestAD(){
+		$error = null;
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		/*$this->render("testAD", [
+            "title" => "",
+            "subtitle" => "",
+        ]);*/
+		
+		//phpinfo(); exit();		
+		echo "Iniciando pruebas de Active Directory";
+		
+		// Define the parameters for the shell command
+		$location_ip = "\\\\172.16.4.2";
+		$domain = "MONTEVERDE.local";
+		$location = "\\SRV-DC";
+		$user = "Monteverde";
+		$pass = "Medellin2019";
+		$letter = "G";
+
+
+$dir = "\\\\172.16.4.2\\g";
+$files = scandir($dir);
+print_r($files);
+/*
+
+		function map_path($path, $domain,$username,$password )
+		{   
+			//delete all current mapping
+			exec("net use * /delete /y");
+			//create a new mapping to local K: drive
+			exec('net use k: '.$path.' /user:'.$domain.'\\'.$username.'  '.$password.' /persistent:no');
+		}
+
+
+		function print_dir_list($master_path){
+			map_path(str_replace("/","\\",dirname($master_path)),"companey_ds","username","password");
+
+			//get the list of folders in local K: drive
+			exec('dir k:', $output, $ret);
+
+			//iterate trough the list and print
+			foreach($output as $str)
+			{
+				echo $str;
+			}
+		}
+		
+		$dor = map_path($location_ip, $domain, $user, $pass);
+		print_r($dor);
+		print_dir_list();
+		*/
+		
+		/*
+		$targetPath = PUBLIC_PATH . "/files/reports/{$year}/{$mouth}/{$day}/";
+		// Compruebe si la carpeta de carga si existe sino se crea la carpeta
+		if ( !file_exists($targetPath) && !is_dir($targetPath) ) { mkdir($targetPath, 0777, true); };
+		// Compruebe si la carpeta se creo o si existe
+		if ( file_exists($targetPath) && is_dir($targetPath) ) {
+			// Comprueba si podemos escribir en el directorio de destino
+			if ( is_writable($targetPath) ) {} else {
+				$returning->text = "No hay permisos en la carpeta. {$targetPath}";
+			}
+		}else{
+			$returning->text = "no existe la carpeta. {$targetPath}";
+		}*/
+	}
+	
+	// Reporte media - Subir Archivo en Reporte
+	public function actionUploadFileReports(){
+		$error = null;
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$year = (isset($_GET['year']) && (int) $_GET['year'] >= date("Y")) ? (int) $_GET['year'] : date("Y");
+		$route_name = isset($_GET['route_name']) ? base64_decode((string) $_GET['route_name']) : false;
+		$group_name = isset($_GET['group_name']) ? base64_decode((string) $_GET['group_name']) : false;
+		$period_name = isset($_GET['period_name']) ? base64_decode((string) $_GET['period_name']) : false;
+		$type = isset($_GET['type']) ? $_GET['type'] : false;
+		$typeText = ($type !== "A") ? ($type == "D") ? 'DESPUES' : 'OTRO' : 'ANTES';
+		
+		$ds          = DIRECTORY_SEPARATOR;
+		$storeFolder = 'uploads';
+		$files_detect = !isset($_FILES['file']) ? false : true;
+		$files = isset($_FILES['file']) ? $_FILES['file'] : [];
+		$returning = (object) [
+			'error' 	=> true,
+			'status'    => 'error',
+			'result' => false,
+			'files_detect' => $files_detect,
+			'files' => [],
+			//'files' => isset($_FILES['file']) ? $_FILES['file'] : [],
+			'text' => ""
+		];
+		
+		if(
+			$route_name !== false
+			&& $group_name !== false
+			&& $period_name !== false
+			&& $type !== false
+		){
+			$folderBase = [
+				"reports",
+				"photographics",
+				"{$year}",
+				"{$period_name}",
+				$group_name,
+				$route_name,
+				$typeText
+			];
+			$targetPath = PUBLIC_PATH . "/" . implode('/', $folderBase)."/";
+			$returning->text = $targetPath;
+			
+			if (!empty($_FILES)) {
+				$isArray = is_array($_FILES['file']['tmp_name']) ? true : false;
+				$day = date("d");
+				$mouth = date("m");
+				$year = date("Y");
+				// Compruebe si la carpeta de carga si existe sino se crea la carpeta
+				if ( !file_exists($targetPath) && !is_dir($targetPath) ) { mkdir($targetPath, 0777, true); };
+				// Compruebe si la carpeta se creo o si existe
+				if ( file_exists($targetPath) && is_dir($targetPath) ) {
+					// Comprueba si podemos escribir en el directorio de destino
+					if ( is_writable($targetPath) ) {
+						if($isArray == true){
+							// $returning->text = "multiples archivos."; //carpeta: {$targetPath}
+							$total = count($files['tmp_name']);
+							for($i = 0; $i < $total; $i++){
+								$model = new PhotographicFile($this->adapter);
+								$model->name = randomString(16, $files['name']);
+								$model->type = $files['type'];
+								$model->size = $files['size'];
+								$model->path_short = "/public/".implode('/', $folderBase)."/" . $model->name;
+								$model->path_full = $targetPath . $model->name;
+								$model->create_by = $this->user->id;
+								
+								// Mover archivo
+								$error_up = !$model->copyFile($files['tmp_name'][$i]);
+								$returning->error = $error_up;
+									$returning->text = $error_up; // carpeta: {$targetPath}
+								if ($error_up == false) {
+									$returning->files[] = (object) [
+										"id" => $model->id,
+										"name" => $model->name,
+										"type" => $model->type,
+										"size" => $model->size,
+										"path_short" => $model->path_short,
+										"path_full" => $model->path_full,
+										"error" => ($model->id > 0) ? false : true,
+									];
+								} else {
+									$response = array (
+										'status' => 'error',
+										'info'   => 'No se pudo cargar el archivo solicitado :(, ocurrió un misterioso error.'
+									);
+								}
+							}
+						} else {
+							$model = new PhotographicFile($this->adapter);
+							$model->name = randomString(16, $files['name']);
+							$model->type = $files['type'];
+							$model->size = $files['size'];
+							$model->path_short = "/public/".implode('/', $folderBase)."/" . $model->name;
+							$model->path_full = $targetPath . $model->name;
+							$model->create_by = $this->user->id;
+							
+							// Mover archivo
+							$error_up = !$model->copyFile($files['tmp_name']);
+							$returning->error = $error_up;
+								$returning->text = $error_up; // carpeta: {$targetPath}
+							if ($error_up == false) {
+								$returning->files[] = (object) [
+									"id" => $model->id,
+									"name" => $model->name,
+									"type" => $model->type,
+									"size" => $model->size,
+									"path_short" => $model->path_short,
+									"path_full" => $model->path_full,
+									"error" => ($model->id > 0) ? false : true,
+								];
+							} else {
+								$response = array (
+									'status' => 'error',
+									'info'   => 'No se pudo cargar el archivo solicitado :(, ocurrió un misterioso error.'
+								);
+							}
+						}
+					} else {
+						$returning->text = "No hay permisos en la carpeta. {$targetPath}";
+					}
+				}else{
+					$returning->text = "no existe la carpeta. {$targetPath}";
+				}
+			}
+
+		}
+		
+		$returning->status = $returning->error == false ? 'status' : 'error';
+		$returning->files = is_object(json_decode(json_encode($returning->files))) ? [$returning->files] : $returning->files;
+		echo json_encode($returning);
+		return json_encode($returning);
+	}
+	
+	// Manejador para empleados
+	public function actionEmployees_List(){
+        if ($this->isGuest || ($this->checkPermission('employees:admin') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$error = null;		
+		$this->render("employees_list", [
+            "title" => "Empleados",
+            "subtitle" => "Personal",
+        ]);
 	}
 	
 }

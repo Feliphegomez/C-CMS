@@ -12,7 +12,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Volcando estructura para tabla admin_mv_pro.accounts
-DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE IF NOT EXISTS `accounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` int(11) NOT NULL,
@@ -51,7 +50,6 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.accounts_contacts
-DROP TABLE IF EXISTS `accounts_contacts`;
 CREATE TABLE IF NOT EXISTS `accounts_contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` int(11) NOT NULL,
@@ -65,12 +63,11 @@ CREATE TABLE IF NOT EXISTS `accounts_contacts` (
   CONSTRAINT `FK_accounts_contacts_accounts` FOREIGN KEY (`account`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_accounts_contacts_contacts` FOREIGN KEY (`contact`) REFERENCES `contacts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_accounts_contacts_contacts_types` FOREIGN KEY (`type`) REFERENCES `contacts_types` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.accounts_headquarters
-DROP TABLE IF EXISTS `accounts_headquarters`;
 CREATE TABLE IF NOT EXISTS `accounts_headquarters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -87,7 +84,6 @@ CREATE TABLE IF NOT EXISTS `accounts_headquarters` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.accounts_types
-DROP TABLE IF EXISTS `accounts_types`;
 CREATE TABLE IF NOT EXISTS `accounts_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -98,7 +94,6 @@ CREATE TABLE IF NOT EXISTS `accounts_types` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.addresses
-DROP TABLE IF EXISTS `addresses`;
 CREATE TABLE IF NOT EXISTS `addresses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `department` int(11) DEFAULT NULL,
@@ -127,7 +122,6 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.attachments
-DROP TABLE IF EXISTS `attachments`;
 CREATE TABLE IF NOT EXISTS `attachments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -144,7 +138,6 @@ CREATE TABLE IF NOT EXISTS `attachments` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.budgets
-DROP TABLE IF EXISTS `budgets`;
 CREATE TABLE IF NOT EXISTS `budgets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -161,7 +154,6 @@ CREATE TABLE IF NOT EXISTS `budgets` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.budgets_history
-DROP TABLE IF EXISTS `budgets_history`;
 CREATE TABLE IF NOT EXISTS `budgets_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `budget` int(11) DEFAULT NULL,
@@ -180,7 +172,6 @@ CREATE TABLE IF NOT EXISTS `budgets_history` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.candidates
-DROP TABLE IF EXISTS `candidates`;
 CREATE TABLE IF NOT EXISTS `candidates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `identification_type` int(11) DEFAULT NULL,
@@ -197,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `candidates` (
   `phone` varchar(50) DEFAULT NULL,
   `mobile` varchar(50) DEFAULT NULL,
   `avatar` int(11) DEFAULT NULL,
-  `notes` varchar(1000) DEFAULT NULL,
+  `notes` varchar(2500) DEFAULT NULL,
   `create` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -213,12 +204,11 @@ CREATE TABLE IF NOT EXISTS `candidates` (
   CONSTRAINT `candidates_ibfk_1` FOREIGN KEY (`city`) REFERENCES `geo_citys` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `candidates_ibfk_2` FOREIGN KEY (`department`) REFERENCES `geo_departments` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `candidates_ibfk_3` FOREIGN KEY (`identification_type`) REFERENCES `identifications_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.candidates_experience
-DROP TABLE IF EXISTS `candidates_experience`;
 CREATE TABLE IF NOT EXISTS `candidates_experience` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `candidate` int(11) NOT NULL,
@@ -231,12 +221,26 @@ CREATE TABLE IF NOT EXISTS `candidates_experience` (
   KEY `id` (`id`),
   KEY `FK_candidates_experience_candidates` (`candidate`),
   CONSTRAINT `FK_candidates_experience_candidates` FOREIGN KEY (`candidate`) REFERENCES `candidates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla admin_mv_pro.candidates_files
+CREATE TABLE IF NOT EXISTS `candidates_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `candidate` int(11) NOT NULL,
+  `media` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`),
+  KEY `FK_candidates_files_candidates` (`candidate`),
+  KEY `FK_candidates_files_media` (`media`),
+  CONSTRAINT `FK_candidates_files_candidates` FOREIGN KEY (`candidate`) REFERENCES `candidates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_candidates_files_media` FOREIGN KEY (`media`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.candidates_studies
-DROP TABLE IF EXISTS `candidates_studies`;
 CREATE TABLE IF NOT EXISTS `candidates_studies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `candidate` int(11) NOT NULL,
@@ -251,12 +255,11 @@ CREATE TABLE IF NOT EXISTS `candidates_studies` (
   CONSTRAINT `FK_candidates_studies_candidates` FOREIGN KEY (`candidate`) REFERENCES `candidates` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_candidates_studies_study_levels` FOREIGN KEY (`level`) REFERENCES `study_levels` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_candidates_studies_study_status` FOREIGN KEY (`status`) REFERENCES `study_status` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.contacts
-DROP TABLE IF EXISTS `contacts`;
 CREATE TABLE IF NOT EXISTS `contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `identification_type` int(11) DEFAULT NULL,
@@ -281,12 +284,11 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   CONSTRAINT `contacts_ibfk_1` FOREIGN KEY (`city`) REFERENCES `geo_citys` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `contacts_ibfk_2` FOREIGN KEY (`department`) REFERENCES `geo_departments` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `contacts_ibfk_3` FOREIGN KEY (`identification_type`) REFERENCES `identifications_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.contacts_types
-DROP TABLE IF EXISTS `contacts_types`;
 CREATE TABLE IF NOT EXISTS `contacts_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -297,7 +299,6 @@ CREATE TABLE IF NOT EXISTS `contacts_types` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.economic_activities
-DROP TABLE IF EXISTS `economic_activities`;
 CREATE TABLE IF NOT EXISTS `economic_activities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `session` int(11) NOT NULL,
@@ -316,7 +317,6 @@ CREATE TABLE IF NOT EXISTS `economic_activities` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.economic_activities_divitions
-DROP TABLE IF EXISTS `economic_activities_divitions`;
 CREATE TABLE IF NOT EXISTS `economic_activities_divitions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -327,7 +327,6 @@ CREATE TABLE IF NOT EXISTS `economic_activities_divitions` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.economic_activities_sessions
-DROP TABLE IF EXISTS `economic_activities_sessions`;
 CREATE TABLE IF NOT EXISTS `economic_activities_sessions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -339,7 +338,6 @@ CREATE TABLE IF NOT EXISTS `economic_activities_sessions` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.emails
-DROP TABLE IF EXISTS `emails`;
 CREATE TABLE IF NOT EXISTS `emails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `box` int(11) DEFAULT NULL,
@@ -372,7 +370,6 @@ CREATE TABLE IF NOT EXISTS `emails` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.emails_attachments
-DROP TABLE IF EXISTS `emails_attachments`;
 CREATE TABLE IF NOT EXISTS `emails_attachments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` int(11) NOT NULL,
@@ -388,7 +385,6 @@ CREATE TABLE IF NOT EXISTS `emails_attachments` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.emails_boxes
-DROP TABLE IF EXISTS `emails_boxes`;
 CREATE TABLE IF NOT EXISTS `emails_boxes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(150) NOT NULL,
@@ -408,7 +404,6 @@ CREATE TABLE IF NOT EXISTS `emails_boxes` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.emails_users
-DROP TABLE IF EXISTS `emails_users`;
 CREATE TABLE IF NOT EXISTS `emails_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,
@@ -425,7 +420,6 @@ CREATE TABLE IF NOT EXISTS `emails_users` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.events
-DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(250) NOT NULL,
@@ -459,7 +453,6 @@ CREATE TABLE IF NOT EXISTS `events` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.events_activity
-DROP TABLE IF EXISTS `events_activity`;
 CREATE TABLE IF NOT EXISTS `events_activity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `event` int(11) NOT NULL,
@@ -479,7 +472,6 @@ CREATE TABLE IF NOT EXISTS `events_activity` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.events_tools
-DROP TABLE IF EXISTS `events_tools`;
 CREATE TABLE IF NOT EXISTS `events_tools` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `event` int(11) NOT NULL,
@@ -502,7 +494,6 @@ CREATE TABLE IF NOT EXISTS `events_tools` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.events_types
-DROP TABLE IF EXISTS `events_types`;
 CREATE TABLE IF NOT EXISTS `events_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -514,7 +505,6 @@ CREATE TABLE IF NOT EXISTS `events_types` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.garden
-DROP TABLE IF EXISTS `garden`;
 CREATE TABLE IF NOT EXISTS `garden` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_comercial` varchar(250) NOT NULL,
@@ -532,7 +522,6 @@ CREATE TABLE IF NOT EXISTS `garden` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.garden_attributes
-DROP TABLE IF EXISTS `garden_attributes`;
 CREATE TABLE IF NOT EXISTS `garden_attributes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `garden` int(11) NOT NULL,
@@ -551,7 +540,6 @@ CREATE TABLE IF NOT EXISTS `garden_attributes` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.garden_comun_names
-DROP TABLE IF EXISTS `garden_comun_names`;
 CREATE TABLE IF NOT EXISTS `garden_comun_names` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `garden` int(11) NOT NULL,
@@ -565,7 +553,6 @@ CREATE TABLE IF NOT EXISTS `garden_comun_names` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.garden_filters
-DROP TABLE IF EXISTS `garden_filters`;
 CREATE TABLE IF NOT EXISTS `garden_filters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag` varchar(50) NOT NULL,
@@ -580,7 +567,6 @@ CREATE TABLE IF NOT EXISTS `garden_filters` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.garden_filters_attributes
-DROP TABLE IF EXISTS `garden_filters_attributes`;
 CREATE TABLE IF NOT EXISTS `garden_filters_attributes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `filter` int(11) NOT NULL,
@@ -595,7 +581,6 @@ CREATE TABLE IF NOT EXISTS `garden_filters_attributes` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.garden_gallery
-DROP TABLE IF EXISTS `garden_gallery`;
 CREATE TABLE IF NOT EXISTS `garden_gallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `garden` int(11) NOT NULL,
@@ -611,7 +596,6 @@ CREATE TABLE IF NOT EXISTS `garden_gallery` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.geo_citys
-DROP TABLE IF EXISTS `geo_citys`;
 CREATE TABLE IF NOT EXISTS `geo_citys` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -625,7 +609,6 @@ CREATE TABLE IF NOT EXISTS `geo_citys` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.geo_departments
-DROP TABLE IF EXISTS `geo_departments`;
 CREATE TABLE IF NOT EXISTS `geo_departments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -638,7 +621,6 @@ CREATE TABLE IF NOT EXISTS `geo_departments` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.geo_types_quadrants
-DROP TABLE IF EXISTS `geo_types_quadrants`;
 CREATE TABLE IF NOT EXISTS `geo_types_quadrants` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -650,7 +632,6 @@ CREATE TABLE IF NOT EXISTS `geo_types_quadrants` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.geo_types_vias
-DROP TABLE IF EXISTS `geo_types_vias`;
 CREATE TABLE IF NOT EXISTS `geo_types_vias` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -661,8 +642,20 @@ CREATE TABLE IF NOT EXISTS `geo_types_vias` (
 
 -- La exportación de datos fue deseleccionada.
 
+-- Volcando estructura para tabla admin_mv_pro.group_technicians
+CREATE TABLE IF NOT EXISTS `group_technicians` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user` int(11) NOT NULL,
+  `active` int(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`),
+  KEY `FK_group_technicians_users` (`user`),
+  CONSTRAINT `FK_group_technicians_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- La exportación de datos fue deseleccionada.
+
 -- Volcando estructura para tabla admin_mv_pro.identifications_types
-DROP TABLE IF EXISTS `identifications_types`;
 CREATE TABLE IF NOT EXISTS `identifications_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -675,7 +668,6 @@ CREATE TABLE IF NOT EXISTS `identifications_types` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.media
-DROP TABLE IF EXISTS `media`;
 CREATE TABLE IF NOT EXISTS `media` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -690,12 +682,11 @@ CREATE TABLE IF NOT EXISTS `media` (
   KEY `id` (`id`),
   KEY `FK_media_users` (`create_by`),
   CONSTRAINT `FK_media_users` FOREIGN KEY (`create_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.media_events
-DROP TABLE IF EXISTS `media_events`;
 CREATE TABLE IF NOT EXISTS `media_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `media` int(11) NOT NULL,
@@ -711,7 +702,6 @@ CREATE TABLE IF NOT EXISTS `media_events` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.media_users
-DROP TABLE IF EXISTS `media_users`;
 CREATE TABLE IF NOT EXISTS `media_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `media` int(11) NOT NULL,
@@ -722,12 +712,11 @@ CREATE TABLE IF NOT EXISTS `media_users` (
   KEY `FK_media_users_users` (`user`),
   CONSTRAINT `FK_media_users_media` FOREIGN KEY (`media`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_media_users_users` FOREIGN KEY (`user`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.meditions
-DROP TABLE IF EXISTS `meditions`;
 CREATE TABLE IF NOT EXISTS `meditions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -739,7 +728,6 @@ CREATE TABLE IF NOT EXISTS `meditions` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.menus
-DROP TABLE IF EXISTS `menus`;
 CREATE TABLE IF NOT EXISTS `menus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -753,7 +741,6 @@ CREATE TABLE IF NOT EXISTS `menus` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.menus_items
-DROP TABLE IF EXISTS `menus_items`;
 CREATE TABLE IF NOT EXISTS `menus_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `menu` int(11) NOT NULL,
@@ -780,7 +767,6 @@ CREATE TABLE IF NOT EXISTS `menus_items` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.permissions
-DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `group` int(11) NOT NULL,
@@ -791,24 +777,22 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   KEY `FK_permissions_permissions` (`permission`),
   CONSTRAINT `FK_permissions_permissions` FOREIGN KEY (`permission`) REFERENCES `permissions_items` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_permissions_permissions_group` FOREIGN KEY (`group`) REFERENCES `permissions_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.permissions_group
-DROP TABLE IF EXISTS `permissions_group`;
 CREATE TABLE IF NOT EXISTS `permissions_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `description` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.permissions_items
-DROP TABLE IF EXISTS `permissions_items`;
 CREATE TABLE IF NOT EXISTS `permissions_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag` varchar(50) NOT NULL,
@@ -818,12 +802,11 @@ CREATE TABLE IF NOT EXISTS `permissions_items` (
   UNIQUE KEY `tag` (`tag`),
   KEY `id` (`id`),
   KEY `tag KEY` (`tag`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.pictures
-DROP TABLE IF EXISTS `pictures`;
 CREATE TABLE IF NOT EXISTS `pictures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) DEFAULT NULL,
@@ -835,12 +818,11 @@ CREATE TABLE IF NOT EXISTS `pictures` (
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.requests
-DROP TABLE IF EXISTS `requests`;
 CREATE TABLE IF NOT EXISTS `requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `account` int(11) NOT NULL,
@@ -863,12 +845,11 @@ CREATE TABLE IF NOT EXISTS `requests` (
   CONSTRAINT `FK_requests_requests_status` FOREIGN KEY (`status`) REFERENCES `requests_status` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_requests_users` FOREIGN KEY (`create_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_requests_users_2` FOREIGN KEY (`update_by`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.requests_addresses
-DROP TABLE IF EXISTS `requests_addresses`;
 CREATE TABLE IF NOT EXISTS `requests_addresses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `request` int(11) NOT NULL,
@@ -879,12 +860,11 @@ CREATE TABLE IF NOT EXISTS `requests_addresses` (
   KEY `FK_requests_addresses_addresses` (`address`),
   CONSTRAINT `FK_requests_addresses_addresses` FOREIGN KEY (`address`) REFERENCES `addresses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_requests_addresses_requests` FOREIGN KEY (`request`) REFERENCES `requests` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.requests_contacts
-DROP TABLE IF EXISTS `requests_contacts`;
 CREATE TABLE IF NOT EXISTS `requests_contacts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `request` int(11) NOT NULL DEFAULT '0',
@@ -895,12 +875,11 @@ CREATE TABLE IF NOT EXISTS `requests_contacts` (
   KEY `FK_requests_contacts_contacts` (`contact`),
   CONSTRAINT `FK_requests_contacts_contacts` FOREIGN KEY (`contact`) REFERENCES `contacts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_requests_contacts_requests` FOREIGN KEY (`request`) REFERENCES `requests` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.requests_services
-DROP TABLE IF EXISTS `requests_services`;
 CREATE TABLE IF NOT EXISTS `requests_services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `request` int(11) NOT NULL,
@@ -911,18 +890,18 @@ CREATE TABLE IF NOT EXISTS `requests_services` (
   KEY `FK_requests_services_services` (`service`),
   CONSTRAINT `FK_requests_services_requests` FOREIGN KEY (`request`) REFERENCES `requests` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_requests_services_services` FOREIGN KEY (`service`) REFERENCES `services` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.requests_status
-DROP TABLE IF EXISTS `requests_status`;
 CREATE TABLE IF NOT EXISTS `requests_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(125) NOT NULL,
   `description` varchar(500) NOT NULL,
   `color` varchar(16) NOT NULL,
   `porcentage` varchar(16) NOT NULL,
+  `calendar_enabled` int(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -930,7 +909,6 @@ CREATE TABLE IF NOT EXISTS `requests_status` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.services
-DROP TABLE IF EXISTS `services`;
 CREATE TABLE IF NOT EXISTS `services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `category` int(11) DEFAULT NULL,
@@ -948,7 +926,6 @@ CREATE TABLE IF NOT EXISTS `services` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.services_categories
-DROP TABLE IF EXISTS `services_categories`;
 CREATE TABLE IF NOT EXISTS `services_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
@@ -960,7 +937,6 @@ CREATE TABLE IF NOT EXISTS `services_categories` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.status_marital
-DROP TABLE IF EXISTS `status_marital`;
 CREATE TABLE IF NOT EXISTS `status_marital` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -971,18 +947,16 @@ CREATE TABLE IF NOT EXISTS `status_marital` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.study_levels
-DROP TABLE IF EXISTS `study_levels`;
 CREATE TABLE IF NOT EXISTS `study_levels` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.study_status
-DROP TABLE IF EXISTS `study_status`;
 CREATE TABLE IF NOT EXISTS `study_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
@@ -993,7 +967,6 @@ CREATE TABLE IF NOT EXISTS `study_status` (
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
@@ -1029,12 +1002,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   CONSTRAINT `FK_users_identifications_types` FOREIGN KEY (`identification_type`) REFERENCES `identifications_types` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_users_permissions_group` FOREIGN KEY (`permissions`) REFERENCES `permissions_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_users_pictures` FOREIGN KEY (`avatar`) REFERENCES `pictures` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla admin_mv_pro.users_events
-DROP TABLE IF EXISTS `users_events`;
 CREATE TABLE IF NOT EXISTS `users_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` int(11) NOT NULL,

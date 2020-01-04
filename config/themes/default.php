@@ -126,6 +126,10 @@ return [
                     'file' => '/build/css/custom.min.css', // Custom Theme Style
                 ],
                 [
+                    'type' => 'stylesheet',
+                    'file' => '/vendors/cropper/dist/cropper.min.css', // Custom Theme Style
+                ],
+                [
                     'type' => 'script',
                     'file' => 'https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js', // vue
                 ],

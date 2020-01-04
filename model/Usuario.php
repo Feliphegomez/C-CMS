@@ -32,7 +32,10 @@ class Usuario extends ModeloBase{
 			'permissions' => "Permisos", 
 			'registered' => "Fecha de registro", 
 			'updated' => "Ultima actualizacion", 
-			'last_connection' => "Ultima conexion"
+			'last_connection' => "Ultima conexion",
+			'bulletin' => "Boletín.<br/>Confirmo mi consentimiento para recibir su boletín",
+			'marketing' => "Campañas de Marketing.<br/>Confirmo mi consentimiento para el procesamiento de mis datos personales con fines de marketing, que consisten en ofertas comerciales enviadas por correo electrónico.",
+			'analytic' => "Campañas de Mejoramiento.<br/>Confirmo mi consentimiento para el procesamiento automatizado de mis datos personales, mediante la elaboración de perfiles, a fin de recibir ofertas comerciales personalizadas en función de mi comportamiento de navegación y compra.",
         ];
     }
 	
@@ -56,6 +59,9 @@ class Usuario extends ModeloBase{
 			'registered', 
 			'updated', 
 			'last_connection', 
+			'bulletin',
+			'marketing',
+			'analytic',
 		];
 	}
 
@@ -147,6 +153,18 @@ class Usuario extends ModeloBase{
 					"name" => "city", 
 					"placeholder" => "Ciudad"
 				], [])]
+			, ["bulletin" => new PHPStrap\Form\Select(["1"=>"SI", "0"=>"NO"], ["0"], [
+				"name" => "bulletin", 
+				"placeholder" => "Boletín"
+			])]
+			, ["marketing" => new PHPStrap\Form\Select(["1"=>"SI", "0"=>"NO"], ["0"], [
+				"name" => "marketing", 
+				"placeholder" => "Campañas de Marketing"
+			])]
+			, ["analytic" => new PHPStrap\Form\Select(["1"=>"SI", "0"=>"NO"], ["0"], [
+				"name" => "analytic", 
+				"placeholder" => "Campañas de Mejoramiento"
+			])]
         ];
     }
 	

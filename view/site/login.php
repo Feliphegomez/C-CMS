@@ -14,6 +14,7 @@
 		<div class="animate form login_form">
 			<section class="login_content">
 				<h1><?= $title; ?></h1>
+				<p>Al crear la cuenta en nuestro sitio confirmas haber leído la política de privacidad y aceptar los Términos y condiciones*</p>
 				<?= $model->formulario; ?>
 				<div class="clearfix"></div>
 				<div class="separator">
@@ -34,6 +35,7 @@
 		<div id="register" class="animate form registration_form">
 			<section class="login_content">
 				<h1>Crear Cuenta</h1>
+				<p>Al pulsar en el botón confirmas haber leído la política de privacidad y aceptas los términos y condiciones.</p>
 				<?= $register->formulario; ?>
 					<div class="clearfix"></div>
 					<div class="separator">

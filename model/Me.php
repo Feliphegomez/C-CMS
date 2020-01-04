@@ -139,6 +139,18 @@ class Me extends Usuario{
 					], [
 						new PHPStrap\Form\Validation\RequiredValidation('Requerido.')
 					])]
+				, ["bulletin" => new PHPStrap\Form\Select(["1"=>"SI", "0"=>"NO"], $this->bulletin, [
+					"name" => "bulletin", 
+					"placeholder" => "Boletín"
+				])]
+				, ["marketing" => new PHPStrap\Form\Select(["1"=>"SI", "0"=>"NO"], $this->marketing, [
+					"name" => "marketing", 
+					"placeholder" => "Campañas de Marketing"
+				])]
+				, ["analytic" => new PHPStrap\Form\Select(["1"=>"SI", "0"=>"NO"], $this->analytic, [
+					"name" => "analytic", 
+					"placeholder" => "Campañas de Mejoramiento"
+				])]
 			];
 		} 
 		else if($dataAccess == "access") {
