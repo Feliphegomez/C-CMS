@@ -45,13 +45,14 @@ class Conectar{
 			if($this->driver=="mysql" || $this->driver==null){
 				# $con=new mysqli($this->host, $this->user, $this->pass, $this->database);
 				$pdo = new PDO(
-					$this->driver.":host={$this->host};dbname={$this->database};charset=utf8mb4",
+					$this->driver.":host={$this->host};dbname={$this->database};charset={$this->charset}",
 					"{$this->user}",
 					"{$this->pass}",
 					[
 						# PDO:: ATTR_PERSISTENT => true,
 						#PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names='es_CO',NAMES '{$this->charset}'"
-						PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->charset}, lc_time_names='es_CO'"
+						#PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->charset}, lc_time_names='es_CO'"
+						#PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES {$this->charset}"
 					]
 					);
 				$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

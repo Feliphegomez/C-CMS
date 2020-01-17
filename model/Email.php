@@ -65,7 +65,7 @@ class Email extends EntidadBase {
 				foreach($keys as $key){
 					if(isset($post[$key])){
 						//$this->decodeIMAPText(
-						// $post = Email::convertKeyValuesIMAP($post);
+						//$post = Email::convertKeyValuesIMAP($post);
 						if(!is_array($post[$key]) && !is_object($post[$key])){
 							#$post[$key] = Email::decodeVal($post[$key]);
 							$post[$key] = ($post[$key]);
@@ -73,16 +73,18 @@ class Email extends EntidadBase {
 							$post[$key] = ($post[$key]);
 						}
 						$keys1[] = "`{$key}`";
-						$keys2[] = ":{$key}";
-						#$keys2[] = "?";
+						// $keys2[] = ":{$key}";
+						$keys2[] = "?";
 						
-						$values[$key] = !is_array($post[$key]) && !is_object($post[$key]) ? ($post[$key]) : json_encode($post[$key]);
+						$values[] = !is_array($post[$key]) && !is_object($post[$key]) ? (Email::decodeVal($post[$key])) : json_encode($post[$key]);
 					}
+					
 				}
 				
-				$k1 = implode(',', $keys1);
-				$k2 = implode(',', $keys2);
-				$sql = "INSERT INTO {$this->getTableUse()} ({$k1}) VALUES ({$k2})";
+								
+				$k1 = implode(',', ($keys1));
+				$k2 = implode(',', ($keys2));
+				$sql = "INSERT INTO {$this->getTableUse()} ({$k1}) VALUES ({$k2}) ";
 				$query = $this->db()->prepare($sql);
 				try {
 					$success = $query->execute($values);

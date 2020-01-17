@@ -29,9 +29,7 @@ $mailBoxes = ($boxes->getAllPendingSync());
 #echo json_encode($mailBoxes)."\n";	
 
 foreach($mailBoxes as $mailBox){
-	echo " - - - - - - - - - - - - \n";
-	$host = "Sincronizando {$mailBox->label} / {$mailBox->user} [{$mailBox->id}]\n";
-	echo " - - - - - - - - - - - - \n";
+	echo $host = "------ Sincronizando {$mailBox->label} / {$mailBox->user} [{$mailBox->id}] ------ \n";
 	$imap = new FG_IMAP($mailBox, $adapter);
 	if($imap->isValid() !== false){
 		$emails = $imap->searchBy(TYPE_SYNC_EMAILS);	

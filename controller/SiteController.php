@@ -754,7 +754,11 @@ class SiteController extends ControladorBase{
 		$arr2 = ["href=\"https:"];
 		$message = preg_replace($arr1, $arr2, $message);
 		
-		$message = utf8_decode(utf8_encode($message));
+		$message = mb_convert_encoding(utf8_encode($message), 'Windows-1252', 'UTF-8');
+		
+		// $message = mb_convert_encoding(utf8_decode($message), 'UTF-8', 'Windows-1252');
+		
+		//$message = (mb_convert_encoding($message, 'Windows-1252','UTF-8') !== $message) ? "" :  $message;
 		echo  ($message);
 		return $message;
 	}
@@ -1176,7 +1180,7 @@ class SiteController extends ControladorBase{
 		return json_encode($returning);
 	}
 	
-	// Reporte fotográfico - Nuevo
+	// Reporte fotográfico
 	public function actionPhotographic_report(){
 		$error = null;
 		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
@@ -1185,6 +1189,32 @@ class SiteController extends ControladorBase{
 		
 		$this->render("photographic_report", [
             "title" => "Reporte fotográfico",
+            "subtitle" => "",
+        ]);
+	}
+	
+	// Reporte fotográfico - Nuevo
+	public function actionPhotographic_report2(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_report2", [
+            "title" => "Reporte fotográfico",
+            "subtitle" => "",
+        ]);
+	}
+	
+	// Reporte fotográfico - Nuevo
+	public function actionPhotographic_report3(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_report3", [
+            "title" => "Informe Registro Fotografico",
             "subtitle" => "",
         ]);
 	}
@@ -1266,19 +1296,21 @@ print_r($files);
 		$route_name = isset($_GET['route_name']) ? base64_decode((string) $_GET['route_name']) : false;
 		$group_name = isset($_GET['group_name']) ? base64_decode((string) $_GET['group_name']) : false;
 		$period_name = isset($_GET['period_name']) ? base64_decode((string) $_GET['period_name']) : false;
+		$lot_name = isset($_GET['lot_name']) ? base64_decode((string) $_GET['lot_name']) : false;
 		$type = isset($_GET['type']) ? $_GET['type'] : false;
 		$typeText = ($type !== "A") ? ($type == "D") ? 'DESPUES' : 'OTRO' : 'ANTES';
 		
 		$ds          = DIRECTORY_SEPARATOR;
 		$storeFolder = 'uploads';
 		$files_detect = !isset($_FILES['file']) ? false : true;
-		$files = isset($_FILES['file']) ? $_FILES['file'] : [];
+		$files = isset($_FILES['file']) ? [$_FILES['file']] : [];
 		$returning = (object) [
 			'error' 	=> true,
 			'status'    => 'error',
 			'result' => false,
 			'files_detect' => $files_detect,
 			'files' => [],
+			'files_origin' => $files,
 			//'files' => isset($_FILES['file']) ? $_FILES['file'] : [],
 			'text' => ""
 		];
@@ -1287,6 +1319,7 @@ print_r($files);
 			$route_name !== false
 			&& $group_name !== false
 			&& $period_name !== false
+			&& $lot_name !== false
 			&& $type !== false
 		){
 			$folderBase = [
@@ -1294,15 +1327,15 @@ print_r($files);
 				"photographics",
 				"{$year}",
 				"{$period_name}",
-				$group_name,
 				$route_name,
+				$lot_name,
 				$typeText
 			];
 			$targetPath = PUBLIC_PATH . "/" . implode('/', $folderBase)."/";
 			$returning->text = $targetPath;
 			
 			if (!empty($_FILES)) {
-				$isArray = is_array($_FILES['file']['tmp_name']) ? true : false;
+				$isArray = is_array($files) ? true : false;
 				$day = date("d");
 				$mouth = date("m");
 				$year = date("Y");
@@ -1314,18 +1347,18 @@ print_r($files);
 					if ( is_writable($targetPath) ) {
 						if($isArray == true){
 							// $returning->text = "multiples archivos."; //carpeta: {$targetPath}
-							$total = count($files['tmp_name']);
+							$total = count($files);
 							for($i = 0; $i < $total; $i++){
 								$model = new PhotographicFile($this->adapter);
-								$model->name = randomString(16, $files['name']);
-								$model->type = $files['type'];
-								$model->size = $files['size'];
+								$model->name = randomString(16, $files[$i]['name']);
+								$model->type = $files[$i]['type'];
+								$model->size = $files[$i]['size'];
 								$model->path_short = "/public/".implode('/', $folderBase)."/" . $model->name;
 								$model->path_full = $targetPath . $model->name;
 								$model->create_by = $this->user->id;
 								
 								// Mover archivo
-								$error_up = !$model->copyFile($files['tmp_name'][$i]);
+								$error_up = !$model->copyFile($files[$i]['tmp_name']);
 								$returning->error = $error_up;
 									$returning->text = $error_up; // carpeta: {$targetPath}
 								if ($error_up == false) {
@@ -1398,6 +1431,49 @@ print_r($files);
 		$this->render("employees_list", [
             "title" => "Empleados",
             "subtitle" => "Personal",
+        ]);
+	}
+
+	public function actionMy_Email_Pending(){
+		header('Content-Type: application/json');
+        if ($this->isGuest || ($this->checkPermission('my:emails') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$error = null;
+		$returnData = [];
+		$returnData['error'] = true;
+		$returnData['message'] = '';
+		$returnData['data'] = [];
+		
+		$myEmailsPendings = new Email($this->adapter);
+		$mailBoxes = $this->user->getEmailBoxes();
+		$mails = $myEmailsPendings->loadMailsPending($mailBoxes);
+		// $returnData['data'] = $mails;
+		if(is_array($mails)){
+			foreach(array_reverse($mails) as $mail){
+				$item = new stdClass();
+				$item->url = linkRoute('site', 'my_email') . "&V=#/{$mail->box}/folder/not_seen/view/{$mail->id}-0";
+				$item->from = (( strlen($mail->from) <= 2) ? "Anon" : $mail->from );
+				$item->from_email = ((strlen($mail->from_email) <= 2) ? "Anon" : $mail->from_email);
+				$item->subject = $mail->subject;
+				$item->message = cortar_string(strip_tags($mail->subject), 25)."...";			
+				$returnData['data'][] = $item;
+			};
+			$returnData['error'] = false;
+		}
+		echo json_encode($returnData);
+		return json_encode($returnData);
+		exit();
+	}
+	
+	// Reporte fotográfico - Nuevo
+	public function actionPhotographic_pending(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_pending", [
+            "title" => "Informe Registro Fotografico",
+            "subtitle" => "Pendientes",
         ]);
 	}
 	

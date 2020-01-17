@@ -1547,6 +1547,12 @@ ul {
 		},
 		created() {},
 		methods: {
+			encode_utf8( s ){
+				return unescape( encodeURIComponent( s ) );
+			},
+			decode_utf8( s ){
+				return decodeURIComponent( escape( s ) );
+			},
 			loadTiny(){
 				console.log('loadTiny');
 				var self = this;
@@ -1882,7 +1888,10 @@ ul {
 			},
 			saveDraft(){
 				var self = this;
-				message = (tinyMCE.activeEditor.getContent());
+				/*message = self.encode_utf8(tinyMCE.activeEditor.getContent()).split('').map(function (char) {
+					return char.charCodeAt(0).toString(2);
+				}).join(' ');;*/
+				message = self.encode_utf8(tinyMCE.activeEditor.getContent());
 				// doc = tinyMCE.activeEditor.getDoc();
 				self.form.message = message;
 				console.log('Guardando Mensaje actual ', self.form);
@@ -1896,10 +1905,11 @@ ul {
 					width: '200px',
 				});
 				
+				console.log((message));
 				api.put('/api.php/records/emails/' + self.form.id, {
 					id: self.form.id,
 					subject: self.form.subject,
-					message: self.form.message,
+					message: (self.form.message),
 					to: JSON.stringify(self.form.to),
 					attachments: JSON.stringify(self.form.attachments),
 					create_by: <?= $this->user->id; ?>,
@@ -1935,7 +1945,8 @@ ul {
 					};
 				})
 				.catch(function (error) {
-					
+					console.log(error);
+					console.log(error.response);
 				});
 			},
 			validateEmail(email) {

@@ -63,6 +63,19 @@ function get_mime_type($structure){
 	return "TEXT/PLAIN";
 }
 
+if(!function_exists("randomString")) {
+	function randomString($length = 16, $origin_str = "") {
+		$str = "";
+		$chars = "-_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		for ($i = 0; $i < $length; $i++) {
+			$str .= $chars[mt_rand(0, strlen($chars) - 1)];
+		}
+		return "{$str}-{$origin_str}";
+	}
+}
+
+
+
 
 class FG_IMAP extends EntidadBase{
 	private $is_valid = false;
@@ -201,6 +214,7 @@ class FG_IMAP extends EntidadBase{
 			$filename = isset($attachment['filename']) && $attachment['filename'] !== "" ? ($attachment['filename']) : null;
 			$name = ($name !== null) ? FG_IMAP::decodeMimeStr($name) : ($filename !== null) ? FG_IMAP::decodeMimeStr($filename) : FG_IMAP::randomString();
 			$filename = ($filename);
+			$name = !isset($name) || $name == null ? ($filename !== null) ? $filename : randomString() : $name;
 			
 			
 			$folderSrv = (dirname(__DIR__)) . "/public/attachments/{$this->parameters->host}/{$this->parameters->user}/{$year}-{$mouth}-{$day}/{$email}/";
@@ -259,6 +273,7 @@ class FG_IMAP extends EntidadBase{
 			$val = $overview[$i];
 			foreach($val as $k => $v){
 				$v = FG_IMAP::decodeMimeStr($v);
+				// $r["{$k}_email"] = $v;
 				if($k === 'message_id'){
 					preg_match('/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i', $v, $b);
 					$v = !isset($b[0]) ? $v : $b[0];
@@ -271,8 +286,8 @@ class FG_IMAP extends EntidadBase{
 					$label = str_replace([" <{$b[0]}>", "<{$b[0]}>", "{$b[0]}"], "", $v);
 					preg_match_all('/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i', $b[0], $matches);
 					$address_mail = ($matches[0]);
-					$r["{$k}_email"] = $address_mail[0];
-					$v = $label;
+					$r["{$k}_email"] = (isset($address_mail[0])) ? $address_mail[0] : $k;
+					$v = isset($label) ? $label : "";
 				} else if($k === 'udate'){
 				} else if($k === 'to'){
 					$original_email = $v;
@@ -342,11 +357,13 @@ class FG_IMAP extends EntidadBase{
 			"uid" => $Overview->uid,
 			"status" => $Overview->seen ? 'read' : 'unread',
 			"subject" => $Overview->subject,
-			"from" => $Overview->from,
-			"from_email" => $Overview->from_email,
+			"from" => isset($Overview->from) ? $Overview->from : "Anon",
+			"from_email" => isset($Overview->from_email) ? $Overview->from_email : "Anon",
 			"to" => $Overview->to,
 			"date" => $Overview->date,
-			"message" => (($Message)),
+			#"message" => (utf8_encode($Message)),
+			"message" => mb_convert_encoding(utf8_decode($Message), 'UTF-8', 'Windows-1252'),
+			#"message" => mb_convert_encoding($string, 'UTF-8', 'Windows-1254'),
 			"size" => $Overview->size,
 			"msgno" => $Overview->msgno,
 			"recent" => $Overview->recent,

@@ -170,53 +170,41 @@
                 <div class="top_nav">
                     <div class="nav_menu">
 						<?php 
-							$myEmailsPendings = new Email($this->adapter);
-							$mails = $myEmailsPendings->loadMailsPending($mailBoxes);
-							$html_mail = "";
-							foreach(array_reverse($mails) as $mail){
-								$html_mail .= PHPStrap\Util\Html::tag('li', 
-									FelipheGomez\Url::a(
-										['site/my_email', ["V" => "#/{$mail->box}/folder/not_seen/view/{$mail->id}-0"]]
-										, # PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
-												PHPStrap\Util\Html::tag('span', 
-														#PHPStrap\Util\Html::tag('span', $mail->from)
-														PHPStrap\Util\Html::tag('span', "{$mail->subject}")
-														. PHPStrap\Util\Html::tag('span', "<b>" . (( strlen($mail->from) <= 2) ? "Anon" : $mail->from ) . " <" . (( strlen($mail->from_email) <= 2) ? "Anon" : $mail->from_email ) . "></b>", ['time'])
-													)
-												. PHPStrap\Util\Html::tag('span', cortar_string(strip_tags($mail->subject), 25), ['message'])
-											, []
-											, []
-										)
-									, [], []);
-							};
+							
+							$html_mail = '
+							<template v-if="mails.length > 0">
+								<li @click="openUrlMailPending(mail.url)" v-for="(mail, mails_index) in mails">
+									<a>
+										<span>
+											<span class="time"><b><a :title="mail.from_email">{{mail.subject}}</a></b>
+											<span>{{mail.from}}</span> 
+											</span>
+										</span> 
+										<span class="message">{{mail.message}}</span>
+									</a>
+								</li>
+							</template>
+							<template v-else>
+								<li>
+									<a>
+										<span><span></span> <span class="time"><b></b></span></span> 
+										<span class="message">No tienes correos actualmente.</span>
+									</a>
+								</li>
+							</template>';
 						?>
 						
 						
                         <?php 
 							$inboxSuccess = ($this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
 								FelipheGomez\Url::a(
-										'javascript:void(0)'
-										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . (count($mails) > 0 ? PHPStrap\Util\Html::tag('span', count($mails)==100 ? "+" . count($mails) : count($mails), ['badge bg-green']) : "")
+										'javascript:void(0);'
+										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', "", ['total-mails-count badge bg-green'])
 										, ['dropdown-toggle info-number']
 										, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
 									)
-								. PHPStrap\Util\Html::tag('ul', 
-										// Items
-										$html_mail
-										// Footer --> Ver todos los correos
-										/*
-										. 
-										PHPStrap\Util\Html::tag('li', 
-											PHPStrap\Util\Html::tag('div', 
-												PHPStrap\Util\Html::tag('a', 
-														PHPStrap\Util\Html::tag('strong', 'Ver todos los correos')
-														. PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
-													)
-												, ['text-center'], [])
-										, [], [])
-										*/
-									, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu2', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;'])
-							, ['dropdown'], ['role' => 'presentation']) : "";
+								. PHPStrap\Util\Html::tag('ul', $html_mail, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-mails', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;' ])
+							, ['dropdown menu-mails-box'], ['@click' => 'load()', 'role' => 'presentation']) : "";
 								
 								echo PHPStrap\Util\Html::tag('nav', 
 									$navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
@@ -274,12 +262,12 @@
 										// Icono 2 - Mails
 										. $inboxSuccess
 										
-									, ['nav navbar-nav navbar-right'])
+									, ['nav navbar-nav navbar-right mail-navbar'])
 								);
 							// }
                         ?>
 						<style>
-							#menu2 {
+							#menu-mails {
 								max-height: calc(45vh);overflow: auto;
 							}
 						</style>

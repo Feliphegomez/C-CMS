@@ -91,3 +91,79 @@
   </div>
 </div>
 <!-- /compose -->
+
+
+
+<script>
+const apiMailNavbar = axios.create({
+  baseURL: '/',
+  timeout: 60000,
+  headers: {'X-Custom-Header': 'foobar'}
+});
+apiMailNavbar.interceptors.response.use(function (response) {
+  if (response.headers['x-xsrf-token']) {
+	document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
+  }
+  return response;
+});
+appMailNavbar = new Vue({
+	data: function () {
+		return {
+			mails: [],
+            timer: ''
+		};
+	},
+	mounted(){
+		var self = this;
+		self.load();
+	},
+	created(){
+		var self = this;
+        self.fetchEventsList();
+        self.timer = setInterval(self.fetchEventsList, 30000)
+	},
+	methods: {
+		openUrlMailPending(urlOpen){
+			var self = this;
+			location.replace(urlOpen);
+		},
+        fetchEventsList() {
+			var self = this;
+            self.load();
+        },
+        cancelAutoUpdate() {
+			var self = this;
+			clearInterval(self.timer)
+		},
+		load(){
+			var self = this;
+			$(".total-mails-count").html("");
+			
+			apiMailNavbar.get('/index.php', { 
+				params: {
+					controller: 'site',
+					action: 'my_email_pending'
+				}
+			})
+			.then(function (r) {
+				if(r.data !== undefined && r.data.error == false){
+					self.mails = r.data.data;
+					// console.log(r.data.data.length);
+					if(r.data.data.length > 0){
+						$(".total-mails-count").html(r.data.data.length);
+					}
+				}else{
+					// console.error('error');
+					return false;
+				}
+			})
+			.catch(function (error) {
+				console.log(error.response);
+				return false;
+			});
+		},
+	}
+}).$mount('.menu-mails-box');
+
+
+</script>

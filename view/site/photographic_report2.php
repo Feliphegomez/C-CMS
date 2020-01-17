@@ -23,173 +23,6 @@
 	<div class="clearfix"></div>
 </div>
 
-<template id="list-routes">
-	<div>
-		<div class="row">
-			<div class="col-xs-12 col-sm-12">
-				<form action="javascript: false;" method="GET" v-on:submit="searchText">
-					<div class="row">
-						<div class="col-xs-12 col-md-12">
-							<div class="input-group">
-								<input v-model="search.text" type="text" class="form-control" placeholder="¿Que estas buscando?" id="txtSearch"/>
-								<div class="input-group-btn">
-									<button class="btn btn-primary" type="submit">
-									<span class="glyphicon glyphicon-search"></span>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="clearfix"></div>
-			<div class="col-md-12 col-sm-12 col-xs-12 text-center">
-				<ul class="pagination pagination-split pull-right">
-					<li v-if="page > 1 && total > 0"><a @click="load();page--;"> &#60; </a></li>
-					<li v-if="total > (limit * page)"><a @click="load();page++;"> &#62; </a></li>
-				</ul>
-			</div>
-			<div class="clearfix"></div>
-		</div>
-		<div class="clearfix"></div>
-		
-		<div class="row">
-			<div class="col-md-12 col-sm-12 col-xs-12">
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>Lotes <small>Microrutas</small></h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<!-- //
-							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#">Settings 1</a></li>
-									<li><a href="#">Settings 2</a></li>
-								</ul>
-							</li>
-							<li><a class="close-link"><i class="fa fa-close"></i></a></li>
-							-->
-							<li>
-								<router-link tag="a" :to="{ name: 'create-route' }">
-									<i class="fa fa-plus"></i>
-								</router-link>
-							</li>
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-					<div class="x_content">
-						<table class="table">
-							<thead>
-								<tr>
-									<th>#</th>
-									<th width="75%">Lote / Microruta</th>
-									<th width="15%"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<template v-if="records.length > 0">
-									<tr v-for="(route, index) in records">
-										<th scope="row">{{ route.id }}</th>
-										<td>
-											<router-link  :to="{ name: 'list-reports', params: { route_id: route.id, route_name: route.name } }">
-												{{ route.name }}
-											</router-link>
-										</td>
-										<td>
-											<router-link tag="button" type="button" class="btn btn-round btn-default" :to="{ name: 'list-reports', params: { route_id: route.id, route_name: route.name } }">
-												<i class="fa fa-inbox"></i> Reportes
-											</router-link>
-										</td>
-									</tr>
-								</template>
-							</tbody>
-						</table>
-					</div>
-				
-				
-					<div class="x_footer">
-						<ul class="nav navbar-right panel_toolbox">
-							<li>
-								Viendo: {{ (((page * limit) - limit) + 1) }}
-								- 
-								{{ (page * limit) }} / Total: {{ total }}
-								 | 
-								Limite x Página: {{ limit }}
-							</li>
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="clearfix"></div>
-		
-	</div>
-</template>
-
-<template id="list-reports">
-	<div>
-		<div class="row">
-			<div class="col-md-12 col-sm-12 col-xs-12">
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>Reportes <small></small></h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<!-- //
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#">Settings 1</a></li>
-									<li><a href="#">Settings 2</a></li>
-								</ul>
-							</li>
-							-->
-							<li>
-								<router-link tag="a" class="close-link btn-sm btn-default" :to="{ name: 'create-report', params: { route_id: $route.params.route_id, route_name: $route.params.route_name } }">
-									<i class="fa fa-plus"></i>									
-								</router-link>
-							</li>
-							<li>
-								<router-link tag="a" class="close-link" :to="{ name: 'list-routes' }">
-									<i class="fa fa-close"></i>
-								</router-link>
-							</li>
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-					<div class="x_content">
-						<div class="row">
-							<template v-if="records.length > 0" v-for="(route, index) in records">
-								<template v-if="route.photographic_files.length > 0" v-for="(file, i_file) in route.photographic_files">
-									<div class="col-xs-6 col-sm-4 col-md-3 rwrapper">
-										<div class="rlisting">
-											<div class="col-sm-12 nopad" style="text-align: center;">
-												<img :src="file.path_short" class="img-responsive img-thumbnail" style="max-height:300px;width:auto;">
-											</div>
-											<div class="col-sm-12 nopad">
-												<h5></h5>
-												<p>
-												{{ file.name }}
-												</p>
-												<div class="rfooter">
-													<a class="btn-sm btn-default" :href="file.path_short" target="_blank" download><i class="fa fa-download"></i></a>
-													<a class="btn-xs btn-default pull-right" :href="file.path_short" target="_blank"><i class="fa fa-link"></i> </a>
-												</div>
-											</div>
-										</div>
-									</div>
-								</template>
-							</template>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="clearfix"></div>
-	</div>
-</template>
-
 <template id="create">
 	<div>
 		<div class="row">
@@ -199,9 +32,16 @@
 						<h2>Crear</h2>
 						<ul class="nav navbar-right panel_toolbox">
 							<li>
+								<!--
 								<router-link tag="a" class="close-link" :to="{ name: 'list-reports', params: { route_id: $route.params.route_id, route_name: $route.params.route_name } }">
 									<i class="fa fa-close"></i>
 								</router-link>
+								-->
+							</li>
+							<li v-if="enabledUpd == true">
+								<a class="close-link" @click="newForm()">
+									<i class="fa fa-close"></i>
+								</a>
 							</li>
 						</ul>
 						<div class="clearfix"></div>
@@ -209,6 +49,13 @@
 					
 					<form action="javascript:false" v-on:submit="validateForm" method="POST" class="x_content">
 						<div class="row">
+							<div class="col-md-12">
+								<button @click="startWatch" class="btn btn-default" type="button" id="toggleWatchBtn">Start Watching</button>
+								<div id="result">
+									<!--Position information will be inserted here-->
+								</div>
+							</div>
+						
 							<template v-if="error.error == true">
 								<div class="alert alert-danger alert-dismissible fade in" role="alert">
 									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -219,8 +66,21 @@
 								</div>
 							</template>
 							
-							
 							<template v-if="enabledUpd !== true">
+								<div class="col-md-12 col-xs-12">
+									
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12" for="route">Microruta<span class="required">*</span></label>
+										<div class="col-md-9 col-sm-9 col-xs-12">
+											<select size="10" id="route" required="required" v-model="record.route" class="form-control">
+												<option value="0">Seleccione una opcion</option>
+												<option v-for="(option, i_option) in options.photographic_routes" :value="option.id">
+													{{ option.name }} {{ option.lot_name }}
+												</option>
+											</select>
+										</div>
+									</div>
+								</div>
 								<div class="col-md-6 col-xs-12">
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12" for="group">Cuadrilla<span class="required">*</span></label>
@@ -260,9 +120,23 @@
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">Tipo de reporte <span class="required">*</span></label>
 										<div class="col-md-9 col-sm-9 col-xs-12">
-											Antes: <input v-model="record.type" type="radio" name="type" value="A" /> 
-											Despues: <input v-model="record.type" type="radio" name="type" value="D" />
-											Otro: <input v-model="record.type" type="radio" name="type" value="O" />
+											<div class="col-xs-6">
+												<div class="col-xs-4 text-right">
+													Antes:
+												</div>
+												<div class="col-xs-8">
+													<input v-model="record.type" type="radio" name="type" value="A" /> 
+												</div>
+											</div>
+											<div class="col-xs-6">
+												<div class="col-xs-4">
+													Despues:
+												</div>
+												<div class="col-xs-8">
+													<input v-model="record.type" type="radio" name="type" value="D" /> 
+												</div>
+											</div>
+											<!-- // Otro: <input v-model="record.type" type="radio" name="type" value="O" /> -->
 										</div>
 									</div>
 								</div>
@@ -292,61 +166,14 @@
 							<button v-if="enabledUpd !== true" @click="validateForm" type="button" class="btn btn-success">Continuar</button>
 							
 							<div class="col-sm-12 col-xs-12">
+								{{ _route_name }}
+							</div>
+							<div class="col-sm-12 col-xs-12">
 								{{ record }}
 							</div>
 							<div class="col-sm-12 col-xs-12">
 								{{ returnFolderCURL }}
 							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
-
-<template id="create-route">
-	<div>
-		<div class="row">
-			<div class="col-md-12 col-sm-12 col-xs-12">
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>Crear Lote</h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<li>
-								<router-link tag="a" :to="{ name: 'list-routes' }" class="close-link">
-									<i class="fa fa-close"></i>
-								</router-link>
-							</li>
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-					
-					<form action="javascript:false" v-on:submit="createReoute" method="POST" class="x_content">
-						<div class="row">
-							<template v-if="error.error == true">
-								<div class="alert alert-danger alert-dismissible fade in" role="alert">
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-										<span aria-hidden="true">×</span>
-									</button>
-									<strong>Error: </strong> 
-									{{ error.message }}
-								</div>
-							</template>
-							
-							<div class="col-md-6 col-xs-6">
-								<br>
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">Nombre / Microruta <span class="required">*</span></label>
-									<div class="col-md-9 col-sm-9 col-xs-12">
-										<input v-model="record.name" type="text" required="required" class="form-control">
-									</div>
-								</div>
-							</div>
-								
-						</div>
-						<div class="modal-footer">
-							<button type="submit" class="btn btn-success">Continuar</button>
 						</div>
 					</form>
 				</div>
@@ -373,66 +200,6 @@ function FormException(error, aviso){
 	this.message = aviso;
 };
 
-var CreateRoute = Vue.extend({
-	template: '#create-route',
-	data(){
-		return {
-			id: 0,
-			record: {
-				"name": "",
-			},
-			error: {
-				error: false,
-				message: "",
-			},
-		};
-	},
-	mounted() {
-		var self = this;
-		window.scrollTo(0, 0);
-		
-	},
-	methods: {
-		createReoute(){
-			var self = this;
-			if(self.record.name.length > 3){
-				api.post('/records/photographic_routes', self.record).then(function(f){
-					console.log(f);
-					if(f.status == 200 && f.data > 0){
-						self.record.name = '';
-						bootbox.confirm({
-							title: "Éxito!",
-							message: "El lote se creo correctamente, desea agregar otro?.",
-							buttons: {
-								cancel: {
-									label: '<i class="fa fa-times"></i> NO'
-								},
-								confirm: {
-									label: '<i class="fa fa-check"></i> SI'
-								}
-							},
-							callback: function (result) {
-								if(result !== true){
-									self.$router.push({
-										name:'list-routes'
-									});
-								}
-							}
-						});
-					}
-				})
-				.catch(function(e){
-					console.log(e.response);
-					bootbox.alert({
-						message: 'Hubo un error subiendo el archivo!',
-						size: 'small'
-					});
-				});
-			}
-		},
-	}
-});
-
 var Create = Vue.extend({
 	template: '#create',
 	data(){
@@ -441,12 +208,13 @@ var Create = Vue.extend({
 			file: '',
 			files: [],
 			options: {
+				photographic_routes: [],
 				photographic_periods: [],
 				photographic_groups: [],
 			},
 			id: 0,
 			record: {
-				"route": this.$route.params.route_id,
+				"route": 0,
 				"year": moment().format('Y'),
 				"group": 0,
 				"period": 0,
@@ -461,6 +229,7 @@ var Create = Vue.extend({
 			countUps: 0,
 			countUp: 0,
 			finishUp: false,
+			watchID: null,
 		};
 	},
 	mounted() {
@@ -522,6 +291,9 @@ var Create = Vue.extend({
 			});
 			
 		});
+		self.startWatch();
+		self.startWatch();
+		// self.showPosition();
 	},
 	computed: {
 		returnFolderCURL(){
@@ -529,18 +301,144 @@ var Create = Vue.extend({
 			// var urlThis = 'https://micuenta.monteverdeltda.com/index.php?action=UploadFileReports';
 			var urlThis = '/index.php?action=UploadFileReports';
 			
-			if(self.enabledUpd === true){
-				route_name = self.$route.params.route_name;
+			
+			try{
+				route_name = self._route_name;
 				group_name = self.options.photographic_groups.find(x => x.id === self.record.group).name;
 				period_name = self.options.photographic_periods.find(x => x.id === self.record.period).name;
 				urlThis += '&year=' + self.record.year + '&route_name=' + encodeURI(btoa(route_name)) + '&group_name=' + encodeURI(btoa(group_name)) + '&period_name=' + encodeURI(btoa(period_name));
+			}catch(e){
+				urlThis = '/index.php?action=UploadFileReports';
 			}
 			
 			return urlThis;
 				
 		},
+		_route_name(){
+			var self = this;			
+			try {
+				console.log(self.options.photographic_routes.find(x => x.id === self.record.route));
+				return self.options.photographic_routes.find(x => x.id === self.record.route).name;
+			} catch(e){
+				return "MicrorutaInvalida";
+			}
+		},
+		_route_lot(){
+			var self = this;			
+			try {
+				return self.options.photographic_routes.find(x => x.id === self.record.route).lot.name;
+			} catch(e){
+				return "LoteInvalido";
+			}
+		},
 	},
 	methods: {
+		showPosition() {
+			var self = this;
+			var result = document.getElementById("result");
+			var toggleWatchBtn = document.getElementById("toggleWatchBtn");
+			if(navigator.geolocation) {
+				self.watchID = navigator.geolocation.watchPosition(self.successCallback);
+			} else {
+				alert("Sorry, your browser does not support HTML5 geolocation.");
+			}
+		},
+		successCallback(position) {
+			var self = this;
+			var result = document.getElementById("result");
+			var toggleWatchBtn = document.getElementById("toggleWatchBtn");
+			toggleWatchBtn.innerHTML = "Stop Watching";
+			
+			// Check position has been changed or not before doing anything
+			if(prevLat != position.coords.latitude || prevLong != position.coords.longitude) {
+				
+				// Set previous location
+				var prevLat = position.coords.latitude;
+				var prevLong = position.coords.longitude;
+				
+				// Get current position
+				var positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + ")";
+				document.getElementById("result").innerHTML = positionInfo;
+				
+			}	
+		},
+		startWatch() {
+			var self = this;
+			var result = document.getElementById("result");
+			var toggleWatchBtn = document.getElementById("toggleWatchBtn");
+			
+			toggleWatchBtn.onclick = function() {
+				if(self.watchID) {
+					toggleWatchBtn.innerHTML = "Start Watching";
+					navigator.geolocation.clearWatch(self.watchID);
+					self.watchID = false;
+				} else {
+					toggleWatchBtn.innerHTML = "Aquiring Geo Location...";
+					self.showPosition();
+				}
+			}
+		},
+		
+		
+		detectLocation() {
+			var self = this;
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + ")";
+					document.getElementById("geolocation-test").innerHTML = positionInfo;
+				});
+			} else {
+				alert("Sorry, your browser does not support HTML5 geolocation.");
+			}
+		},
+		detectLocation2(){
+			var self = this;
+			
+			if (navigator.geolocation){
+				console.log('// Código de la aplicación');
+			} else {
+				console.log('// No hay soporte para la geolocalización: podemos desistir o utilizar algún método alternativo');
+			}
+			
+			(function(){
+				var content = document.getElementById("geolocation-test");
+
+				if (navigator.geolocation)
+				{
+					navigator.geolocation.getCurrentPosition(function(objPosition)
+					{
+						var lon = objPosition.coords.longitude;
+						var lat = objPosition.coords.latitude;
+
+						content.innerHTML = "<p><strong>Latitud:</strong> " + lat + "</p><p><strong>Longitud:</strong> " + lon + "</p>";
+
+					}, function(objPositionError)
+					{
+						switch (objPositionError.code)
+						{
+							case objPositionError.PERMISSION_DENIED:
+								content.innerHTML = "No se ha permitido el acceso a la posición del usuario.";
+							break;
+							case objPositionError.POSITION_UNAVAILABLE:
+								content.innerHTML = "No se ha podido acceder a la información de su posición.";
+							break;
+							case objPositionError.TIMEOUT:
+								content.innerHTML = "El servicio ha tardado demasiado tiempo en responder.";
+							break;
+							default:
+								content.innerHTML = "Error desconocido.";
+						}
+					}, {
+						maximumAge: 75000,
+						timeout: 15000
+					});
+				}
+				else
+				{
+					content.innerHTML = "Su navegador no soporta la API de geolocalización.";
+				}
+			})();
+		},
 		loadOptions(){
 			var self = this;
 			self.$root.loadAPI_List('photographic_periods', {}, function(e){
@@ -548,6 +446,13 @@ var Create = Vue.extend({
 			});
 			self.$root.loadAPI_List('photographic_groups', {}, function(e){
 				self.options.photographic_groups = e;
+			});
+			self.$root.loadAPI_List('photographic_routes', {
+				join: [
+					'lots'
+				]
+			}, function(e){
+				self.options.photographic_routes = e;
 			});
 		},
 		validateForm(){			
@@ -568,6 +473,19 @@ var Create = Vue.extend({
 				self.enabledUpd = false;
 			}
 		},
+		newForm(){
+			var self = this;
+			self.enabledUpd = false;
+			self.record = {
+				"route": 0,
+				"year": moment().format('Y'),
+				"group": 0,
+				"period": 0,
+				"media": 0,
+				"type": 0,
+				"created_by": <?= $this->user->id; ?>,
+			};
+		},
 		submitFile(){
 			var self = this;
 			self.files.forEach(function(fileInput){
@@ -579,11 +497,12 @@ var Create = Vue.extend({
 				
 				/* Make the request to the POST /single-file URL */
 				var urlThis = '/index.php?action=UploadFileReports';
-				route_name = self.$route.params.route_name;
+				route_name = self._route_name;
+				lot_name = self._route_lot;
 				group_name = self.options.photographic_groups.find(x => x.id === self.record.group).name;
 				period_name = self.options.photographic_periods.find(x => x.id === self.record.period).name;
 				
-				urlThis += '&type=' + self.record.type + '&year=' + self.record.year + '&route_name=' + encodeURI(btoa(route_name)) + '&group_name=' + encodeURI(btoa(group_name)) + '&period_name=' + encodeURI(btoa(period_name));
+				urlThis += '&type=' + self.record.type + '&year=' + self.record.year + '&lot_name=' + encodeURI(btoa(lot_name)) + '&route_name=' + encodeURI(btoa(route_name)) + '&group_name=' + encodeURI(btoa(group_name)) + '&period_name=' + encodeURI(btoa(period_name));
 				
 				axios.post(urlThis, formData, {
 					headers: { 
@@ -610,7 +529,7 @@ var Create = Vue.extend({
 											message: "La imagen se subio correctamente, desea agregar otra imagen?.",
 											buttons: {
 												cancel: {
-													label: '<i class="fa fa-times"></i> Volver a los lotes'
+													label: '<i class="fa fa-times"></i> Otro reporte'
 												},
 												confirm: {
 													label: '<i class="fa fa-check"></i> Subir otra'
@@ -618,9 +537,7 @@ var Create = Vue.extend({
 											},
 											callback: function (result) {
 												if(result !== true){
-													self.$router.push({
-														name:'list-routes'
-													});
+													self.newForm();
 												}
 											}
 										});
@@ -666,208 +583,10 @@ var Create = Vue.extend({
 	}
 });
 
-var List_Routes = Vue.extend({
-	template: '#list-routes',
-	data(){
-		return {
-			loading: true,
-			temp_filters: [],
-			options: {
-				filters: [],
-			},
-			records: [],
-			total: 0,
-			limit: 20,
-			page: 1,
-			search: {
-				loading: false,
-				text: '',				
-			}
-		};
-	},
-	mounted: function () {
-		var self = this;
-		self.loadFilters();
-	},
-	computed: {
-	},
-	methods: {
-		loadFilters(){
-			var self = this;
-			self.load();
-		},
-		load(){
-			var self = this;
-			self.loading = true;
-			self.records = [];
-			self.total = 0;
-			window.scrollTo(0, 0);
-			
-			api.get('/records/photographic_routes', {
-				params: {
-					order: "id",
-					page: self.page + "," + self.limit
-				}
-			}).then(function (response) {
-				console.log('response', response);
-				if(response.data.records && response.data.records.length > 0){
-					self.total = response.data.results;
-					self.records = response.data.records;
-				}
-				self.loading = false;
-			}).catch(function (error) {
-				console.log('error list-routes::methods::load()');
-				console.log(error.response);
-				self.loading = false;
-			});
-		},
-		searchText(){
-			var self = this;
-			if(self.search.text.length >= 2){
-				if(self.search.loading == false){
-					self.search.loading = true;
-					self.records = [];
-					api.get('/records/photographic_routes', {
-						params: {
-							filter: [
-								'name,cs,' + self.search.text
-							],
-							order: "id",
-							page: self.page + "," + self.limit
-						}
-					}).then(function (response) {
-						self.search.loading = false;
-						if(response.data.records && response.data.records.length > 0){
-							self.total = response.data.results;
-							self.records = response.data.records;
-						}
-					}).catch(function (error) {
-						console.log('error list-routes::methods::load()');
-						console.log(error.response);
-						self.search.loading = false;
-					});
-				} else {
-					alert("Espera a que se complete la busqueda anterior.");
-					
-				}
-			} else {
-				if(self.search.text.length >= 0 || self.search.text == "")
-					self.load();
-			}
-		},
-	}
-});
-
-var List_Reports = Vue.extend({
-	template: '#list-reports',
-	data(){
-		return {
-			loading: true,
-			temp_filters: [],
-			options: {
-				filters: [],
-			},
-			records: [],
-			total: 0,
-			limit: 20,
-			page: 1,
-			search: {
-				loading: false,
-				text: '',				
-			},
-			"route_id": this.$route.params.route_id,
-			"route_name": this.$route.params.route_name,
-		};
-	},
-	created: function () {
-	},
-	mounted: function () {
-		var self = this;
-		self.loadFilters();
-	},
-	computed: {
-	},
-	methods: {
-		loadFilters(){
-			var self = this;
-			self.load();
-		},
-		load(){
-			var self = this;
-			self.loading = true;
-			self.records = [];
-			self.total = 0;
-			window.scrollTo(0, 0);
-			
-			api.get('/records/photographic_routes', {
-				params: {
-					filter: [
-						'id,eq,' + self.route_id
-					],
-					join: [
-						'photographic_files',
-					],
-					order: "id",
-					page: self.page + "," + self.limit
-				}
-			}).then(function (response) {
-				console.log('response', response);
-				if(response.data.records && response.data.records.length > 0){
-					self.total = response.data.results;
-					self.records = response.data.records;
-					
-				}
-				self.loading = false;
-			}).catch(function (error) {
-				console.log('error list-routes::methods::load()');
-				console.log(error.response);
-				self.loading = false;
-			});
-		},
-		searchText(){
-			var self = this;
-			if(self.search.text.length >= 2){
-				if(self.search.loading == false){
-					self.search.loading = true;
-					self.records = [];
-					api.get('/records/photographic_routes', {
-						params: {
-							filter: [
-								'name,cs,' + self.search.text
-							],
-							order: "id",
-							page: self.page + "," + self.limit
-						}
-					}).then(function (response) {
-						self.search.loading = false;
-						if(response.data.records && response.data.records.length > 0){
-							self.total = response.data.results;
-							self.records = response.data.records;
-						}
-					}).catch(function (error) {
-						console.log('error list-routes::methods::load()');
-						console.log(error.response);
-						self.search.loading = false;
-					});
-				} else {
-					alert("Espera a que se complete la busqueda anterior.");
-					
-				}
-			} else {
-				if(self.search.text.length >= 0 || self.search.text == "")
-					self.load();
-			}
-		},
-	}
-});
-
 var router = new VueRouter({
 	linkActiveClass: 'active',
 	routes:[
-		{ path: '/', component: List_Routes, name: 'list-routes' },
-		{ path: '/:route_id-:route_name', component: List_Reports, name: 'list-reports' },
-		{ path: '/:route_id-:route_name/create', component: Create, name: 'create-report' },
-		{ path: '/create', component: CreateRoute, name: 'create-route' },
+		{ path: '/', component: Create, name: 'create-report' },
 	]
 });
 

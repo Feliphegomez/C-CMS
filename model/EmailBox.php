@@ -27,7 +27,7 @@ class EmailBox extends ModeloBase{
 	public function getAllPendingSync(){
 		$items = parent::getAll();
 		
-		$xmasDay = new DateTime('-1 minutes');
+		$xmasDay = new DateTime('-15 seconds');
 		$boxes_sync = [];
 		foreach($items as $box){
 			if($box->actived == 1){

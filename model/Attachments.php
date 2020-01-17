@@ -35,7 +35,8 @@ class Attachments extends EntidadBase {
 				if(isset($post[$k])){
 					$this->set($k, $post[$k]);
 					$arrayInsert[$k] = $post[$k];
-					$keys1[] = ":{$k}";
+					#$keys1[] = ":{$k}";
+					$keys1[] = "?";
 				}
 			}
 			$exist = parent::getBy('path_short', $post['path_short']);
@@ -48,12 +49,11 @@ class Attachments extends EntidadBase {
 				$query = $this->db()->prepare($sql);
 				
 				try {
-					$success = $query->execute($post);
+					$success = $query->execute(array_values($post));
 					return $this->db()->lastInsertId();
 				}catch (Exception $e){
 					//throw $e;
-					echo "\n {$sql} \n";
-					echo $e->getMessage();
+					echo "{$e->getMessage()}\n {$sql} \n";
 					return 0;
 				}
 				
