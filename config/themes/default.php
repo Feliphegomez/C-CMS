@@ -123,7 +123,8 @@ return [
                 ],*/
                 [
                     'type' => 'stylesheet',
-                    'file' => '/build/css/custom.min.css', // Custom Theme Style
+                    # 'file' => '/build/css/custom.min.css', // Custom Theme Style
+                    'file' => '/build/css/custom.css', // Custom Theme Style
                 ],
                 [
                     'type' => 'stylesheet',
@@ -154,6 +155,19 @@ return [
                 [
                     'type' => 'script',
                     'file' => '/vendors/bootstrap/dist/js/bootstrap.min.js', // Bootstrap
+                ],
+                [
+                    'type' => 'script',
+                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js', // End fullcalendar
+                ],
+                [
+                    'type' => 'script',
+                    //'file' => '/vendors/fullcalendar/3.1.0/dist/lang-all.js', // fullcalendar
+                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js', // bootbox
+                ],
+                [
+                    'type' => 'script',
+                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js', // End fullcalendar
                 ],
                 [
                     'type' => 'script',
@@ -447,6 +461,11 @@ return [
                     'type' => 'script',
                     'file' => '/vendors/fullcalendar/3.1.0/dist/fullcalendar.min.js', // End fullcalendar
                 ],
+				/*
+                [
+                    'type' => 'script',
+                    'file' => '/vendors/fullcalendar/3.1.0/dist/locale/es.js', // fullcalendar
+                ],*/
                 [
                     'type' => 'script',
                     'file' => '/vendors/bootbox/bootbox.all.min.js', // bootbox

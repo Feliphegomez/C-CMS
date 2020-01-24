@@ -93,7 +93,7 @@
 <!-- /compose -->
 
 
-
+<?php /*
 <script>
 const apiMailNavbar = axios.create({
   baseURL: '/',
@@ -166,4 +166,4 @@ appMailNavbar = new Vue({
 }).$mount('.menu-mails-box');
 
 
-</script>
+</script>-*/

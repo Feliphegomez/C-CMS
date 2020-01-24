@@ -1180,45 +1180,6 @@ class SiteController extends ControladorBase{
 		return json_encode($returning);
 	}
 	
-	// Reporte fotográfico
-	public function actionPhotographic_report(){
-		$error = null;
-		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
-        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
-		$this->render("photographic_report", [
-            "title" => "Reporte fotográfico",
-            "subtitle" => "",
-        ]);
-	}
-	
-	// Reporte fotográfico - Nuevo
-	public function actionPhotographic_report2(){
-		$error = null;
-		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
-        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
-		$this->render("photographic_report2", [
-            "title" => "Reporte fotográfico",
-            "subtitle" => "",
-        ]);
-	}
-	
-	// Reporte fotográfico - Nuevo
-	public function actionPhotographic_report3(){
-		$error = null;
-		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
-        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
-		$this->render("photographic_report3", [
-            "title" => "Informe Registro Fotografico",
-            "subtitle" => "",
-        ]);
-	}
-	
 	// 
 	public function actionTestAD(){
 		$error = null;
@@ -1328,7 +1289,7 @@ print_r($files);
 				"{$year}",
 				"{$period_name}",
 				$route_name,
-				$lot_name,
+				// $lot_name,
 				$typeText
 			];
 			$targetPath = PUBLIC_PATH . "/" . implode('/', $folderBase)."/";
@@ -1469,7 +1430,7 @@ print_r($files);
 		$error = null;
 		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
-        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if (($this->checkPermission('reports:photographic:back') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
 		$this->render("photographic_pending", [
             "title" => "Informe Registro Fotografico",
@@ -1477,4 +1438,139 @@ print_r($files);
         ]);
 	}
 	
+	function actionMy_Webmail(){
+        if ($this->isGuest || ($this->checkPermission('my:webmail') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		if (!isset($_GET['_box']) || (int) $_GET['_box'] <= 0) { header('HTTP/1.0 404 Forbidden'); exit(); }
+		$mailBox = new EmailBox($this->adapter);
+		$mailBox->getById($_GET['_box']);
+		$user = $mailBox->user;
+		$pass = $mailBox->pass;
+		$urlOut = "https://micuenta.monteverdeltda.com/webmail/?_task=logout_mvt";
+		$url = "https://micuenta.monteverdeltda.com/webmail/?postlogin&_user={$user}&_pass={$pass}&_action=login";
+		
+		$this->render("my_webmail", [
+            "title" => "Correo Corporativo Monteverde LTDA",
+            "subtitle" => "",
+            "url" => $url,
+        ]);
+	}
+	
+	// Reporte fotográfico
+	public function actionPhotographic_report(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:view') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_report", [
+            "title" => "Reporte fotográfico",
+            "subtitle" => "",
+        ]);
+	}
+	
+	// Reporte fotográfico - Nuevo
+	public function actionPhotographic_creator(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:creator') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_creator_report", [
+            "title" => "Reporte fotográfico",
+            "subtitle" => "",
+        ]);
+	}
+	
+	// Reporte fotográfico - Nuevo
+	public function actionPhotographic_client(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:client') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_report3", [
+            "title" => "Informe Registro Fotografico",
+            "subtitle" => "",
+        ]);
+	}
+	
+	function actionMy_reports_approved(){
+        if ($this->isGuest || ($this->checkPermission('reports:photographic:me:approvals') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_me_approved", [
+            "title" => "Informe Registro Fotografico - Mi reportes aprobados",
+            "subtitle" => "",
+        ]);
+	}
+	
+	function actionMy_reports_declined(){
+        if ($this->isGuest || ($this->checkPermission('reports:photographic:me:declined') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_me_declined", [
+            "title" => "Informe Registro Fotografico - Mi reportes rechazados",
+            "subtitle" => "",
+        ]);
+	}
+	
+	function actionMy_reports_pending(){
+        if ($this->isGuest || ($this->checkPermission('reports:photographic:me:pending') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_me_pending", [
+            "title" => "Informe Registro Fotografico - Mi reportes pendientes",
+            "subtitle" => "",
+        ]);
+	}
+	
+	function actionMy_reports(){
+        if ($this->isGuest || ($this->checkPermission('reports:photographic:me:reports') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("photographic_me_reports", [
+            "title" => "Informe Registro Fotografico - Mi reportes",
+            "subtitle" => "",
+        ]);
+	}
+
+    function actionSchedule(){
+        if ($this->isGuest || ($this->checkPermission('schedule:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        // $this->render("schedule_emvarias", [
+        $this->render("schedule", [
+            "title" => "Revision General",
+            "subtitle" => "Listado General",
+        ]);
+    }
+	
+    function actionLots(){
+        if ($this->isGuest || ($this->checkPermission('lots:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        $this->render("lots", [
+            "title" => "Lotes",
+            "subtitle" => "Listado generado",
+        ]);
+    }
+	
+    function actionMicroroutes(){
+        if ($this->isGuest || ($this->checkPermission('microrutes:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        $this->render("microroutes", [
+            "title" => "Microrutas",
+            "subtitle" => "Listado General",
+        ]);
+    }
+	
+    function actionSchedule_Programming(){
+        if ($this->isGuest || ($this->checkPermission('schedule:programming:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("schedule_programming", [
+            "title" => "Programacion",
+            "subtitle" => "Crear",
+        ]);
+    }
+	
+    function actionProgramming(){
+        if ($this->isGuest || ($this->checkPermission('schedule:programming') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("emvarias_programming", [
+            "title" => "Programacion",
+            "subtitle" => "Crear",
+        ]);
+    }
 }

@@ -12,7 +12,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta charset="<?= $this->getCharset(); ?>">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- // <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         <title><?= $title; ?></title>
         <?= $this->head(); ?>
 		<script>
@@ -29,6 +30,14 @@
 			  return response;
 			});*/
 		</script>
+		<script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+		<link href='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />		
+		<style>
+		.mapboxgl-popup {
+		max-width: 400px;
+		font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+		}
+		</style>
     </head>
     <body class="nav-md">
         <div class="container body">
@@ -105,13 +114,19 @@
 								foreach($mailBoxes as $box){
 									$box = is_array($box) ? (object) $box : $box;
 									
-									$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/folder/inbox/1"]], 
-										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label
+									$boxes_html[] = FelipheGomez\Url::a(['site/my_webmail', ["_box" => "{$box->id}"]], 
+										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope-o"]) . $box->label
 									, ['sub_menu'], ["title" => $box->user]);
+									
+									
+									
+									/*$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/folder/inbox/1"]], 
+										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label
+									, ['sub_menu'], ["title" => $box->user]);*/
 								}
 							}
 							// Mis correos
-                            $menu_section_emails = ($this->checkPermission('my:emails') == true) ? (PHPStrap\Util\Html::tag('div', 
+                            $menu_section_emails = ($this->checkPermission('my:webmail') == true || $this->checkPermission('my:emails') == true) ? (PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('h3', 'Correo Electronico')
                                 . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
                                 . PHPStrap\Util\Html::ul([($this->checkPermission('system:emails:manage') == true) ? 
@@ -136,10 +151,11 @@
 								. PHPStrap\Util\Html::clearfix(), 
 							['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
 							
+							
                         ?>
                         <!-- /sidebar menu -->
                         <!-- /menu footer buttons -->
-                        <?= PHPStrap\Util\Html::tag('div', 
+                        <?php /* PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('span', "", ['glyphicon glyphicon-cog'], ['aria-hidden' => 'true']), [], [
                                     'data-toggle' => 'tooltip'
                                     , 'data-placement' => 'top'
@@ -162,6 +178,7 @@
                                     , 'href' => 'login.html'
                                 ])
                             , ["sidebar-footer hidden-small"]);
+                            */
                         ?>
                         <!-- /menu footer buttons -->
                     </div>
@@ -170,7 +187,6 @@
                 <div class="top_nav">
                     <div class="nav_menu">
 						<?php 
-							
 							$html_mail = '
 							<template v-if="mails.length > 0">
 								<li @click="openUrlMailPending(mail.url)" v-for="(mail, mails_index) in mails">
@@ -192,11 +208,8 @@
 									</a>
 								</li>
 							</template>';
-						?>
-						
-						
-                        <?php 
-							$inboxSuccess = ($this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
+							
+							$inboxSuccess = ($this->checkPermission('my:webmail') == true || $this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
 								FelipheGomez\Url::a(
 										'javascript:void(0);'
 										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', "", ['total-mails-count badge bg-green'])
@@ -205,7 +218,18 @@
 									)
 								. PHPStrap\Util\Html::tag('ul', $html_mail, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-mails', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;' ])
 							, ['dropdown menu-mails-box'], ['@click' => 'load()', 'role' => 'presentation']) : "";
-								
+							
+							
+							$iconBarTop_reports_declines = ($this->checkPermission('my:webmail') == true || $this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
+								FelipheGomez\Url::a(
+										'javascript:void(0);'
+										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', "", ['total-mails-count badge bg-green'])
+										, ['dropdown-toggle info-number']
+										, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+									)
+								. PHPStrap\Util\Html::tag('ul', $html_mail, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-mails', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;' ])
+							, ['dropdown menu-mails-box'], ['@click' => 'load()', 'role' => 'presentation']) : "";
+
 								echo PHPStrap\Util\Html::tag('nav', 
 									$navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
 									. PHPStrap\Util\Html::tag('ul', 
@@ -260,7 +284,7 @@
 										, ['dropdown'], ['role' => 'presentation'])
 										*/
 										// Icono 2 - Mails
-										. $inboxSuccess
+										// . $inboxSuccess
 										
 									, ['nav navbar-nav navbar-right mail-navbar'])
 								);

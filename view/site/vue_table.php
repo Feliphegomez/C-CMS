@@ -498,9 +498,9 @@ var List = Vue.extend({
 		if(subject == null || subject == undefined){ return null; };
 		if(record == null || record == undefined){ return null; };
       var properties = this.getProperties('read', subject, this.definition);
-	  console.log('record', record);
+	  //console.log('record', record);
       var displayColumn = this.getDisplayColumn(Object.keys(properties));
-	  console.log('displayColumn', displayColumn);
+	  //console.log('displayColumn', displayColumn);
 	  return (record !== null) ? record[displayColumn] : (displayColumn !== null) ? displayColumn : null;
     },
     referenceId(subject, record) {

@@ -1,5 +1,5 @@
-<script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" />
+<!-- // <script src="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" rel="stylesheet" /> -->
 <!-- // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.css" /> -->
 <!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script> -->
 <style>
@@ -26,217 +26,6 @@
 	<div class="clearfix"></div>
 </div>
 
-<template id="list-periods">
-	<div>
-		<div class="row">
-			<div class="col-md-12 col-sm-12 col-xs-12">
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>Periodo <small></small></h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<!-- //
-							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#">Settings 1</a></li>
-									<li><a href="#">Settings 2</a></li>
-								</ul>
-							</li>
-							<li><a class="close-link"><i class="fa fa-close"></i></a></li>
-							-->
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-					<form action="javascript: false;" method="POST" v-on:submit="searchRoutes">
-						<div class="x_content">
-							<div class="col-md-6 col-xs-6">
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">Año <span class="required">*</span></label>
-									<div class="col-md-9 col-sm-9 col-xs-12">
-										<input v-model="next.year" type="number" min="2019" id="year" required="required" class="form-control">
-									</div>
-								</div>
-							</div>
-							<div class="col-md-6 col-xs-6">
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" for="period">Periodo<span class="required">*</span></label>
-									<div class="col-md-9 col-sm-9 col-xs-12">
-										<select size="1" id="period" required="required" v-model="next.period" class="form-control">
-											<option value="0">Seleccione una opcion</option>
-											<option v-for="(option, i_option) in options.photographic_periods" :value="option.id">{{ option.name }}</option>
-										</select>
-									</div>
-								</div><div class="clearfix"></div>
-							</div>
-							<div class="x_footer">
-								<div class="col-xs-12 pull-right">
-									<div class="input-group-btn">
-										<button class="btn btn-primary" type="submit">
-										<span class="glyphicon glyphicon-search"></span>
-										</button>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-						</div>
-					</form>
-				</div>
-				
-				<template v-for="(route, index) in records">
-					<div class="x_panel">
-						<div class="x_title">
-							<h2>
-								<?= isset($title) ? $title : ""; ?>  {{ route.period.name }} {{ next.year }} - {{ route.name }}
-								<!-- // <router-link  :to="{ name: 'list-reports', params: { route_id: route.id, route_name: route.name } }"> --
-									{{ route.id }} - 
-								<!-- // </router-link> --> <small></small>
-							</h2>
-							<div class="clearfix"></div>
-						</div>
-						<div class="x_content">
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Periodo</th>
-										<th width="20%">Antes/Despues/Ambas</th>
-										<th width="20%">Cuadrilla/Grupo</th>
-										<th width="15%">Total</th>
-									</tr>
-								</thead>
-								<tbody>
-									<template v-for="(group, group_i) in route.groups">
-										<tr>
-											<td>{{ route.period.name }} {{ next.year }}</td>
-											<td>Antes</td>
-											<td>{{ group.name }}</td>
-											<td>{{ group.pictures['A'].length }}</td>
-										</tr>
-										<tr>
-											<td>{{ route.period.name }} {{ next.year }}</td>
-											<td>Despues</td>
-											<td>{{ group.name }}</td>
-											<td>{{ group.pictures['D'].length }}</td>
-										</tr>
-										<tr>
-											<td>{{ route.period.name }} {{ next.year }}</td>
-											<td>Ambas</td>
-											<td>{{ group.name }}</td>
-											<td>{{ (group.pictures['A'].length >= 0 && group.pictures['D'].length >= 0) ? (group.pictures['A'].length + group.pictures['D'].length) : 0 }}</td>
-										</tr>
-										<tr>
-											<td> --- </td>
-											<td> --- </td>
-											<td> --- </td>
-											<td> --- </td>
-										</tr>
-									</template>
-								</tbody>
-							</table>
-						</div>
-					</div>
-					<div class="x_panel">
-						
-						<div class="x_content" v-for="(group, group_i) in route.groups">
-							<div class="x_title">
-								<h2>{{ group.id }} - {{ group.name }} - <?= isset($title) ? $title : ""; ?>  {{ route.period.name }} - {{ route.name }}<small></small></h2>
-								<div class="clearfix"></div>
-							</div>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Periodo</th>
-										<th width="20%">Antes/Despues/Ambas</th>
-										<th width="20%">Cuadrilla/Grupo</th>
-										<th width="15%">Total</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>{{ route.period.name }} {{ next.year }}</td>
-										<td>Antes</td>
-										<td>{{ group.name }}</td>
-										<td>{{ group.pictures['A'].length }}</td>
-									</tr>
-									<tr>
-										<td>{{ route.period.name }} {{ next.year }}</td>
-										<td>Despues</td>
-										<td>{{ group.name }}</td>
-										<td>{{ group.pictures['D'].length }}</td>
-									</tr>
-									<tr>
-										<td>{{ route.period.name }} {{ next.year }}</td>
-										<td>Ambas</td>
-										<td>{{ group.name }}</td>
-										<td>{{ (group.pictures['A'].length >= 0 && group.pictures['D'].length >= 0) ? (group.pictures['A'].length + group.pictures['D'].length) : 0 }}</td>
-									</tr>
-								</tbody>
-							</table>
-							
-							<div class="row">
-								<div class="col-xs-6">
-									<div class="x_title">
-										<h2>Antes: <small></small></h2>
-										<div class="clearfix"></div>
-									</div>
-									<div class="row">
-										<div class="col-md-55" v-for="(media, media_i) in group.pictures['A']">
-											<div class="thumbnail">
-												<div class="image view view-first">
-													<img style="width: 100%; display: block;" :src="media.path_short" alt="image" />
-													<div class="mask">
-														<p>ID: {{ media.id }}</p>
-														<div class="tools tools-bottom">
-															<a href="#"><i class="fa fa-link"></i></a>
-															<a href="#"><i class="fa fa-pencil"></i></a>
-															<a href="#"><i class="fa fa-times"></i></a>
-														</div>
-													</div>
-												</div>
-												<div class="caption">
-													<p>{{ media.name }}</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-xs-6">
-									<div class="x_title">
-										<h2>Despues: <small></small></h2>
-										<div class="clearfix"></div>
-									</div>
-									<div class="row">
-										<div class="col-md-55" v-for="(media, media_i) in group.pictures['D']">
-											<div class="thumbnail">
-												<div class="image view view-first">
-													<img style="width: 100%; display: block;" :src="media.path_short" alt="image" />
-													<div class="mask">
-														<p>ID: {{ media.id }}</p>
-														<div class="tools tools-bottom">
-															<a href="#"><i class="fa fa-link"></i></a>
-															<a href="#"><i class="fa fa-pencil"></i></a>
-															<a href="#"><i class="fa fa-times"></i></a>
-														</div>
-													</div>
-												</div>
-												<div class="caption">
-													<p>{{ media.name }}</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-					</div>
-				</template>
-			</div>
-		</div>
-		<div class="clearfix"></div>
-	</div>
-</template>
-
 <template id="list-pending">
 	<div>
 		<div class="row">
@@ -253,96 +42,173 @@
 					</div>
 					<div class="x_content">
 						<div class="row">
-							<div class="col-md-55" v-for="(record, record_i) in records">
+							<div class="col-xs-12">
+								<div class="table-responsive">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>ID. Reporte</th>
+												<th>Microruta</th>
+												<th>Área</th>
+												<th>Cuadrilla/Grupo</th>
+												<th>Observaciones</th>
+												<th>F. Reporte</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-for="(record, record_i) in records">
+												<td>{{ record.id }}</td>
+												<td>{{ record.route.name }}</td>
+												<td>{{ record.route.area_m2 }}</td>
+												<td>{{ record.group.name }}</td>
+												<td>{{ record.route.obs }}</td>
+												<td>{{ record.created }}</td>
+												<td><a @click="selected = record;loadGeometry" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-camera-retro"></i></a></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+								<div class="col-xs-12 col-sm-12">
+									<ul class="nav navbar-right panel_toolbox">
+										<li>
+											Viendo: {{ page }} / {{ parseInt(total/limit) }}
+											- 
+											{{ (page * limit) }} / Total: {{ total }}
+											 | 
+											Limite x Página: {{ limit }}
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+									<ul class="pagination pagination-split pull-right">
+										<li :class="(page == 1) ? 'active' : ''"><a @click="page=1;load();"> Inicio </a></li>
+										<template v-if="total > (limit*3) && parseInt(total/limit) > 1" v-for="npage in parseInt(total/limit)"><li :class="(npage == page) ? 'active' : ''" v-if="npage > 1 && npage < parseInt(total/limit)"><a @click="page=npage;load();"> {{npage}} </a></li></template>
+										<li v-if="total > (limit+1)" :class="(page == parseInt(total/limit)) ? 'active' : ''"><a @click="page=parseInt(total/limit);load();"> Fín </a></li>
+										<!-- // 
+										--->
+									</ul>
+								</div>
+								<div class="clearfix"></div>
+						</div>
+						<!-- //
+						<div class="row">
+							<div class="col-xs-4" v-for="(record, record_i) in records">
 								<div class="thumbnail">
 									<div class="image view view-first">
-										<img style="width: 100%; display: block;" :src="record.media.path_short" alt="image" />
+										<img class="img-responsive" :src="record.media.path_short" alt="image" style="height: auto;width: calc(85vw);" />
 										<div class="mask">
 											<p>ID: {{ record.id }}</p>
 											<div class="tools tools-bottom">
-												<a href="#"><i class="fa fa-link"></i></a>
-												<a href="#"><i class="fa fa-pencil"></i></a>
-												<a href="#"><i class="fa fa-times"></i></a>
-												<a @click="selected = record" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-info-circle"></i></a>
+												<a @click="selected = record;loadGeometry" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-info-circle"></i></a>
 											</div>
 										</div>
 									</div>
 									<div class="caption">
-										<p>{{ record }}</p>
+										<p>
+											<span title="Microruta">{{ record.route.name }}</span>
+											<br /><span title="Lote"><b>{{ record.route.lot.name }}</b></span>
+											- <span title="Lote"><b>{{ record.created }}</b></span>
+										</p>
 									</div>
 								</div>
 							</div>
 						</div>
+						-->
 						
 						  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog modal-md">
+							<div class="modal-dialog modal-lg">
 							  <div class="modal-content">
 
 								<div class="modal-header">
 								  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
 								  </button>
-								  <h4 class="modal-title" id="myModalLabel2">Información del Reporte</h4>
+								  <h4 class="modal-title" id="myModalLabel2">Contrato CW72436 - Informe Registro Fotografico</h4>
 								</div>
 								<div class="modal-body">
 									<h4></h4>
-									<table class="table bordered">
-										<tr>
-											<th>Microruta</th>
-											<td>{{ selected.route.name }}</td>
-											<th>Nombre del Lote</th>
-											<td>{{ selected.route.lot.name }}</td>
-										</tr>
-										<tr>
-											<th>Direccion del Lote</th>
-											<td>{{ selected.route.lot.address.minsize }}</td>
-											<th>Ubicacion</th>
-											<td>{{ selected.route.lot.geometry }}</td>
-										</tr>
-										<tr>
-											<th>Periodo</th>
-											<td>{{ selected.period.name }}</td>
-											<th>Año</th>
-											<td>{{ selected.year }}</td>
-										</tr>
-										<tr>
-											<th>Cuadrilla/Grupo</th>
-											<td>{{ selected.group.name }}</td>
-											<th>Reportado por</th>
-											<td>{{ selected.created_by.username }}</td>
-										</tr>
-										<tr>
-											<th>Tipo de Foto</th>
-											<td>{{ (selected.type == 'A') ? 'Antes' : (selected.type == 'B') ? 'B' : 'Desconocido' }}</td>
-											<th>Fecha y Hora</th>
-											<td>{{ selected.created }}</td>
-										</tr>
-										<tr>
-											<td colspan="4">
-												<img class="img-responsive" style="width: 100%; display: block;" :src="selected.media.path_short" alt="image" />
-											</td>
-										</tr>
-										<tr>
-											<td>
-											</td>
-											<td>
-											</td>
-											<td>
-											</td>
-											<td>
-												<a class="btn btn-default pull-right" :href="selected.media.path_short" target="_blank"><i class="fa fa-search-plus"></i></a>
-												<a class="btn btn-default pull-right" :href="selected.media.path_short" download><i class="fa fa-download" ></i></a>
-											</td>
-										</tr>
-									</table>
-									<p>
-										<div style="width:100%; height:500px" id="map"></div>
-									{{ loadGeometry }}
-									</p>
+									<div class="table-responsive">
+										<table class="table table-bordered">
+											<tr>
+												<th width="25%">Año</th>
+												<td width="25%">{{ selected.year }}</td>
+												<th width="25%">Periodo</th>
+												<td width="25%">{{ selected.period.name }}</td>
+											</tr>
+											<tr>
+												<th>Fecha y Hora del Reporte</th>
+												<td colspan="3">{{ selected.created }}</td>
+											</tr>
+											<tr>
+												<th>Microruta</th>
+												<td>{{ selected.route.name }}</td>
+												<th>Área</th>
+												<td>{{ selected.route.area_m2 }}</td>
+											</tr>
+											<tr>
+												<th>Direccion del Lote</th>
+												<td colspan="3">{{ selected.route.address_text }}</td>
+											</tr>
+											<tr>
+												<th>Descripción</th>
+												<td colspan="3">
+													<template v-if="selected.route.description !== null && selected.route.description !== ''">
+														{{ selected.route.description }}
+													</template>
+													<template v-else>
+														Sin descripción.
+													</template>
+												</td>
+											</tr>
+											<tr>
+												<th>Observaciones</th>
+												<td colspan="3">
+													<template v-if="selected.route.obs !== null && selected.route.obs !== ''">
+														{{ selected.route.obs }}
+													</template>
+													<template v-else>
+														Sin observaciones.
+													</template>
+												</td>
+											</tr>
+											<tr>
+											</tr>
+											<tr>
+												<th>Cuadrilla/Grupo</th>
+												<td>{{ selected.group.name }}</td>
+												<th>Reportado por</th>
+												<td>{{ selected.created_by.username }}</td>
+											</tr>
+											<tr>
+												<th colspan="2">Tipo de Foto</th>
+												<td colspan="2">{{ (selected.type == 'A') ? 'Antes' : (selected.type == 'D') ? 'Despues' : 'Desconocido' }}</td>
+											</tr>
+											<tr>
+												<td colspan="4">
+													<img class="img-responsive" style="width: 100%; display: block;" :src="selected.media.path_short" alt="image" />
+												</td>
+											</tr>
+											<tr>
+												<td colspan="4">
+													<div id="map"></div>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="4">
+													<a class="btn btn-default pull-right" :href="selected.media.path_short" target="_blank"><i class="fa fa-search-plus"></i></a>
+													<a class="btn btn-default pull-right" :href="selected.media.path_short" download><i class="fa fa-download" ></i></a>
+												</td>
+											</tr>
+										</table>
+									</div>
 								</div>
 								<div class="modal-footer">
+								  <button @click="declineReport" type="button" class="btn btn-danger pull-left">Rechazar</button>
+								  <button @click="aprobeReport" type="button" class="btn btn-primary pull-left">Aprobar</button>
 								  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-								  <button type="button" class="btn btn-danger">Rechazar</button>
-								  <button type="button" class="btn btn-primary">Aprobar</button>
 								</div>
 
 							  </div>
@@ -395,6 +261,7 @@ var List_Pending = Vue.extend({
 	template: '#list-pending',
 	data(){
 		return {
+			intervalid1: null,
 			loading: true,
 			temp_filters: [],
 			options: {
@@ -478,7 +345,7 @@ var List_Pending = Vue.extend({
 				}
 			},
 			total: 0,
-			limit: 20,
+			limit: 25,
 			page: 1,
 			search: {
 				loading: false,
@@ -487,6 +354,17 @@ var List_Pending = Vue.extend({
 			"route_id": this.$route.params.route_id,
 			"route_name": this.$route.params.route_name,
 			map: null,
+			drone: {
+				"type": "Feature", 
+				'properties': {
+					'description': "Mi posicion",
+					'icon': 'rocket'
+				},
+				"geometry": {
+					"type": "Point", 
+					"coordinates": [],
+				}, 
+			}
 		};
 	},
 	created: function () {
@@ -495,64 +373,140 @@ var List_Pending = Vue.extend({
 		var self = this;
 		document.cookie = 'SameSite=None; Secure';
 		self.load();
-		
+		self.intervalid1 = setInterval(function(){
+			self.load();
+		}, 300000);
 	},
 	computed: {
 		loadGeometry(){
 			var self = this;
 			if(self.selected.id > 0 && self.selected.route.lot.id){
+							 
 				
 				api.get('/geojson/lots/' + self.selected.route.lot.id, {params: {}}).then(function (response) {
 					console.log('response loadGeometry', response.data);
 					if(response.status !== 200) { return false; };
 					
-					mapboxgl.accessToken = 'pk.eyJ1IjoiYW5kcmVzZ29tZXptb250ZXZlcmRlIiwiYSI6ImNrNWgxNTB3ODBkeXEzanMzZTZ2cHBmOXoifQ.NDnUq9Yf6CEwEFajzzA5Kw';
-					var map = new mapboxgl.Map({
-						container: 'map',
-						style: 'mapbox://styles/mapbox/outdoors-v11',
-						center: (response.data.geometry.coordinates[0][0] !== undefined) ? response.data.geometry.coordinates[0][0] : (response.data.geometry.coordinates[0] !== undefined && response.data.geometry.coordinates[1] !== undefined) ? [response.data.geometry.coordinates[0], response.data.geometry.coordinates[1]] : [4.570868, -74.2973328],
-						zoom: 10
-					});
-					 
-					map.on('load', function() {
-						map.addSource('national-park', {
-							'type': 'geojson',
-							'data': response.data
-						});
-						 
-						map.addLayer({
-							'id': 'park-boundary',
-							'type': 'fill',
-							'source': 'national-park',
-							'paint': {
-							'fill-color': '#888888',
-							'fill-opacity': 0.4
-							},
-							'filter': ['==', '$type', 'Polygon']
-						});
-						 
-						map.addLayer({
-							'id': 'park-volcanoes',
-							'type': 'circle',
-							'source': 'national-park',
-							'paint': {
-							'circle-radius': 6,
-							'circle-color': '#B42222'
-							},
-							'filter': ['==', '$type', 'Point']
-						});
-					});
+					api.get('/geojson/photographic_reports/' + self.selected.id, {
+						params: {
+						}
+					}).then(function (responseGEO) {
+						if(responseGEO.status == 200){
+							console.log('responseGEO.geometry.coordinates', responseGEO);
+							self.drone = responseGEO.data;
 					
-					
+						}
+					}).catch(function (error) {
+						console.log('error list-routes::methods::load()');
+						console.log(error.response);
+						console.error(error);
+						self.search.loading = false;
+					});
 				}).catch(function (error) {
 					console.log('error list-routes::methods::load()');
 					console.log(error.response);
+					console.error(error);
 					self.loading = false;
 				});
 			}
 		}
 	},
 	methods: {
+		aprobeReport(){
+			var self = this;
+			
+			bootbox.confirm({
+				message: "Debes confirmar antes de continuar.",
+				locale: 'es',
+				buttons: {
+					confirm: {
+						label: 'Aprobar',
+						className: 'btn-success'
+					},
+					cancel: {
+						label: 'Cancelar',
+						className: 'btn-default'
+					}
+				},
+				callback: function (result) {
+					if(result === true){
+						api.put('/records/photographic_reports/' + self.selected.id, {
+							id: self.selected.id,
+							status: 1,
+							updated_by: <?= $this->user->id; ?>,
+						}).then(function (response) {
+							if(response.status == 200){
+								self.load();
+								$('.bs-example-modal-sm').modal('hide')
+							}
+						}).catch(function (error) {
+							console.log('error list-routes::methods::load()');
+							console.log(error.response);
+							self.search.loading = false;
+						});
+					}
+					console.log('This was logged in the callback: ' + result);
+				}
+			});
+		},
+		declineReport(){
+			var self = this;
+			
+			bootbox.confirm({
+				message: "Debes confirmar antes de continuar.",
+				locale: 'es',
+				buttons: {
+					confirm: {
+						label: 'Rechazar',
+						className: 'btn-danger'
+					},
+					cancel: {
+						label: 'Cancelar',
+						className: 'btn-default'
+					}
+				},
+				callback: function (result) {
+					if(result === true){
+						api.put('/records/photographic_reports/' + self.selected.id, {
+							id: self.selected.id,
+							status: 2,
+							updated_by: <?= $this->user->id; ?>,
+						}).then(function (response) {
+							if(response.status == 200){
+								bootbox.confirm({
+									message: "Deseas enviar una notificacion del rechazo?.",
+									locale: 'es',
+									buttons: {
+										confirm: {
+											label: 'Enviar',
+											className: 'btn-success'
+										},
+										cancel: {
+											label: 'Cerrar',
+											className: 'btn-default'
+										}
+									},
+									callback: function (result) {
+										if(result === true){
+											// urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.' + '%20https%3A%2F%2Fmicuenta.monteverdeltda.com' + encodeURI(self.selected.media.path_short);
+											urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.';
+											window.open(urlWA,'popUpWindow','height=500,width=600,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+										}
+									}
+								});
+								self.load();
+								$('.bs-example-modal-sm').modal('hide')
+							}
+						}).catch(function (error) {
+							console.log('error list-routes::methods::load()');
+							console.log(error.response);
+							self.search.loading = false;
+						});
+					}
+					console.log('This was logged in the callback: ' + result);
+				}
+			});
+		},
 		searchRoutes(){
 			var self = this;
 			if(self.next.year > 0 && self.next.period > 0){
@@ -728,5 +682,4 @@ app = new Vue({
 		},
 	}
 }).$mount('#reporting-app');
-
 </script>

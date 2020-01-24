@@ -274,7 +274,7 @@
 			<div class="col-md-12 col-sm-12 col-xs-12 text-center">
 				<ul class="pagination pagination-split pull-right">
 					<li :class="(page == 1) ? 'active' : ''"><a @click="page=1;load();"> Inicio </a></li>
-					<template v-if="total > (limit*3) && parseInt(total/limit) > 3" v-for="npage in parseInt(total/limit)"><li :class="(npage == page) ? 'active' : ''" v-if="npage > 1 && npage < parseInt(total/limit)"><a @click="page=npage;load();"> {{npage}} </a></li></template>
+					<template v-if="total > (limit*3) && parseInt(total/limit) > 1" v-for="npage in parseInt(total/limit)"><li :class="(npage == page) ? 'active' : ''" v-if="npage > 1 && npage < parseInt(total/limit)"><a @click="page=npage;load();"> {{npage}} </a></li></template>
 					<li v-if="total > (limit+1)" :class="(page == parseInt(total/limit)) ? 'active' : ''"><a @click="page=parseInt(total/limit);load();"> Fín </a></li>
 					<!-- // 
 					--->

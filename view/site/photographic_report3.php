@@ -294,7 +294,8 @@ var List_Periods = Vue.extend({
 					params: {
 						filter: [
 							'year,eq,' + self.next.year,
-							'period,eq,' + self.next.period
+							'period,eq,' + self.next.period,
+							'status,eq,1'
 						],
 						join: [
 							'photographic_periods',
