@@ -1,183 +1,228 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.print.css" media='print' />
-<!-- // <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script> -->
-<!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> -->
-<!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> -->
-<!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js"></script> -->
-<!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script> -->
-<!-- //  -->
-<!-- // <script src="/public/assets/vendors/fullcalendar/3.1.0/dist/gcal.js"></script> -->
-<!-- // <script src="/public/assets/vendors/fullcalendar/3.1.0/dist/locales-all.js"></script> -->
+<!-- // 
 <style>
-	#wrap {
-		width: 100%;
-		margin: 0 auto;
-	}
-		
-	#external-events {
-		float: left;
-		width: 150px;
-		padding: 0 10px;
-		border: 1px solid #ccc;
-		background: #eee;
-		text-align: left;
-	}
-		
-	#external-events h4 {
-		font-size: 16px;
-		margin-top: 0;
-		padding-top: 1em;
-	}
-		
-	#external-events .fc-event {
-		margin: 10px 0;
-		cursor: pointer;
-	}
-		
-	#external-events p {
-		margin: 1.5em 0;
-		font-size: 11px;
-		color: #666;
-	}
-		
-	#external-events p input {
-		margin: 0;
-		vertical-align: middle;
-	}
-	#calendar {
-		float: right;
-		width: 900px;
-	}
+.demo-topbar{height:40px;line-height:40px;padding-left:1em;background:#eee;border-bottom:1px solid #ddd;font-family:Lucida Grande,Helvetica,Arial,Verdana,sans-serif!important;font-size:14px!important;color:#000!important}.demo-topbar .codepen-button{float:right;margin-top:7px;margin-right:7px}.codepen-button{-webkit-appearance:none;-moz-appearance:none;appearance:none;height:26px;line-height:26px;padding:0 6px;border:1px solid #ddd;background:#fff;border-radius:4px;font-family:Lucida Grande,Helvetica,Arial,Verdana,sans-serif!important;font-size:11px!important;color:#000!important;cursor:pointer}.codepen-button:after{content:"\02197";vertical-align:middle;margin:-50% 0 -50% 2px}
+</style>-->
+<!-- //
+<link href='https://unpkg.com/fullcalendar@3.10.1/dist/fullcalendar.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/fullcalendar@3.10.1/dist/fullcalendar.print.css' rel='stylesheet' media='print' />-->
+<link href='https://unpkg.com/fullcalendar-scheduler@1.10.0/dist/scheduler.min.css' rel='stylesheet' /> 
+<!-- // <script src='https://unpkg.com/moment@2.24.0/min/moment.min.js'></script> -->
+<!-- // <script src='https://unpkg.com/jquery@3.4.1/dist/jquery.min.js'></script> -->
+<script src='https://unpkg.com/fullcalendar@3.10.1/dist/fullcalendar.min.js'></script>
+<script src='https://unpkg.com/fullcalendar-scheduler@1.10.0/dist/scheduler.min.js'></script>
+<!-- // <script src='https://fullcalendar.io/assets/demo-to-codepen.js'></script> -->
+
+<style>
+.modal {
+	overflow: auto !important;
+}
+#calendar-schedule {
+	/* max-width: 900px; */
+	margin: 40px auto;
+}
+.fc-license-message {
+	display: none;
+}
+.tile-stats .icon {
+    right: 153px;
+    top: 82px;
+}
+.tile-stats .icon i {
+	font-size: 120px;
+}
 </style>
 
 <div id="schedule-programming">
 	<div class="page-title">
 		<div class="title_left">
-			<h3><?= $title; ?> <small><?= $subtitle; ?></small></h3>
-		</div>
-		<div class="title_right">
+			<h3>Servicios Periodicos</h3>
 		</div>
 	</div>
 	<div class="clearfix"></div>
-	
 	<div class="row">
-		<router-view :key="$route.fullPath" ></router-view>
-	</div>
-</div>
-
-<template id="step-one">
-	<div>
-		<div id='wrap'>
-			
-			<!-- // <div :class="'col-md-12 col-sm-12 col-xs-12 ' + ((inSchedule !== false) ? 'hidden' : '')"> -->
-			<div >
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>Paso # 1 <small></small></h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#">Settings 1</a></li>
-									<li><a href="#">Settings 2</a></li>
-								</ul>
-							</li>
-							<li><a class="close-link"><i class="fa fa-close"></i></a></li>
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-					<div class="x_content">
-						<p class="text-muted font-13 m-b-30">
-							The Buttons extension for DataTables provides a common set of options, API methods and styling to display buttons on a page that will interact with a DataTable. The core library provides the based framework upon which plug-ins can built.
-						</p>
-						<div class="row">
-							<div class="col-md-4 col-xs-12">
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>Programar <small>Consola básica</small></h2>
+					<ul class="nav navbar-right panel_toolbox">
+						<li><a @click="submitFormSearch" class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+						<!-- // 
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#">Settings 1</a></li>
+								<li><a href="#">Settings 2</a></li>
+							</ul>
+						</li>
+						-->
+						<li><a ><i class="fa fa-refresh"></i></a></li>
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" v-on:submit="submitFormSearch" action="javascript:return false;">
 								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" for="contract">Contrato<span class="required">*</span></label>
-									<div class="col-md-8 col-xs-12">
-										<select id="contract" required="required" v-model="contract" class="form-control">
-											<option value="0">Seleccione una opcion</option>
-											<option v-for="(option, i_option) in options.emvarias_contracts" :value="option.id">{{ option.name }}</option>
-										</select>
-									</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							
-							<div class="col-md-4 col-xs-12">
-								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" for="period">Periodo<span class="required">*</span></label>
-									<div class="col-md-8 col-xs-12">
-										<select id="period" required="required" v-model="period" class="form-control">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Periodo</label>
+									<div class="col-md-9 col-sm-9 col-xs-12">
+										<select @change="submitFormSearch" v-model="form_search_create.period" class="select2_single form-control" tabindex="-1">
 											<option value="0">Seleccione una opcion</option>
 											<option v-for="(option, i_option) in options.photographic_periods" :value="option.id">{{ option.name }}</option>
 										</select>
 									</div>
 								</div>
-								<div class="clearfix"></div>
-							</div>
-							
-							<div class="col-md-4 col-xs-12">
 								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">Año <span class="required">*</span></label>
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Año <span class="required">*</span></label>
 									<div class="col-md-9 col-sm-9 col-xs-12">
-										<input v-model="year" type="number" min="2019" id="year" required="required" class="form-control">
+										<input @change="submitFormSearch" v-model="form_search_create.year" id="birthday" class="date-picker form-control col-md-7 col-xs-12" min="2018" required="required" type="number">
 									</div>
 								</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="col-xs-12">
-								<br>
-								<button @click="validateStepOne" type="button" class="btn btn-success pull-right">Continuar</button>
-							</div>
-						</div>
-					
-				</div>
-			</div>
-			
-			<div :class="'col-md-12 col-sm-12 col-xs-12 ' + ((inSchedule !== false) ? '' : 'hidden')">
-				<div class="col-md-3 col-xs-4">
-					<div class="x_panel" style="max-height:calc(65vh);    overflow: auto;">
-						<div class="x_content">
-							<div>
-								<div id='external-events'>
-									<h4>Draggable Events</h4>
-									<div class="box-rec"></div>
-									<p>
-										<input type='checkbox' id='drop-remove' />
-										<label for='drop-remove'>Remover despues de colocar</label>
-									</p>
-								</div>
-								<div style='clear:both'></div>
-							</div>
-							
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-9 col-xs-8">
-					<div class="row">
-						<div class="col-md-6 col-sm-6 col-xs-12" v-for="(group, group_i) in options.photographic_groups">
-							<div class="x_panel">
-								<div class="x_title">
-									<h2>{{ group.name }} <small></small></h2>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<div :id="'calendar-group-' + group.id" class="calendar calender_box" style="display: hidden; "></div>
-									<!-- // <ol data-draggable="target"></ol> -->
-								</div>
-							</div>
+								<div class="ln_solid"></div>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-			
 		</div>
-	</div>
-</template>
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<ul class="nav navbar-right panel_toolbox">
+						<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#">Settings 1</a></li>
+								<li><a href="#">Settings 2</a></li>
+							</ul>
+						</li>
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<div id='calendar-schedule'></div>
+				</div>
+			</div>
+		</div>
+	</div>					
+								
+	<div id="CreateScheduleModal" class="modal fade">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+					<h4 id="modalTitle2" class="modal-title modal-info-title"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							
+							<div class="row">
+								<div class="animated flipInY col-sm-offset-2 col-sm-8 col-xs-12">
+									<div class="tile-stats">
+										<div class="icon">
+											<i class="fa fa-calendar"></i>
+										</div>
+										<div class="count">{{ form_search_create.date_executed_schedule }}</div>
+										<h3>{{ groupName }}</h3>
+										<p>
+											{{ periodName }} {{ form_search_create.year }}.
+										</p>
+										<p>
+											<b>Microruta: </b>
+											<template v-if="microrouteData !== undefined && microrouteData.name !== undefined">
+												{{ microrouteData.name }}
+											</template>
+											<template v-else>Seleccione la Microruta/Lote para ver más información.</template>
+										</p>
+										<p>
+											<b>Contrato: </b>
+											<template v-if="microrouteData !== undefined && microrouteData.contract !== undefined && microrouteData.contract.name !== undefined">
+												{{ microrouteData.contract.name }}
+											</template>
+											<template v-else>Seleccione la Microruta/Lote para ver más información.</template>
+										</p>
+										<p>
+											<b>Lote (Antigüo): </b>
+											<template v-if="microrouteData !== undefined && microrouteData.lot !== undefined && microrouteData.lot.id_ref !== undefined">
+												{{ microrouteData.lot.id_ref }}
+											</template>
+											<template v-else>Seleccione la Microruta/Lote para ver más información.</template>
+										</p>
+										<p>
+											<b>Direccion(es): </b>
+											<template v-if="microrouteData !== undefined && microrouteData.lot !== undefined && microrouteData.lot.address_text !== undefined">
+												{{ microrouteData.lot.address_text }}
+											</template>
+											<template v-else>Seleccione la Microruta/Lote para ver más información.</template>
+										</p>
+										
+										<p>
+											<b>Área	m²: </b>
+											<template v-if="microrouteData !== undefined && microrouteData.lot !== undefined && microrouteData.lot.address_text !== undefined">
+												{{ microrouteData.lot.address_text }} m²
+											</template>
+											<template v-else>Seleccione la Microruta/Lote para ver más información.</template>
+										</p>
+										<p>
+											<b>Descripción: </b>
+											<template v-if="microrouteData !== undefined && microrouteData.lot !== undefined && microrouteData.lot.description !== undefined">
+												{{ microrouteData.lot.description }}
+											</template>
+											<template v-else>Seleccione la Microruta/Lote para ver más información.</template>
+										</p>
+										<!-- // 
+										<p>
+											<button v-if="newScheduleComplete === true" class="btn btn-md btn-info pull-right" @click="newSchedule">
+												Programar
+											</button>
+										</p>
+										
+										-->
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="table-responsive">
+								<p class="datatable-buttons2-message"></p>
+								<table class="table table-striped table-hover hover table-bordered datatable-buttons2">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<div id="modalBody" class="modal-body"> </div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>		
+	
+</div>
+
+<style>
+.nav-microroutes {
+  background-color: yellow; 
+  list-style-type: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-microroutes li {
+  display: inline-block;
+  font-size: 20px;
+  padding: 20px;
+}
+
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+	    line-height: normal;
+}
+</style>
 
 <script>
 var api = axios.create({
@@ -197,407 +242,688 @@ function FormException(error, aviso){
 	this.message = aviso;
 };
 
-var Step_One = Vue.extend({
-	template: '#step-one',
-	data(){
+var app = new Vue({
+	data: function () {
 		return {
-			inSchedule: false,
-			options: {
-				emvarias_contracts: [],
-				emvarias_microroutes: [],
-				photographic_periods: [],
-				photographic_groups: [],
-			},
-			total_m2: 0,
-			total_m2_schedule: 0,
-			total: 0,
-			period: 0,
-			contract: 0,
-			"year": moment().format('Y'),
+			records_org: [],
 			records: [],
-			routesInSchedule: [],
-			dataTable: null,
+			options: {
+				photographic_groups: [],
+				photographic_periods: [],
+				emvarias_microroutes: [],
+				microroutes: [],
+			},
+			calendar: {
+				colors: ["gray", "#bbe069", "#61adee", "#ff7777", "yellow", "#ffa62c", "#ae93df", "#cecece"],
+				resources: []
+			},
+			form_search_create: {
+				period: 0,
+				year: moment().format('Y'),
+				microroute: 0,
+				group: 0,
+				date_executed_schedule: '',
+				created_by: <?= $this->user->id; ?>,
+			},
 		};
 	},
-	created: function () {
+	mounted(){
+		var self = this;
+		self.$root.loadAPI_List('emvarias_microroutes', {
+			join: [
+				'emvarias_lots',
+				'emvarias_contracts'
+			],
+		}, function(e){
+			self.options.emvarias_microroutes = e;
+			
+			self.loadOptions();
+		});
+		$('#CreateScheduleModal').on('show.bs.modal', function (e) {
+			$('.modal .modal-dialog').attr('class', 'modal-lg modal-dialog  ' + 'zoomIn' + '  animated');
+			$('.datatable-buttons2-message').html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> Cargando...');
+			setTimeout(self.loadTableMicroroutes, 1000);
+		})
+		/*
+		$('#CreateScheduleModal').on('hide.bs.modal', function (e) {
+			$('.modal .modal-dialog').attr('class', 'modal-md modal-dialog  ' + 'zoomOut' + '  animated');
+		})*/
 	},
 	computed: {
-		contractName(){
+		groupName(){
 			var self = this;
 			try{
-				return self.options.emvarias_contracts.find(x => x.id === self.contract).name;
+				return self.options.photographic_groups.find(x => x.id === self.form_search_create.group).name;
 			} catch(e){
-				return "";
+				return "Cuadrilla invalida o no seleccionada.";
 			}
 		},
 		periodName(){
 			var self = this;
 			try{
-				return self.options.photographic_periods.find(x => x.id === self.period).name;
+				return self.options.photographic_periods.find(x => x.id === self.form_search_create.period).name;
 			} catch(e){
-				return "";
+				return "Periodo invalido o no seleccionado.";
+			}
+		},
+		newScheduleComplete(){
+			var self = this;
+			try {
+				if(
+					self.form_search_create.period <= 0
+					|| self.form_search_create.year <= 0
+					|| self.form_search_create.group <= 0
+					|| self.form_search_create.date_executed_schedule == ''
+					|| self.form_search_create.microroute <= 0
+				){
+					return false;
+				} else {
+					return true;
+				}
+				
+			} catch(e){
+				console.error(e);
+				return false;
+			}
+		},
+		microrouteName(){
+			var self = this;
+			item = self.options.emvarias_microroutes.find(x => x.id === self.form_search_create.microroute);
+			try{
+				return item.name;
+			} catch(e){
+				return "Microruta/Lote invalid@ o no seleccionad@.";
+			}
+		},
+		microrouteData(){
+			var self = this;
+			item = self.options.emvarias_microroutes.find(x => x.id === self.form_search_create.microroute);
+			try{
+				return item;
+			} catch(e){
+				return "Microruta/Lote invalid@ o no seleccionad@.";
 			}
 		},
 		periodDateStart(){
 			var self = this;
 			try{
-				period = self.options.photographic_periods.find(x => x.id === self.period);
+				period = self.options.photographic_periods.find(x => x.id == self.form_search_create.period);
 				if(period.start_month === null || period.start_day === null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
 				return (moment().format('Y') + '-' + ((String(period.start_month).length > 1) ? period.start_month : '0' + period.start_month) + '-' + ((String(period.start_day).length > 1) ? period.start_day : '0' + period.start_day));
 			} catch(e){
-				return "";
+				return "1950-01-01";
 			}
 		},
 		periodDateEnd(){
 			var self = this;
 			try{
-				period = self.options.photographic_periods.find(x => x.id === self.period);
+				period = self.options.photographic_periods.find(x => x.id === self.form_search_create.period);
 				if(period.end_month === null || period.end_day === null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
 				return (moment().format('Y') + '-' + ((String(period.end_month).length > 1) ? period.end_month : '0' + period.end_month) + '-' + ((String(period.end_day).length > 1) ? period.end_day : '0' + period.end_day));
 			} catch(e){
-				return "";
+				return "1950-01-02";
 			}
 		},
-	},
-	mounted: function () {
-		var self = this;
-		self.listOptions();
 	},
 	methods: {
-		validateStepOne(){
+		scheduleToEvent(scheduleData){
 			var self = this;
-			self.inSchedule = false;
-			try{
-				if(self.contract > 0 && self.period > 0  && self.year > 0){
-					self.inSchedule = true;
-						self.loadMicroroutes();
-				} else {
-					throw new FormException('incompleteStep', 'Completa todos los campos.');
-				}
-			}catch(e){
-				console.error(e);
+			try {
+				return {
+					id: scheduleData.id,
+					title: 'Z' + scheduleData.microroute.zone + 'CC' + self.$root.zfill(scheduleData.microroute.name, 4) + 'FM' + scheduleData.microroute.repeat,
+					content: scheduleData.microroute.name,
+					objectMV: scheduleData,
+					microroute: scheduleData.microroute,
+					period: scheduleData.period,
+					group: scheduleData.group,
+					resourceId: scheduleData.group.id,
+					year: scheduleData.year,
+					allDay: true,
+					start: (scheduleData.date_executed_schedule),
+					// end: (scheduleData.date_executed_schedule_end),
+					end: moment(scheduleData.date_executed_schedule_end),
+					date_executed_schedule: scheduleData.date_executed_schedule,
+					date_executed_schedule_end: scheduleData.date_executed_schedule_end,
+					created_by: scheduleData.created_by,
+					stick: true
+				};
+			} catch(e){
+				console.log(e);
 			}
 		},
-		loadDrag2(){
-			(function(){
-				//exclude older browsers by the features we need them to support
-				//and legacy opera explicitly so we don't waste time on a dead browser
-				if (!document.querySelectorAll || !('draggable' in document.createElement('span')) || window.opera) { return; }
-				//get the collection of draggable items and add their draggable attribute
-				for(var items = document.querySelectorAll('[data-draggable="item"]'), len = items.length, i = 0; i < len; i ++){
-					items[i].setAttribute('draggable', 'true');
-				}
-				//variable for storing the dragging item reference 
-				//this will avoid the need to define any transfer data 
-				//which means that the elements don't need to have IDs 
-				var item = null;
-				//dragstart event to initiate mouse dragging
-				document.addEventListener('dragstart', function(e){
-					//set the item reference to this element
-					item = e.target;
-					//we don't need the transfer data, but we have to define something
-					//otherwise the drop action won't work at all in firefox
-					//most browsers support the proper mime-type syntax, eg. "text/plain"
-					//but we have to use this incorrect syntax for the benefit of IE10+
-					e.dataTransfer.setData('text', '');
-				}, false);
-				//dragover event to allow the drag by preventing its default
-				//ie. the default action of an element is not to allow dragging 
-				document.addEventListener('dragover', function(e){
-					if(item){ e.preventDefault(); }
-				}, false);
-				//drop event to allow the element to be dropped into valid targets
-				document.addEventListener('drop', function(e){
-					//if this element is a drop target, move the item here 
-					//then prevent default to allow the action (same as dragover)
-					if(e.target.getAttribute('data-draggable') == 'target'){
-						e.target.appendChild(item);
-						e.preventDefault();
-					}				
-				}, false);				
-				//dragend event to clean-up after drop or abort
-				//which fires whether or not the drop target was valid
-				document.addEventListener('dragend', function(e){
-					item = null;				
-				}, false);
-			})();
-		},
-		loadcalendar(){
+		createLogSchedule(data, callb){
 			var self = this;
-			self.options.photographic_groups.forEach(function(a){
-				//console.log('Comenzando con grupo: ', a.id + ' - ' + a.name);
-				
-				$('#calendar-group-' + a.id).fullCalendar({
-					dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-					dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sáb'],
-					monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-					monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-					buttonText: {
-						today:    'Hoy',
-						month:    'Mes',
-						week:     'Semana',
-						day:      'Día',
-						list:     'Lista'
-					},
-					defaultButtonText: {
-						prev: "Anterior",
-						next: "Siguiente",
-						prevYear: "Ant Año",
-						nextYear: "Sig Año",
-						today: 'Hoy',
-						month: 'mes',
-						week: 'Semana',
-						day: 'Día'
-					},
-					eventSources: [
-						// your event source
-						{
-							url: '/api.php/records/emvarias_schedule?join[]=emvarias_microroutes&' + 'filter[]=' + 'group,eq,' + a.id + '&filter[]=' + 'period,eq,' + self.period + '&filter[]=' + 'year,eq,' + self.year,
-							method: 'GET',
-							extraParams: {
-								custom_param2: 'somethingelse'
-							},
-							failure: function() {
-								alert('there was an error while fetching events!');
-							},
-							success: function(content, xhr) {
-								let result = content.records.map(function(eventEl) {
-									self.routesInSchedule.push(eventEl.id);
-									// Eliminar las rutas
-									// $( "#microroute-drog-" + eventEl.microroute.id).css('display', 'none')
-									$( "#microroute-drog-" + eventEl.microroute.id).css('background-color', '#a6ad3a');
-									
-									return {
-										id: eventEl.id,
-										title: eventEl.microroute.name,
-										microroute: eventEl.microroute.id,
-										period: eventEl.period,
-										group: a.id,
-										year: eventEl.year,
-										start: eventEl.date_executed_schedule,
-										date_executed_schedule: eventEl.date_executed_schedule,
-										created_by: <?= $this->user->id; ?>,
-										stick: true
-									}
-								});
-								return result;
-							},
-							color: '#d8e9cf',   // a non-ajax option
-							textColor: '#666'
-						},
-					  ],
-					defaultView: 'month',
-					validRange: {
-						start: self.periodDateStart,
-						end: self.periodDateEnd
-					},
-					timeZone: 'local',
-					defaultDate: moment(self.periodDateStart),
-					header: {
-						left: 'prev,next today',
-						center: 'title',
-						// right: 'month,agendaWeek,agendaDay'
-						right: 'month,listWeek'
-					},
-					editable: true,
-					droppable: true, // this allows things to be dropped onto the calendar
-					eventReceive: function (event) {
-						if (confirm("Desea Agregar este evento?")) {
-							var subDialog = bootbox.dialog({
-								message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
-								closeButton: false
-							});
-							
-							event.date_executed_schedule = event.start.format('Y-MM-DD');
-							// console.log(event);
-							dataSend = {
-								microroute: event.microroute,
-								period: event.period,
-								group: a.id,
-								year: event.year,
-								date_executed_schedule: event.date_executed_schedule,
-								created_by: <?= $this->user->id; ?>,
-								
-							};
-							
-							if(event.id == null){
-								api.post('/records/emvarias_schedule', dataSend)
-								.then(function (b){
-									if(b.data > 0){
-										event.id = b.data;
-									}
-								})
-								.catch(function (e) {
-									console.log('Error Agrgando schedule');
-									//console.error(e);
-									console.log(e.response);
-									$('#calendar-group-' + a.id).fullCalendar('removeEvents', event._id);
-								});
-							}
-							subDialog.modal('hide');
-						} else {
-							$('#calendar-group-' + a.id).fullCalendar('removeEvents', event._id);
-						}
-					},
-					drop: function(date, jsEvent, ui, resourceId) {
-						var memberName = $(this).data('event').title;
-						var memberID = $(this).attr('id').toString();
-						
-						if ($('#drop-remove').is(':checked')) {
-							$(this).remove();
-						}
-					},
-					eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
-						console.log(event.title + " was dropped on " + event.start.format());
-						if (!confirm("Desea modificar la fecha de este evento?")) {
-							revertFunc();
-						} else {
-							var subDialog = bootbox.dialog({
-								message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
-								closeButton: false
-							});
-							
-							if(event.id > 0){
-								event.color = 'orange';
-								event.date_executed_schedule = event.start.format('Y-MM-DD');
-								
-								api.put('/records/emvarias_schedule/' + event.id, {
-									id: event.id,
-									date_executed_schedule: event.start.format('Y-MM-DD'),
-									updated_by: <?= $this->user->id; ?>
-								})
-								.then(function (b){
-									if(b.data > 0){
-										console.log(event);
-									}
-								})
-								.catch(function (e) {
-									console.log('Error Agrgando schedule');
-									//console.error(e);
-									console.log(e.response);
-									revertFunc();
-								});
-								subDialog.modal('hide');
-							} else {
-								revertFunc();
-							}
-						}
-					},
-					eventRender: function(event, element) {
-						// console.log('eventRender: element', element);
-						element.prepend( "<span class='closeon'>X</span>" );
-						element.find(".closeon").click(function() {
-							var subDialog = bootbox.dialog({
-								message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
-								closeButton: false
-							});
-							
-							if (confirm("Desea Eliminar este evento?")) {
-								api.delete('/records/emvarias_schedule/' + event.id, {})
-								.then(function (b){
-									if(b.data > 0){
-										$('.calendar').fullCalendar('removeEvents',event._id);
-									}
-								})
-								.catch(function (e) {
-									console.log('Error al eliminar schedule');
-									//console.error(e);
-									console.log(e.response);
-								});
-								
-								subDialog.modal('hide');
-							}
-						});
-					},
-					dayRender: function (date, cell) {
-						// console.log('date', moment(date));
-						// cell.css("background-color", "red");
+			try{
+				send = {};
+				send.schedule = data.schedule;
+				send.action = data.action;
+				send.data_in = JSON.stringify(data.data);
+				send.data_out = JSON.stringify(data.response);
+				send.created_by = <?= $this->user->id; ?>;
+				// console.log('send LOG: ', send);
+				api.post('/records/emvarias_schedule_log', send)
+				.then(function (l){
+					// console.log('log', l);
+					if(l.status == 200){
+						// console.log('Registro creado con exito.');
+						callb(l);
+					} else {
+						throw new FormException('error_create_log', 'No se pudo crear el LOG.');
 					}
+				})
+				.catch(function (e) {
+					callb(e);
+					return e;
 				});
-				
-			});			
+			}
+			catch(e){
+				// console.log('Error al creado el registro.');
+				console.error(e);
+				callb(e)
+				// data
+			}
 		},
-		loadMicroroutes(){
+		loadTableMicroroutes(){
 			var self = this;
-			self.options.emvarias_microroutes = [];
-			$("#external-events .box-rec").html('');
-			var dialog = bootbox.dialog({
-				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
-				closeButton: false
-			});
 			
-			self.$root.loadAPI_List('emvarias_microroutes', {
-				filter: [
-					'contract,eq,' + self.contract
+			self.dataTable = $('.datatable-buttons2').DataTable({
+				destroy: true,
+				dom: "Blfrtip",
+				buttons: [{ extend: "copy", className: "btn-sm btn-default" }, ],
+				responsive: true,
+				"processing": true,
+				language: { "url": "/public/assets/build/js/lang-datatable.json" },
+				data: self.options.emvarias_microroutes.map(a => [
+					a.id,
+					'Z' + a.zone + 'CC' + self.$root.zfill(a.name, 4) + 'FM' + a.repeat, 
+					(a.lot.id_ref.length > 1 || a.lot.id_ref.length !== 'N/A') ? a.lot.id_ref : 'N/A', 
+					a.lot.address_text, 
+					self.$root.formatMoney(a.lot.area_m2, 2, ',', '.') + ' m2', 
+					a.zone, 
+					self.$root.zfill(a.name, 4), 
+					'<font id="repeats-microroute-' + a.id + '">' + self.repeatsDetect(a) + '</font>' + '/' + a.repeat, 
+					'<button data-microroute="' + a.id + '" data-lot="' + a.lot.id + '" class="btn btn-sm btn-success create-schedule-fast"><i class="fa fa-plus-circle"></i></button>', 
+					a.contract.name, 
+					(a.lot.obs.length > 1) ? a.lot.obs : 'Sin observacion(es)',
+					(a.lot.description.length > 1) ? a.lot.description : 'Sin Descripcion',
+				]),
+				"order": [[1, 'asc']],
+				columns: [
+					{ title: "Id INT" },
+					{ title: "Microruta" },
+					{ title: "Lote Ref" },
+					{ title: "Direccion(es)" },
+					{ title: "Area m2" },
+					{ title: "Zona" },
+					{ title: "CC" },
+					{ title: "Repeticiones" },
+					{ title: "Añadir" },
+					{ title: "Contrato" },
+					{ title: "Obs lote" },
+					{ title: "Descripcion", class: "child" },
 				],
-			}, function(e){
-				self.options.emvarias_microroutes = e;
-				e.forEach(function(a){
-					var $newdiv1 = $( "<div class=\"fc-event\" id=\"microroute-drog-" + a.id + "\"></div>" );
-					// $newdiv1.text(a.name);
-					// $newdiv1.attr('v-if', 'routesInSchedule.find(x => x === a.id)');
-					$newdiv1.text(a.name + ' ');
-					// {{ routesInSchedule.find(x => x.id === self.contract).name }} 
+				initComplete: function( settings, json ) {
+					//subDialog.modal('hide');
+					var apiTables = this.api();
+					apiTables.$('tr').click( function () {
+						tds = $(this).find( "td" );
+						selectedId = parseInt($(tds[0]).text());
+						self.form_search_create.microroute = ((parseInt(selectedId)>0) ? parseInt(selectedId) : 0);
+						//document.getElementById('CreateScheduleModal').scrollTo(0, 0);
+					} );
 					
-					/* initialize the external events
-					-----------------------------------------------------------------*/
-					$newdiv1.data('event', {
-						color: '#6ba74c',
-						id: null,
-						title: $.trim($newdiv1.text()),
-						microroute: a.id,
-						period: self.period,
-						year: self.year,
-						date_executed_schedule: null,
-						stick: true,
-						created_by: <?= $this->user->id; ?>
+					
+					apiTables.$("button.create-schedule-fast").click(function() {
+						try {
+							//button = $(this).find( "" );
+							
+							if(
+								self.form_search_create.period <= 0
+								|| self.form_search_create.year <= 0
+								|| self.form_search_create.group <= 0
+								|| self.form_search_create.date_executed_schedule == ''
+							){
+								return false;
+							} else {
+								
+								if (confirm("Desea agregar la microruta/lote al dia " + self.form_search_create.date_executed_schedule + ', ' + self.groupName + '?')) {
+									dataThis = $(this).data();
+									self.form_search_create.microroute = dataThis.microroute;
+									self.newSchedule(false, false);
+									$("#repeats-microroute-" + dataThis.microroute).text(parseInt($("#repeats-microroute-" + dataThis.microroute).text())+1);
+									//self.loadTableMicroroutes();
+								}
+							}
+							
+						} catch(e){
+							console.error(e);
+							return false;
+						}
 					});
-					// make the event draggable using jQuery UI
-					$newdiv1.draggable({
-						zIndex: 999,
-						revert: true,      // will cause the event to go back to its
-						revertDuration: 0  //  original position after the drag
-					});
-					$("#external-events .box-rec").append( $newdiv1 );
-				});
-				
-				dialog.modal('hide');
-				self.loadcalendar();
+					$('.datatable-buttons2-message').html('');
+				},
 			});
 		},
-		listOptions(){
+		repeatsDetect(microroute){
 			var self = this;
-			self.$root.loadAPI_List('photographic_groups', {}, function(e){
-				self.options.photographic_groups = e;
-			});
+			detect = self.records_org.filter(x => (x.microroute.id === microroute.id || x.microroute === microroute));
+			detect = (detect !== undefined) ? detect : [];
+			return detect.length;
+		},
+		loadOptions(){
+			var self = this;
 			self.$root.loadAPI_List('photographic_periods', {}, function(e){
 				self.options.photographic_periods = e;
-			});
-			self.$root.loadAPI_List('emvarias_contracts', {}, function(e){
-				self.options.emvarias_contracts = e;
+				self.$root.loadAPI_List('photographic_groups', {}, function(e){				
+					e.forEach(function(a){
+						self.options.photographic_groups.push(a);
+						self.calendar.resources.push({
+							id: a.id,
+							title: a.name,
+							eventColor: (self.calendar.colors[a.id] !== undefined) ? self.calendar.colors[a.id] : "gray",
+						});
+					});
+					self.loadCalendar();
+				});
 			});
 		},
-		
-	}
-});
+		newSchedule(closeModal=true, empty_form=true){
+			var self = this;
+			try {
+				if(self.form_search_create.period <= 0){ throw new FormException('Datos incompletos', 'Seleccione el primero el periodo de la programacion.') };
+				if(self.form_search_create.year <= 0){ throw new FormException('Datos incompletos', 'Seleccione antes el año de la programacion.') };
+				if(self.form_search_create.group <= 0){ throw new FormException('Datos incompletos', 'Seleccione antes la cuadrilla de la programacion.') };
+				if(self.form_search_create.date_executed_schedule == ''){ throw new FormException('Datos incompletos', 'Seleccione antes la fecha de la programacion.') };
+				if(self.form_search_create.microroute <= 0){ throw new FormException('Datos incompletos', 'Seleccione la microruta/lote que desea agregar a la programacion.') };
+				var sendTo = self.form_search_create;
+				sendTo.date_executed_schedule_end = moment(self.form_search_create.date_executed_schedule).add(1, 'day').format('Y-MM-DD');
+				
+				api.post('/records/emvarias_schedule', sendTo)
+				.then(function (c){
+					if(c.status == 200){
+						self.createLogSchedule({
+							schedule: c.data,
+							action: 'create',
+							data: sendTo,
+							response: c,
+						}, function(w){
+							new PNotify({
+								"title": "¡Éxito!",
+								"text": "Creada con éxito",
+								"styling":"bootstrap3",
+								"type":"success",
+								"icon":true,
+								"animation":"zoom",
+								"hide":true
+							});
+							
+							if(empty_form === true){							
+								self.form_search_create.microroute = 0;
+								self.form_search_create.group = 0;
+								self.form_search_create.date_executed_schedule = '';
+								//self.submitFormSearch();	
+							}
+							
+							self.$root.loadAPI_Single('emvarias_schedule', c.data, {
+								join: [
+									'emvarias_microroutes',
+									'emvarias_microroutes,emvarias_lots',
+									'photographic_periods',
+									'photographic_groups'
+								],
+								filter: [
+									'period,eq,' + self.form_search_create.period,
+									'year,eq,' + self.form_search_create.year
+								],
+							}, function(d){
+								//console.log('d', d);
+								self.records_org.push(d);
+								item = self.scheduleToEvent(d);
+								console.log('item', item);
+								self.records.push(item);
+								$('#calendar-schedule').fullCalendar('addEventSource', [item]);
+							});
+							if(closeModal === true){
+								$('#CreateScheduleModal').modal('hide');
+							}
+						});
+					}
+				})
+				.catch(function (e) {
+					console.error(e);
+					self.createLogSchedule({
+						action: 'create-error',
+						data: self.form_search_create,
+						response: e.response,
+					}, function(){});
+				});
+			} catch(e){
+				console.error(e);
+				self.createLogSchedule({
+					action: 'create-error',
+					data: self.form_search_create,
+					response: e,
+				}, function(w){
+					new PNotify({
+						"title": e.name,
+						"text": e.message,
+						"styling":"bootstrap3",
+						"type":"error",
+						"icon":true,
+						"animation":"zoom",
+						"hide":true
+					});
+				});
+			}
+		},
+		submitFormSearch(){
+			var self = this;
+			$('#calendar-schedule').fullCalendar( 'removeEventSource', self.records );
+			self.records = [];
+			if(self.form_search_create.period <= 0 || self.form_search_create.year <= 1950){ return false; };
+			api.get('/records/emvarias_schedule', {
+				params: {
+					join: [
+						'emvarias_microroutes',
+						'emvarias_microroutes,emvarias_lots',
+						'photographic_periods',
+						'photographic_groups'
+					],
+					filter: [
+						'period,eq,' + self.form_search_create.period,
+						'year,eq,' + self.form_search_create.year
+					],
+				}
+			})
+			.then(function (c){
+				if(c.status == 200){
+					self.records_org = c.data.records;
+					self.records = c.data.records.map(function(eventEl) {
+						return self.scheduleToEvent(eventEl);
+					});
+				};
+			})
+			.catch(function (e) {
+				console.error(e);
+				// console.log(e.response);
+				return false;
+			}).finally(function(){
+				// console.log(self.records)
+				// console.log('carga finalizada...');
+				$('#calendar-schedule').fullCalendar( 'addEventSource', self.records );
+				$('#calendar-schedule').fullCalendar( 'gotoDate', self.periodDateStart );
+			});			
+		},
+		loadCalendar(){
+			var self = this;
+			$('#calendar-schedule').fullCalendar({
+				dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+				dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sáb'],
+				monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+				monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				buttonText: { today:    'Hoy', month:    'Mes', week:     'Semana', day:      'Día', list:     'Lista' },
+				defaultButtonText: { prev: "Anterior", next: "Siguiente", prevYear: "Ant Año", nextYear: "Sig Año", today: 'Hoy', month: 'mes', week: 'Semana', day: 'Día' },
+				plugins: [ 'interaction', 'resourceTimeline' ],
+				timeZone: 'UTC',
+				header: { left: 'today prev,next timelineDay', center: 'title', right: 'timelineWeek timelineMonth,timelineYear list' },
+				defaultView: 'timelineMonth',
+				resourceLabelText: 'Cuadrillas',
+				resources: self.calendar.resources,
+				events: self.records,
+				/*
+				validRange: {
+					start: self.periodDateStart,
+					end: self.periodDateEnd
+				},*/
+				// dateIncrement: { days: 1 },
+				dayClick: function (date, jsEvent, view, resourceOb) {
+					if(date.format('Y-MM-DD') == self.form_search_create.date_executed_schedule && parseInt(resourceOb.id) == self.form_search_create.group){
+						$('#CreateScheduleModal').modal('show');
+						// self.loadTableMicroroutes();
+					}
+					self.form_search_create.date_executed_schedule = date.format('Y-MM-DD');
+					self.form_search_create.group = parseInt(resourceOb.id);
+				},
+				resourceRender: function(resourceObj, $td) {
+					$td.eq(0).find('.fc-cell-content')
+					.append(
+						$('<strong>(?)</strong>').popover({
+							title: resourceObj.title,
+							content: resourceObj.id,
+							trigger: 'hover',
+							placement: 'right',
+							container: 'body'
+						})
+					);
+				},
+				editable: true,
+				droppable: true, // this allows things to be dropped onto the calendar
+				/*eventClick: function(calEvent, jsEvent, view) {
+					var title = prompt('Event Title:', calEvent.title, { buttons: { Ok: true, Cancel: false} });
+						calEvent.date_executed_schedule_end = calEvent.end.format('Y-MM-DD');
+						console.log(calEvent.date_executed_schedule_end);
 
-var router = new VueRouter({
-	linkActiveClass: 'active',
-	routes:[
-		{ path: '/', component: Step_One, name: 'Step-One' },
-	]
-});
+					if (title){
+						calEvent.title = title;
+						$('#calendar-schedule').fullCalendar('updateEvent',calEvent);
+					}
+				},*/
+				eventResize: function(event, delta, revertFunc, jsEvent, ui, view) {
+					alert(event.title + " end is now " + event.end.format('Y-MM-DD'));
+					if (!confirm("Desea modificar la fecha de finalizacion del evento?")) {
+						revertFunc();
+					} else {
+						api.put('/records/emvarias_schedule/' + event.id, {
+							id: event.id,
+							date_executed_schedule_end: event.end.format('Y-MM-DD'),
+							updated_by: <?= $this->user->id; ?>
+						})
+						.then(function (b){
+							if(b.data > 0){									
+								self.createLogSchedule({
+									schedule: event.id,
+									action: 'edit',
+									data: {
+										id: event.id,
+										date_executed_schedule_end: event.end.toISOString(),
+										updated_by: <?= $this->user->id; ?>
+									},
+									response: b,
+								}, function(w){
+									new PNotify({
+										"title": "¡Éxito!",
+										"text": "Modificado con éxito",
+										"styling":"bootstrap3",
+										"type":"success",
+										"icon":true,
+										"animation":"zoom",
+										"hide":true
+									});
+									
+								});
+							}
+						})
+						.catch(function (e) {
+							//console.error(e);
+							self.createLogSchedule({
+								schedule: event.id,
+								action: 'edit-error',
+								data: {
+									id: event.id,
+									date_executed_schedule_end: event.end.toISOString(),
+									updated_by: <?= $this->user->id; ?>
+								},
+								response: e.response,
+							}, function(w){
+								revertFunc();
+							});
+							
+						});
+					}
+				},
+				eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
+					// console.log(event.title + " was dropped on " + event.start.format());
+					if (!confirm("Desea modificar la fecha de este evento?")) {
+						revertFunc();
+					} else {
+						var subDialog = bootbox.dialog({
+							message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+							closeButton: false
+						});
 
-app = new Vue({
-	router: router,
-	data: function () {
-		return {};
-	},
-	methods: {
+						
+						if(event.id > 0){
+							event.color = 'orange';
+							event.date_executed_schedule = event.start.format('Y-MM-DD');
+							
+							api.put('/records/emvarias_schedule/' + event.id, {
+								id: event.id,
+								group: event.resourceId,
+								date_executed_schedule: event.start.format('Y-MM-DD'),
+								date_executed_schedule_end:  event.end.toISOString(),
+								updated_by: <?= $this->user->id; ?>
+							})
+							.then(function (b){
+								if(b.data > 0){									
+									self.createLogSchedule({
+										schedule: event.id,
+										action: 'edit',
+										data: {
+											id: event.id,
+											group: event.resourceId,
+											date_executed_schedule_end: event.end.format('Y-MM-DD'),
+											date_executed_schedule: event.start.format('Y-MM-DD'),
+											updated_by: <?= $this->user->id; ?>
+										},
+										response: b,
+									}, function(w){
+										event.date_executed_schedule = event.start.format('Y-MM-DD');
+										event.date_executed_schedule_end = event.end.format('Y-MM-DD');
+										event.group = event.resourceId;
+										
+										new PNotify({
+											"title": "¡Éxito!",
+											"text": "Modificado con éxito",
+											"styling":"bootstrap3",
+											"type":"success",
+											"icon":true,
+											"animation":"zoom",
+											"hide":true
+										});
+										
+									});
+								}
+							})
+							.catch(function (e) {
+								//console.error(e);
+								self.createLogSchedule({
+									schedule: event.id,
+									action: 'edit-error',
+									data: {
+										id: event.id,
+										group: event.resourceId,
+										date_executed_schedule: event.start.format('Y-MM-DD'),
+										updated_by: <?= $this->user->id; ?>
+									},
+									response: e.response,
+								}, function(w){
+									
+									revertFunc();
+								});
+								
+							});
+							subDialog.modal('hide');
+						} else {
+							revertFunc();
+						}
+					}
+				},
+				eventRender: function(eventObj, element) {
+					// console.log('eventRender: element', element);
+					
+					element.prepend( "<span class='closeon' style='z-index: 99999;position: relative;color: black;padding:2px;'>X</span>" );
+					element.find(".closeon").click(function() {
+						if (confirm("Desea Eliminar este evento?")) {
+							api.delete('/records/emvarias_schedule/' + eventObj.id, {})
+							.then(function (b){
+								if(b.status == 200){
+									self.createLogSchedule({
+										action: 'delete',
+										data: { id: eventObj.id },
+										response: b,
+									}, function(w){
+										$('.popover.fade.top').remove();
+										$('#calendar-schedule').fullCalendar('removeEvents',eventObj._id);
+										
+										IndexOne = self.records.findIndex(x => (x.id == eventObj.id));
+										IndexTwo = self.records_org.findIndex(x => (x.id == eventObj.id));
+										if(IndexOne > -1){ self.records.splice(IndexOne, 1); }
+										if(IndexTwo > -1){ self.records_org.splice(IndexTwo, 1); }
+									
+										new PNotify({
+											"title": "Éxito!",
+											"text": "La programacion se eliminó con éxito.",
+											"styling":"bootstrap3",
+											"type":"error",
+											"icon":true,
+											"animation":"zoom",
+											"hide":true
+										});
+									});									
+								}
+							})
+							.catch(function (e) {
+								// console.log('Error al eliminar schedule');
+								self.createLogSchedule({
+									schedule: eventObj.id,
+									action: 'delete-error',
+									data: { id: eventObj.id },
+									response: e.response,
+								}, function(w){
+									new PNotify({
+										"title": "Error eliminando",
+										"text": "La programacion no se puede modificar, posiblemente hay contanido anexido a ellá.",
+										"styling":"bootstrap3",
+										"type":"error",
+										"icon":true,
+										"animation":"zoom",
+										"hide":true
+									});
+								});
+							});
+						}
+					});
+					
+					// console.log('lot ', eventObj.objectMV.microroute.lot.description);
+					element.popover({
+					  title: eventObj.date_executed_schedule + ' | ' + eventObj.title + ' | ' + eventObj.objectMV.microroute.lot.address_text,
+					  content: eventObj.objectMV.microroute.lot.description,
+					  trigger: 'hover',
+					  placement: 'top',
+					  container: 'body'
+					});
+					
+					element.click(function(e) {
+						if (e.which === 1) {
+							//$('.popover.fade.top').remove();
+						}
+						
+					});
+					element.mousemove(function(e) {
+						if (e.which === 1) {
+							$('.popover.fade.top').remove();
+						}
+					});
+				},
+			});
+		},
 		loadAPI_List(table=null, paramsIn=null, call=null){
 			var self = this;
 			paramsIn = paramsIn !== null ? paramsIn : {};
-			call = call !== null ? call : function(e){ console.log('e',e); };
+			call = call !== null ? call : function(e){
+				console.log('e',e);
+			};
 			table = table !== null ? '/records/' + table : '/openapi';
 			
 			
@@ -605,14 +931,16 @@ app = new Vue({
 			.then(function (c){ if(c.status == 200){ call(c.data.records); } else { return call([]); } })
 			.catch(function (e) {
 				console.error(e);
-				console.log(e.response);
+				// console.log(e.response);
 				return call([]);
 			});
 		},
 		loadAPI_Single(table=null, id=0, paramsIn=null, call=null){
 			var self = this;
 			paramsIn = paramsIn !== null ? paramsIn : {};
-			call = call !== null ? call : function(e){ console.log('e',e); };
+			call = call !== null ? call : function(e){
+				// console.log('e',e);
+			};
 			table = table !== null && id > 0 ? '/records/' + table + '/' + id : '/openapi';
 			
 			
@@ -620,7 +948,7 @@ app = new Vue({
 			.then(function (c){ if(c.status == 200){ call(c.data); } else { return call(null); } })
 			.catch(function (e) {
 				console.error(e);
-				console.log(e.response);
+				// console.log(e.response);
 				return call([]);
 			});
 		},
@@ -645,7 +973,10 @@ app = new Vue({
 			var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
 			var j = (j = i.length) > 3 ? j % 3 : 0;
 			return sign + (j ? i.substr(0, j) + thouSep : "") + (i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + (thouSep))) + (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
-		},
+		}
 	}
 }).$mount('#schedule-programming');
 </script>
+
+
+

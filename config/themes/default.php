@@ -112,6 +112,11 @@ return [
                     'type' => 'stylesheet',
                     'file' => '/vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css', // jQuery custom content scroller
                 ],
+				/*
+                [
+                    'type' => 'stylesheet',
+                    'file' => '/vendors/fullcalendar/3.1.0/dist/scheduler.min.css', // fullcalendar Schedule
+                ],*/
                 [
                     'type' => 'stylesheet',
                     'file' => '/vendors/fullcalendar/3.1.0/dist/fullcalendar.min.css', // fullcalendar
@@ -158,16 +163,20 @@ return [
                 ],
                 [
                     'type' => 'script',
-                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js', // End fullcalendar
+                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js', // Bootstrap
                 ],
                 [
                     'type' => 'script',
-                    //'file' => '/vendors/fullcalendar/3.1.0/dist/lang-all.js', // fullcalendar
+                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js', // End 
+                ],
+                [
+                    'type' => 'script',
+                    //'file' => '/vendors/fullcalendar/3.1.0/dist/lang-all.js', // 
                     'file' => 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js', // bootbox
                 ],
                 [
                     'type' => 'script',
-                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js', // End fullcalendar
+                    'file' => 'https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js', // End 
                 ],
                 [
                     'type' => 'script',
@@ -455,12 +464,17 @@ return [
                 ],
                 [
                     'type' => 'script',
-                    'file' => '/vendors/moment/min/moment.min.js', // fullcalendar
+                    'file' => '/vendors/moment/min/moment.min.js', // Moment
                 ],
                 [
                     'type' => 'script',
                     'file' => '/vendors/fullcalendar/3.1.0/dist/fullcalendar.min.js', // End fullcalendar
                 ],
+				/*
+                [
+                    'type' => 'script',
+                    'file' => '/vendors/fullcalendar/3.1.0/dist/scheduler.min.js', // End fullcalendar Schedule
+                ],*/
 				/*
                 [
                     'type' => 'script',

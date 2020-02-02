@@ -1,8 +1,4 @@
 <style>
-.modal {
-	overflow: auto !important;
-}
-
 .list-inline-sonar {display:block;}
 .list-inline-sonar li{display:inline-block;}
 .list-inline-sonar li:after{content:'|'; margin:0 10px;}
@@ -81,7 +77,7 @@
 								<div class="col-md-8 col-xs-12">
 									<select id="contract" required="required" v-model="contract" class="form-control">
 										<option value="0">Seleccione una opcion</option>
-										<option v-for="(option, i_option) in options.emvarias_contracts" :value="option.id">{{ option.name }}</option>
+										<option v-for="(option, i_option) in options.photographic_groups" :value="option.id">{{ option.name }}</option>
 									</select>
 								</div>
 							</div>
@@ -188,7 +184,6 @@
 							  <div id="sparkline22_01" class="demo-placeholder"></div>
 							</div>
 							  <div class="col-md-4">
-								<div id="echart_pie2" style="height:350px;"></div>
 								<canvas class="canvasDoughnut_02" width="100%" style="margin: 5px 10px 10px 0;width:100%"></canvas>
 							  </div>
 						  </div>
@@ -701,7 +696,7 @@
 													<h4 class="heading">Quieres enviar un mensaje sobre este evento?</h4>
 														<label for="message">Mensaje/Comentario (10 min) :</label>
 													<blockquote class="message">
-														<textarea id="message" v-model="commentSchedule" required="required" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="10" data-parsley-maxlength="100" data-parsley-minlength-message="Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10" style="margin: 0px 5.66406px 0px 0px; height: 140px;"></textarea>
+														<textarea id="message" v-model="commentSchedule" required="required" class="form-control" name="message" data-parsley-trigger="keyup" data-parsley-minlength="10" data-parsley-maxlength="100" data-parsley-minlength-message="Come on! You need to enter at least a 20 caracters long comment.." data-parsley-validation-threshold="10" style="margin: 0px 5.66406px 0px 0px; width: 508px; height: 140px;"></textarea>
 													</blockquote>
 													<br />
 													<p class="url">
@@ -778,7 +773,7 @@
 											</button>
 										
 											<!-- // <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-view-photo-modal-lg">Agregar archivos</a> -->
-											<!-- // <a href="#" class="btn btn-sm btn-warning">Report contact</a> -->
+											<a href="#" class="btn btn-sm btn-warning">Report contact</a>
 											
 											
 										</div>
@@ -1067,7 +1062,7 @@ var List = Vue.extend({
 		contractName(){
 			var self = this;
 			try{
-				return self.options.emvarias_contracts.find(x => x.id == self.contract).name;
+				return self.options.emvarias_contracts.find(x => x.id === self.contract).name;
 			} catch(e){
 				return "";
 			}
@@ -1075,7 +1070,7 @@ var List = Vue.extend({
 		periodName(){
 			var self = this;
 			try{
-				return self.options.photographic_periods.find(x => x.id == self.period).name;
+				return self.options.photographic_periods.find(x => x.id === self.period).name;
 			} catch(e){
 				return "";
 			}
@@ -1083,7 +1078,7 @@ var List = Vue.extend({
 		groupName(){
 			var self = this;
 			try{
-				return self.options.photographic_groups.find(x => x.id == self.generalSelected).name;
+				return self.options.photographic_groups.find(x => x.id === self.generalSelected).name;
 			} catch(e){
 				return "";
 			}
@@ -1091,9 +1086,9 @@ var List = Vue.extend({
 		periodDateStart(){
 			var self = this;
 			try{
-				period = self.options.photographic_periods.find(x => x.id == self.period);
-				if(period.start_month == null || period.start_day == null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
-				return (moment().format('Y') + '-' + ((String(period.start_month).length > 1) ? period.start_month : '0' + period.start_month) + '-' + ((String((period.start_day)).length > 1) ? period.start_day : '0' + (period.start_day)));
+				period = self.options.photographic_periods.find(x => x.id === self.period);
+				if(period.start_month === null || period.start_day === null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
+				return (moment().format('Y') + '-' + ((String(period.start_month).length > 1) ? period.start_month : '0' + period.start_month) + '-' + ((String((period.start_day+1)).length > 1) ? period.start_day+1 : '0' + (period.start_day+1)));
 			} catch(e){
 				return "";
 			}
@@ -1101,9 +1096,9 @@ var List = Vue.extend({
 		periodDateEnd(){
 			var self = this;
 			try{
-				period = self.options.photographic_periods.find(x => x.id == self.period);
+				period = self.options.photographic_periods.find(x => x.id === self.period);
 				if(period.end_month === null || period.end_day === null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
-				return (moment().format('Y') + '-' + ((String((period.end_month)).length > 1) ? period.end_month : '0' + (period.end_month)) + '-' + ((String((period.end_day)).length > 1) ? period.end_day : '0' + (period.end_day)));
+				return (moment().format('Y') + '-' + ((String((period.end_month)).length > 1) ? period.end_month : '0' + (period.end_month)) + '-' + ((String((period.end_day+1)).length > 1) ? period.end_day+1 : '0' + (period.end_day+1)));
 			} catch(e){
 				return "";
 			}
@@ -1385,7 +1380,6 @@ var List = Vue.extend({
 		scheduleSendComment(){
 			var self = this;
 			if(self.commentSchedule.length < 9){ return false; }
-			
 			bootbox.confirm({
 				message: "Debes confirmar antes de continuar.",
 				locale: 'es',
@@ -1400,7 +1394,6 @@ var List = Vue.extend({
 					}
 				},
 				callback: function (result) {
-					
 					if(result === true){
 						api.post('/records/emvarias_schedule_comments', {
 							schedule: self.generalSelected.schedule.id,
@@ -1490,8 +1483,6 @@ var List = Vue.extend({
 		},
 		scheduleChangeToExecuted(){
 			var self = this;
-			//$(".bs-info-general-modal-lg").modal('show');
-			//$(".bs-info-general-modal-lg").modal('hide');
 			bootbox.confirm({
 				message: "Debes confirmar antes de continuar.",
 				locale: 'es',
@@ -1526,13 +1517,10 @@ var List = Vue.extend({
 								}
 								self.total_m2_executed += self.generalSelected.lot.area_m2;
 							}
-							//$(".bs-info-general-modal-lg").modal('show');
 						}).catch(function (error) {
 							console.error(error);
 							console.log(error.response);
 						});
-					} else {
-						//$(".bs-info-general-modal-lg").modal('show');
 					}
 				}
 			});
@@ -1783,17 +1771,10 @@ var List = Vue.extend({
 				closeButton: false
 			});
 			
-			
 			startDate = new Date(self.periodDateStart);
-			// endDate = new Date(self.periodDateStart).addDays(15);
 			endDate = new Date(self.periodDateEnd);
-			console.log('startDate', startDate);
-			console.log('endDate', endDate);
-			
-			
-			
 			for (var i = -1; i < ((((((endDate-startDate)/1000)/60)/60)/24)+2); i++) {
-				var dat = new Date(startDate).add(i).days();
+				dat = new Date(startDate).add(i).days();
 				self.charts.plot01.push([dat.getTime(), 0]);
 				self.charts.plot02.push([dat.getTime(), 0]);
 				self.charts.plot03.push([dat.getTime(), 0]);
@@ -1811,7 +1792,7 @@ var List = Vue.extend({
 			
 			api.get('/records/emvarias_microroutes', { params: {
 				filter: [
-					'contract,eq,' + self.contract,
+					// 'group,eq,' + self.contract,
 				],
 				join: [
 					'emvarias_lots',
@@ -1827,220 +1808,6 @@ var List = Vue.extend({
 					self.total = a.data.records.length;
 					var recordsSends = [];
 					
-					  var theme = {
-						  color: [
-							  '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
-							  '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
-						  ],
-
-						  title: {
-							  itemGap: 8,
-							  textStyle: {
-								  fontWeight: 'normal',
-								  color: '#408829'
-							  }
-						  },
-
-						  dataRange: {
-							  color: ['#1f610a', '#97b58d']
-						  },
-
-						  toolbox: {
-							  color: ['#408829', '#408829', '#408829', '#408829']
-						  },
-
-						  tooltip: {
-							  backgroundColor: 'rgba(0,0,0,0.5)',
-							  axisPointer: {
-								  type: 'line',
-								  lineStyle: {
-									  color: '#408829',
-									  type: 'dashed'
-								  },
-								  crossStyle: {
-									  color: '#408829'
-								  },
-								  shadowStyle: {
-									  color: 'rgba(200,200,200,0.3)'
-								  }
-							  }
-						  },
-
-						  dataZoom: {
-							  dataBackgroundColor: '#eee',
-							  fillerColor: 'rgba(64,136,41,0.2)',
-							  handleColor: '#408829'
-						  },
-						  grid: {
-							  borderWidth: 0
-						  },
-
-						  categoryAxis: {
-							  axisLine: {
-								  lineStyle: {
-									  color: '#408829'
-								  }
-							  },
-							  splitLine: {
-								  lineStyle: {
-									  color: ['#eee']
-								  }
-							  }
-						  },
-
-						  valueAxis: {
-							  axisLine: {
-								  lineStyle: {
-									  color: '#408829'
-								  }
-							  },
-							  splitArea: {
-								  show: true,
-								  areaStyle: {
-									  color: ['rgba(250,250,250,0.1)', 'rgba(200,200,200,0.1)']
-								  }
-							  },
-							  splitLine: {
-								  lineStyle: {
-									  color: ['#eee']
-								  }
-							  }
-						  },
-						  timeline: {
-							  lineStyle: {
-								  color: '#408829'
-							  },
-							  controlStyle: {
-								  normal: {color: '#408829'},
-								  emphasis: {color: '#408829'}
-							  }
-						  },
-
-						  k: {
-							  itemStyle: {
-								  normal: {
-									  color: '#68a54a',
-									  color0: '#a9cba2',
-									  lineStyle: {
-										  width: 1,
-										  color: '#408829',
-										  color0: '#86b379'
-									  }
-								  }
-							  }
-						  },
-						  map: {
-							  itemStyle: {
-								  normal: {
-									  areaStyle: {
-										  color: '#ddd'
-									  },
-									  label: {
-										  textStyle: {
-											  color: '#c12e34'
-										  }
-									  }
-								  },
-								  emphasis: {
-									  areaStyle: {
-										  color: '#99d2dd'
-									  },
-									  label: {
-										  textStyle: {
-											  color: '#c12e34'
-										  }
-									  }
-								  }
-							  }
-						  },
-						  force: {
-							  itemStyle: {
-								  normal: {
-									  linkStyle: {
-										  strokeColor: '#408829'
-									  }
-								  }
-							  }
-						  },
-						  chord: {
-							  padding: 4,
-							  itemStyle: {
-								  normal: {
-									  lineStyle: {
-										  width: 1,
-										  color: 'rgba(128, 128, 128, 0.5)'
-									  },
-									  chordStyle: {
-										  lineStyle: {
-											  width: 1,
-											  color: 'rgba(128, 128, 128, 0.5)'
-										  }
-									  }
-								  },
-								  emphasis: {
-									  lineStyle: {
-										  width: 1,
-										  color: 'rgba(128, 128, 128, 0.5)'
-									  },
-									  chordStyle: {
-										  lineStyle: {
-											  width: 1,
-											  color: 'rgba(128, 128, 128, 0.5)'
-										  }
-									  }
-								  }
-							  }
-						  },
-						  gauge: {
-							  startAngle: 225,
-							  endAngle: -45,
-							  axisLine: {
-								  show: true,
-								  lineStyle: {
-									  color: [[0.2, '#86b379'], [0.8, '#68a54a'], [1, '#408829']],
-									  width: 8
-								  }
-							  },
-							  axisTick: {
-								  splitNumber: 10,
-								  length: 12,
-								  lineStyle: {
-									  color: 'auto'
-								  }
-							  },
-							  axisLabel: {
-								  textStyle: {
-									  color: 'auto'
-								  }
-							  },
-							  splitLine: {
-								  length: 18,
-								  lineStyle: {
-									  color: 'auto'
-								  }
-							  },
-							  pointer: {
-								  length: '90%',
-								  color: 'auto'
-							  },
-							  title: {
-								  textStyle: {
-									  color: '#333'
-								  }
-							  },
-							  detail: {
-								  textStyle: {
-									  color: 'auto'
-								  }
-							  }
-						  },
-						  textStyle: {
-							  fontFamily: 'Arial, Verdana, sans-serif'
-						  }
-					  };
-
-
-
 					a.data.records.forEach(function(b){
 						self.lastDayExecuted = -1;
 						self.total_m2 += (b.lot.area_m2) * b.repeat;
@@ -2048,56 +1815,58 @@ var List = Vue.extend({
 						
 						if(detectCalendar == true){
 							b.emvarias_schedule.forEach(function(c){
-								self.lastDayExecuted = -1;
-								self.total_m2_schedule += b.lot.area_m2;
-								// Charts
-								indexSheduled = self.charts.plot01.findIndex(x => (x[0] == new Date(c.date_executed_schedule).getTime()));
-								if(indexSheduled > -1){
-									self.charts.plot01[indexSheduled][1] += (b.lot.area_m2);
-								}
-								
-								
-								if(c.is_executed == 1){
-									self.total_m2_executed += b.lot.area_m2;
-									indexExecuted = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_executed).getTime()));
-									console.log('indexExecuted', indexExecuted);
-									if(indexExecuted > -1){
-										self.charts.plot02[indexExecuted][1] += parseFloat(b.lot.area_m2);
-										self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
-										
-								}
-									indexGroupChart = self.charts.plot05.findIndex(x => (x.id == c.group.id));
-									if(indexGroupChart > -1){
-										// self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
-										self.charts.plot05[indexGroupChart].data += parseFloat(b.lot.area_m2);
+								if(self.contract == c.group.id){
+									self.lastDayExecuted = -1;
+									self.total_m2_schedule += b.lot.area_m2;
+									// Charts
+									indexSheduled = self.charts.plot01.findIndex(x => (x[0] == new Date(c.date_executed_schedule).getTime()));
+									if(indexSheduled > -1){
+										self.charts.plot01[indexSheduled][1] += (b.lot.area_m2);
 									}
 									
-									self.lastDayExecuted = indexExecuted;
-								}
-								
-								if(c.is_approved == 1){
-									self.total_m2_approved += b.lot.area_m2;
-									indexApproved = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_approved).getTime()));
-									if(indexApproved > -1){
-										self.charts.plot03[indexApproved][1] += parseFloat(b.lot.area_m2);
+									
+									if(c.is_executed == 1){
+										self.total_m2_executed += b.lot.area_m2;
+										indexExecuted = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_executed).getTime()));
+										console.log('indexExecuted', indexExecuted);
+										if(indexExecuted > -1){
+											self.charts.plot02[indexExecuted][1] += parseFloat(b.lot.area_m2);
+											self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
+											
 									}
+										indexGroupChart = self.charts.plot05.findIndex(x => (x.id == c.group.id));
+										if(indexGroupChart > -1){
+											// self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
+											self.charts.plot05[indexGroupChart].data += parseFloat(b.lot.area_m2);
+										}
+										
+										self.lastDayExecuted = indexExecuted;
+									}
+									
+									if(c.is_approved == 1){
+										self.total_m2_approved += b.lot.area_m2;
+										indexApproved = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_approved).getTime()));
+										if(indexApproved > -1){
+											self.charts.plot03[indexApproved][1] += parseFloat(b.lot.area_m2);
+										}
+									}
+									
+									// repeat
+									
+									recordsSends.push({
+										id: b.id,
+										name: b.name,
+										area_m2: b.lot.area_m2,
+										repeat: b.repeat,
+										repeatDetect: b.repeat,
+										lot: b.lot,
+										contract: b.contract,
+										isSchedule: true,
+										isExecuted: c.is_executed == 1 ? true : false,
+										isApproved: c.is_approved == 1 ? true : false,
+										schedule: c,
+									});
 								}
-								
-								// repeat
-								
-								recordsSends.push({
-									id: b.id,
-									name: b.name,
-									area_m2: b.lot.area_m2,
-									repeat: b.repeat,
-									repeatDetect: b.repeat,
-									lot: b.lot,
-									contract: b.contract,
-									isSchedule: true,
-									isExecuted: c.is_executed == 1 ? true : false,
-									isApproved: c.is_approved == 1 ? true : false,
-									schedule: c,
-								});
 							});
 						} else {
 							recordsSends.push({
@@ -2188,56 +1957,23 @@ var List = Vue.extend({
 							finalChart02 = [];
 							finalChart03 = [];
 							finalChart04 = [];
-							self.charts.plot01.forEach(function(x){ if(x[1] >= 0){ finalChart01.push(x); } });
-							self.charts.plot02.forEach(function(x){ if(x[1] >= 0){ finalChart02.push(x); } });
-							self.charts.plot03.forEach(function(x){ if(x[1] >= 0){ finalChart03.push(x); } });
-							
-							
-								
-							$.plot( $("#chart_plot_02_02"), 
-							[{ 
-								label: "Programado", 
-								data: finalChart01, 
-								lines: { 
-									fillColor: "rgba(150, 100, 89, 0.12)" 
-								}, 
-								points: { 
-									fillColor: "#fff" } 
-							},{ 
-								label: "Ejecutado", 
-								data: finalChart02, 
-								lines: { 
-									fillColor: "rgba(63, 151, 235, 0.12)" 
-								}, 
-								points: { 
-									fillColor: "#fff" } 
-							},{ 
-								label: "Aprobado", 
-								data: finalChart03, 
-								lines: { 
-									fillColor: "rgba(202,150, 0, 0.12)" 
-								}, 
-								points: { 
-									fillColor: "#fff" } 
-							}], chart_plot_02_settings);
-							
+							self.charts.plot01.forEach(function(x){ if(x[1] > 0){ finalChart01.push(x); } });
+							self.charts.plot02.forEach(function(x){ if(x[1] > 0){ finalChart02.push(x); } });
+							self.charts.plot03.forEach(function(x){ if(x[1] > 0){ finalChart03.push(x); } });
 							
 							ot = 0;
 							chart1 = [];
-							self.charts.plot01.forEach(function(x){ if(x[1] > 0){ ot += x[1]; x[1] = ot; chart1.push(x); } });
+							self.charts.plot01.forEach(function(x){ if(x[1] >= 0){ ot += x[1]; x[1] = ot; chart1.push(x); } });
 							
 							ot = 0;
 							chart2 = [];
-							self.charts.plot02.forEach(function(x){ if(x[1] > 0){ ot += x[1]; x[1] = ot; chart2.push(x); } });
+							self.charts.plot02.forEach(function(x){ if(x[1] >= 0){ ot += x[1]; x[1] = ot; chart2.push(x); } });
 							
 							chart3_label = [];
 							chart3_data = [];
 							self.charts.plot05.forEach(function(x){ if(x.id > 0){ chart3_label.push(x.label); chart3_data.push(x.data); } });
 							
-							console.log('self.charts', self.charts);
-							console.log('self.chart1', chart1);
-							console.log('self.chart2', chart2);
-							console.log('self.chart3_data', chart3_data);
+							
 							$.plot( $("#sparkline22_01"), [
 							{ 
 								label: "Programado", 
@@ -2287,169 +2023,42 @@ var List = Vue.extend({
 										responsive: true
 									}
 								}
-							$('.canvasDoughnut_02').each(function(){
-								
-								var chart_element = $(this);
-								var chart_doughnut = new Chart( chart_element, chart_doughnut_settings);
-								
-							});
-							
-							
-						
-			  
-							if ($('#echart_pie2').length ){ 
-							  var echartPieCollapse = echarts.init(document.getElementById('echart_pie2'));
-										/*
-									  echartPieCollapse.setOption({
-										tooltip: {
-											trigger: 'item',
-											formatter: '{a} <br/>{b}: {c} ({d}%)'
-										},
-										legend: {
-											orient: 'vertical',
-											left: 10,
-											data: ['直达', '营销广告', '搜索引擎', '邮件营销', '联盟广告', '视频广告', '百度', '谷歌', '必应', '其他']
-										},
-										series: [
-											{
-												name: '访问来源',
-												type: 'pie',
-												selectedMode: 'single',
-												radius: [0, '30%'],
-
-												label: {
-													position: 'inner'
-												},
-												labelLine: {
-													show: false
-												},
-												data: [
-													{value: 335, name: '直达', selected: true},
-													{value: 679, name: '营销广告'},
-													{value: 1548, name: '搜索引擎'}
-												]
-											},
-											{
-												name: '访问来源',
-												type: 'pie',
-												radius: ['40%', '55%'],
-												label: {
-													formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
-													backgroundColor: '#eee',
-													borderColor: '#aaa',
-													borderWidth: 1,
-													borderRadius: 4,
-													// shadowBlur:3,
-													// shadowOffsetX: 2,
-													// shadowOffsetY: 2,
-													// shadowColor: '#999',
-													// padding: [0, 7],
-													rich: {
-														a: {
-															color: '#999',
-															lineHeight: 22,
-															align: 'center'
-														},
-														// abg: {
-														//     backgroundColor: '#333',
-														//     width: '100%',
-														//     align: 'right',
-														//     height: 22,
-														//     borderRadius: [4, 4, 0, 0]
-														// },
-														hr: {
-															borderColor: '#aaa',
-															width: '100%',
-															borderWidth: 0.5,
-															height: 0
-														},
-														b: {
-															fontSize: 16,
-															lineHeight: 33
-														},
-														per: {
-															color: '#eee',
-															backgroundColor: '#334455',
-															padding: [2, 4],
-															borderRadius: 2
-														}
-													}
-												},
-												data: [
-													{value: 335, name: '直达'},
-													{value: 310, name: '邮件营销'},
-													{value: 234, name: '联盟广告'},
-													{value: 135, name: '视频广告'},
-													{value: 1048, name: '百度'},
-													{value: 251, name: '谷歌'},
-													{value: 147, name: '必应'},
-													{value: 102, name: '其他'}
-												]
-											}
-										]
-									});
-									*/
+								$('.canvasDoughnut_02').each(function(){
 									
+									var chart_element = $(this);
+									var chart_doughnut = new Chart( chart_element, chart_doughnut_settings);
+									
+								});
 							
-							  echartPieCollapse.setOption({
-								tooltip: {
-								  trigger: 'item',
-								  formatter: "{a} <br/>{b} : {c} ({d}%)"
-								},
-								legend: {
-								  x: 'center',
-								  y: 'bottom',
-								  data: ['rose1', 'rose2', 'rose3', 'rose4', 'rose5', 'rose6']
-								},
-								toolbox: {
-								  show: true,
-								  feature: {
-									magicType: {
-									  show: true,
-									  type: ['pie', 'funnel']
-									},
-									restore: {
-									  show: true,
-									  title: "Restore"
-									},
-									saveAsImage: {
-									  show: true,
-									  title: "Save Image"
-									}
-								  }
-								},
-								calculable: true,
-								series: [{
-								  name: 'Area Mode',
-								  type: 'pie',
-								  radius: [25, 90],
-								  center: ['50%', 170],
-								  roseType: 'area',
-								  x: '50%',
-								  max: 40,
-								  sort: 'ascending',
-								  data: [{
-									value: 10,
-									name: 'rose1'
-								  }, {
-									value: 5,
-									name: 'rose2'
-								  }, {
-									value: 15,
-									name: 'rose3'
-								  }, {
-									value: 25,
-									name: 'rose4'
-								  }, {
-									value: 20,
-									name: 'rose5'
-								  }, {
-									value: 35,
-									name: 'rose6'
-								  }]
-								}]
-							  });
-							} 
+							
+							
+						$.plot( $("#chart_plot_02_02"), 
+						[{ 
+							label: "Programado", 
+							data: finalChart01, 
+							lines: { 
+								fillColor: "rgba(150, 100, 89, 0.12)" 
+							}, 
+							points: { 
+								fillColor: "#fff" } 
+						},{ 
+							label: "Ejecutado", 
+							data: finalChart02, 
+							lines: { 
+								fillColor: "rgba(63, 151, 235, 0.12)" 
+							}, 
+							points: { 
+								fillColor: "#fff" } 
+						},{ 
+							label: "Aprobado", 
+							data: finalChart03, 
+							lines: { 
+								fillColor: "rgba(202,150, 0, 0.12)" 
+							}, 
+							points: { 
+								fillColor: "#fff" } 
+						}], chart_plot_02_settings);
+						
 					}
 					
 					

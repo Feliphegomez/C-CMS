@@ -33,7 +33,7 @@ h1, h2, h3, h4, h5, h6{
 ============================================== */
 
 .about {
-  background: url(http://www.aeroviajespacifico.co/paquetes-turisticos/images/layout/bg/square_bg.png) no-repeat top center;
+  background: url(/public/assets/build/images/square_bg.png) no-repeat top center;
   background-size: cover;
   background-color: rgba(255, 255, 255, 0.2);
   text-align: center;

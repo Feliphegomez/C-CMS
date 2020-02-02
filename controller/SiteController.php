@@ -17,7 +17,15 @@ class SiteController extends ControladorBase{
     }
     
     public function actionHome_users(){
-        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest){
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			], 'demo-login');
+			header('HTTP/1.0 403 Forbidden'); exit();	
+		}
         /*
         $this->render("home_users", [
             "title" => "Principal Usuario",
@@ -201,7 +209,13 @@ class SiteController extends ControladorBase{
 	// Cuentas - Master
 	public function actionAccounts_master(){
 		$error = null;
-        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('accounts:master:admin') !== true)){ $this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			], 'main'); }
+			
 		$this->render("accounts_master", [
             "title" => "Master Cuentas",
         ]);
@@ -1288,6 +1302,7 @@ print_r($files);
 				"photographics",
 				"{$year}",
 				"{$period_name}",
+				// cuadrilla
 				$route_name,
 				// $lot_name,
 				$typeText
@@ -1566,6 +1581,156 @@ print_r($files);
         ]);
     }
 	
+	// Reporte media - Subir Archivo en Reporte
+	public function actionSend_Photo_Schedule(){
+		$error = null;
+        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$_get = (!empty($_GET)) ? $_GET : [];
+		$year = (isset($_GET['year']) && (int) $_GET['year'] >= date("Y")) ? (int) $_GET['year'] : date("Y");
+		
+		$schedule = isset($_GET['schedule']) ? ($_GET['schedule']) : false;
+		$contract_name = isset($_GET['contract_name']) ? base64_decode((string) $_GET['contract_name']) : false;
+		$route_name = isset($_GET['route_name']) ? base64_decode((string) $_GET['route_name']) : false;
+		$group = isset($_GET['group']) ? ($_GET['group']) : false;
+		$period = isset($_GET['period']) ? ($_GET['period']) : false;
+		$date_executed = isset($_GET['date_executed']) ? ($_GET['date_executed']) : false;
+		
+		$group_name = isset($_GET['group_name']) ? base64_decode((string) $_GET['group_name']) : false;
+		$period_name = isset($_GET['period_name']) ? base64_decode((string) $_GET['period_name']) : false;
+		
+		$type = isset($_GET['type']) ? $_GET['type'] : false;
+		$typeText = ($type !== "A") ? ($type == "D") ? 'DESPUES' : 'OTRO' : 'ANTES';
+		
+		$ds          = DIRECTORY_SEPARATOR;
+		$storeFolder = 'uploads';
+		$files_detect = !isset($_FILES['file']) ? false : true;
+		$files = !empty($_FILES) ? [$_FILES['file']] : [];
+		$returning = (object) [
+			'error' 	=> true,
+			'status'    => 'error',
+			'result' => false,
+			'files_detect' => $files_detect,
+			'files' => [],
+			'files_origin' => $files,
+			//'files' => isset($_FILES['file']) ? $_FILES['file'] : [],
+			'text' => "",
+			'_get' => $_get,
+		];
+		
+		if(
+			$route_name !== false
+			&& $contract_name !== false
+			&& $schedule !== false
+			&& $group !== false
+			&& $group_name !== false
+			&& $period !== false
+			&& $period_name !== false
+			&& $date_executed !== false
+			&& $type !== false
+		){
+			$folderBase = [
+				"reports",
+				"photographics",
+				"{$contract_name}",
+				"{$year}",
+				"{$period_name}",
+				"{$group_name}",
+				$route_name,
+				$typeText,
+				// $date_executed
+			];
+			$targetPath = PUBLIC_PATH . $ds . implode($ds, $folderBase) . $ds;
+			$returning->text = $targetPath;
+			$returning->folderBase = $folderBase;
+			
+			
+			/*
+			$fichero_subido = $dir_subida . basename($_FILES['archivoDesarrolloHidrocalido']['name']);
+			echo '<pre>';
+			if (move_uploaded_file($_FILES['archivoDesarrolloHidrocalido']['tmp_name'], $fichero_subido)) {
+				echo "El fichero es válido y se subió con éxito.\n";
+			} else {
+				echo "¡Posible ataque de subida de ficheros!\n";
+			}
+			echo 'Más información de depuración:';
+			print_r($_FILES);
+			print "</pre>";
+			*/
+			
+			
+			if (!empty($_FILES)) {
+				$isArray = is_array($files) ? true : [$files];
+				// Compruebe si la carpeta de carga si existe sino se crea la carpeta
+				if ( !file_exists($targetPath) && !is_dir($targetPath) ) { mkdir($targetPath, 0777, true); };
+				// Compruebe si la carpeta se creo o si existe
+				if ( file_exists($targetPath) && is_dir($targetPath) ) {
+					// Comprueba si podemos escribir en el directorio de destino
+					if ( is_writable($targetPath) ) {
+						// $returning->text = "multiples archivos."; //carpeta: {$targetPath}
+						$total = count($files);
+						$returning->total = $total;
+						for($i = 0; $i < $total; $i++){
+							$model = new ReportPhotographicFile($this->adapter);
+							$model->schedule = $schedule;
+							$model->year = $year;
+							$model->type = $type;
+							$model->group = $group;
+							$model->period = $period;
+							
+							$model->file_name = randomString(6, $files[$i]['name']);
+							$model->file_type = $files[$i]['type'];
+							$model->file_size = $files[$i]['size'];
+							$model->file_path_short = $ds . "public" . $ds .implode($ds, $folderBase). $ds . $date_executed . "-" . $model->file_name;
+							$model->file_path_full = $targetPath . $date_executed . "-" . $model->file_name;
+							$model->create_by = $this->user->id;
+							
+							
+							// echo json_encode($model);
+							// return json_encode($model);
+							// Mover archivo
+							$error_up = !$model->copyFile($files[$i]['tmp_name']);
+							$returning->error = $error_up;
+								$returning->text = $error_up; // carpeta: {$targetPath}
+							if ($error_up == false) {
+								$returning->files[] = (object) [
+									"id" => $model->id,
+									"name" => $model->file_name,
+									"type" => $model->file_type,
+									"size" => $model->file_size,
+									"path_short" => $model->file_path_short,
+									"path_full" => $model->file_path_full,
+									"error" => ($model->id > 0) ? false : true,
+								];
+							} else {
+								$response = array (
+									'status' => 'error',
+									'info'   => 'No se pudo cargar el archivo solicitado :(, ocurrió un misterioso error.'
+								);
+							}
+							
+						}
+					} else {
+						$returning->text = "No hay permisos en la carpeta. {$targetPath}";
+					}
+				}else{
+					$returning->text = "no existe la carpeta. {$targetPath}";
+				}
+			}
+		}
+		
+		$returning->status = $returning->error == false ? 'status' : 'error';
+		$returning->files = is_object(json_decode(json_encode($returning->files))) ? [$returning->files] : $returning->files;
+		
+		header('Content-Type: application/json');
+		echo json_encode($returning);
+		return json_encode($returning);
+	}
+	
+	// Reporte nuevo - Subir Archivo en Reporte
+	/*
+	*/
+	
     function actionProgramming(){
         if ($this->isGuest || ($this->checkPermission('schedule:programming') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
         $this->render("emvarias_programming", [
@@ -1573,4 +1738,36 @@ print_r($files);
             "subtitle" => "Crear",
         ]);
     }
+	
+	// Reporte fotográfico - Consola de revision
+	public function actionSchedule_Revision(){
+		$error = null;
+		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+        if (($this->checkPermission('reports:photographic:back') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$this->render("schedule_revision", [
+            "title" => "Informe Registro Fotografico",
+            "subtitle" => "Pendientes",
+        ]);
+	}
+
+    function actionSchedule_Group(){
+        if ($this->isGuest || ($this->checkPermission('schedule:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        // $this->render("schedule_emvarias", [
+        $this->render("schedule_group", [
+            "title" => "Revision",
+            "subtitle" => "Listado General",
+        ]);
+    }
+	
+	function actionSchedule_Report_Before(){
+        if ($this->isGuest || ($this->checkPermission('schedule:reports:create:before') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        $this->render("schedule_report_before_create", [
+            "title" => "Reportar",
+            "subtitle" => "Antes",
+        ]);
+	}
 }

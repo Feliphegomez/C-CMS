@@ -9,27 +9,8 @@
 <!DOCTYPE html>
 <html lang="<?= $this->getLang(); ?>">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta charset="<?= $this->getCharset(); ?>">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <!-- // <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-        <title><?= $title; ?></title>
-        <?= $this->head(); ?>
-		<script>
-		/*
-			var api = axios.create({
-				baseURL: '/api.php',
-			   withCredentials: true
-			});
-
-			api.interceptors.response.use(function (response) {
-			  if (response.headers['x-xsrf-token']) {
-				document.cookie = 'XSRF-TOKEN=' + response.headers['x-xsrf-token'] + '; path=/';
-			  }
-			  return response;
-			});*/
-		</script>
+		<?= $this->head(); ?>
+		<script src='/public/assets/build/js/apiFG.js'></script>
 		<script src='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
 		<link href='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />		
 		<style>

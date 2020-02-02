@@ -2,9 +2,9 @@
 <div class="col-md-12">
   <div class="col-middle">
 	<div class="text-center text-center">
-	  <h1 class="error-number">403</h1>
-	  <h2>Access denied</h2>
-	  <p>Se requiere elevacion de permisos para acceder a este recurso. <a href="#">Reporta esto?</a>
+	  <h1 class="error-number"><?= $code; ?></h1>
+	  <h2><?= $title; ?></h2>
+	  <p><?= $description; ?> <a href="#">Reporta esto?</a>
 	  </p>
 	  <div class="mid_center">
 		

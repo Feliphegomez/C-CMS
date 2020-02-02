@@ -6,7 +6,6 @@
  * ******************************/
 
 class DemoController extends ControladorBase{
-    
     public function __construct() {
         parent::__construct([
 			"theme" => "demo"

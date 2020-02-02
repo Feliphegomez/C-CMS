@@ -73,7 +73,6 @@ class ControladorBase{
 			}
 			return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
 		};';
-		$this->appendScriptBefore($toMysqlFormat);
 	}
 
     public function setPermissions($permissions = null){
@@ -184,7 +183,9 @@ class ControladorBase{
 	}
 	
 	public function head(){
+		$datahead = @include('public/head.php');
 		$r = "";
+		$r .= is_string($datahead) ? $datahead : '';
 		foreach($this->theme['assets']['includes']['head'] as $a){
 			$url = (filter_var($a['file'], FILTER_VALIDATE_URL) === FALSE) ? "{$this->getUrlAssets()}{$a['file']}" : $a['file'];
 				
