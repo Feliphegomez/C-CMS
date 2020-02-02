@@ -666,21 +666,24 @@ var app = new Vue({
 				defaultButtonText: { prev: "Anterior", next: "Siguiente", prevYear: "Ant Año", nextYear: "Sig Año", today: 'Hoy', month: 'mes', week: 'Semana', day: 'Día' },
 				plugins: [ 'interaction', 'resourceTimeline' ],
 				timeZone: 'UTC',
-				header: { left: 'today prev,next timelineDay', center: 'title', right: 'timelineWeek timelineMonth,timelineYear list' },
+				header: { left: 'timelineWeek,timelineYear list timelineDay', center: 'title', right: 'today prev,next timelineMonth' },
 				defaultView: 'timelineMonth',
 				resourceLabelText: 'Cuadrillas',
 				resources: self.calendar.resources,
 				events: self.records,
-				/*
-				validRange: {
+				duration: { days: parseInt(moment(self.periodDateEnd).format('D')) - parseInt(moment(self.periodDateStart).format('D')) },
+				dateAlignment: self.periodDateStart,
+				defaultDate: self.periodDateStart,
+				visibleRange: {
 					start: self.periodDateStart,
 					end: self.periodDateEnd
-				},*/
-				// dateIncrement: { days: 1 },
+				},
+				//dateIncrement: { days: 15 },
 				dayClick: function (date, jsEvent, view, resourceOb) {
 					if(date.format('Y-MM-DD') == self.form_search_create.date_executed_schedule && parseInt(resourceOb.id) == self.form_search_create.group){
-						$('#CreateScheduleModal').modal('show');
-						// self.loadTableMicroroutes();
+						if (confirm("Desea continuar?")) {
+							$('#CreateScheduleModal').modal('show');
+						}
 					}
 					self.form_search_create.date_executed_schedule = date.format('Y-MM-DD');
 					self.form_search_create.group = parseInt(resourceOb.id);
@@ -698,90 +701,19 @@ var app = new Vue({
 					);
 				},
 				editable: true,
-				droppable: true, // this allows things to be dropped onto the calendar
-				/*eventClick: function(calEvent, jsEvent, view) {
-					var title = prompt('Event Title:', calEvent.title, { buttons: { Ok: true, Cancel: false} });
-						calEvent.date_executed_schedule_end = calEvent.end.format('Y-MM-DD');
-						console.log(calEvent.date_executed_schedule_end);
-
-					if (title){
-						calEvent.title = title;
-						$('#calendar-schedule').fullCalendar('updateEvent',calEvent);
-					}
-				},*/
+				droppable: true,
 				eventResize: function(event, delta, revertFunc, jsEvent, ui, view) {
-					alert(event.title + " end is now " + event.end.format('Y-MM-DD'));
+					// alert(event.title + " end is now " + event.end.format('Y-MM-DD'));
 					if (!confirm("Desea modificar la fecha de finalizacion del evento?")) {
 						revertFunc();
 					} else {
-						api.put('/records/emvarias_schedule/' + event.id, {
-							id: event.id,
-							date_executed_schedule_end: event.end.format('Y-MM-DD'),
-							updated_by: <?= $this->user->id; ?>
-						})
-						.then(function (b){
-							if(b.data > 0){									
-								self.createLogSchedule({
-									schedule: event.id,
-									action: 'edit',
-									data: {
-										id: event.id,
-										date_executed_schedule_end: event.end.toISOString(),
-										updated_by: <?= $this->user->id; ?>
-									},
-									response: b,
-								}, function(w){
-									new PNotify({
-										"title": "¡Éxito!",
-										"text": "Modificado con éxito",
-										"styling":"bootstrap3",
-										"type":"success",
-										"icon":true,
-										"animation":"zoom",
-										"hide":true
-									});
-									
-								});
-							}
-						})
-						.catch(function (e) {
-							//console.error(e);
-							self.createLogSchedule({
-								schedule: event.id,
-								action: 'edit-error',
-								data: {
-									id: event.id,
-									date_executed_schedule_end: event.end.toISOString(),
-									updated_by: <?= $this->user->id; ?>
-								},
-								response: e.response,
-							}, function(w){
-								revertFunc();
-							});
-							
-						});
-					}
-				},
-				eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
-					// console.log(event.title + " was dropped on " + event.start.format());
-					if (!confirm("Desea modificar la fecha de este evento?")) {
-						revertFunc();
-					} else {
-						var subDialog = bootbox.dialog({
-							message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
-							closeButton: false
-						});
-
-						
-						if(event.id > 0){
-							event.color = 'orange';
-							event.date_executed_schedule = event.start.format('Y-MM-DD');
-							
+						if(moment().diff(event.start, 'days') > 0 || moment().diff(event.end, 'days') > 0){
+							alert('No puedes modificar el evento antes de hoy.');
+							revertFunc();
+						} else {
 							api.put('/records/emvarias_schedule/' + event.id, {
 								id: event.id,
-								group: event.resourceId,
-								date_executed_schedule: event.start.format('Y-MM-DD'),
-								date_executed_schedule_end:  event.end.toISOString(),
+								date_executed_schedule_end: event.end.format('Y-MM-DD'),
 								updated_by: <?= $this->user->id; ?>
 							})
 							.then(function (b){
@@ -791,17 +723,11 @@ var app = new Vue({
 										action: 'edit',
 										data: {
 											id: event.id,
-											group: event.resourceId,
-											date_executed_schedule_end: event.end.format('Y-MM-DD'),
-											date_executed_schedule: event.start.format('Y-MM-DD'),
+											date_executed_schedule_end: event.end.toISOString(),
 											updated_by: <?= $this->user->id; ?>
 										},
 										response: b,
 									}, function(w){
-										event.date_executed_schedule = event.start.format('Y-MM-DD');
-										event.date_executed_schedule_end = event.end.format('Y-MM-DD');
-										event.group = event.resourceId;
-										
 										new PNotify({
 											"title": "¡Éxito!",
 											"text": "Modificado con éxito",
@@ -822,78 +748,155 @@ var app = new Vue({
 									action: 'edit-error',
 									data: {
 										id: event.id,
-										group: event.resourceId,
-										date_executed_schedule: event.start.format('Y-MM-DD'),
+										date_executed_schedule_end: event.end.toISOString(),
 										updated_by: <?= $this->user->id; ?>
 									},
 									response: e.response,
 								}, function(w){
-									
 									revertFunc();
 								});
 								
 							});
-							subDialog.modal('hide');
-						} else {
+						}
+					}
+				},
+				eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
+					if (!confirm("Desea modificar la fecha de este evento?")) {
+						revertFunc();
+					} else {
+						if(moment().diff(event.start, 'days') > 0){
+							alert('No puedes modificar el evento antes de hoy.');
 							revertFunc();
+						} else {
+							var subDialog = bootbox.dialog({
+								message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+								closeButton: false
+							});
+							if(event.id > 0){
+								event.color = 'orange';
+								event.date_executed_schedule = event.start.format('Y-MM-DD');
+								
+								api.put('/records/emvarias_schedule/' + event.id, {
+									id: event.id,
+									group: event.resourceId,
+									date_executed_schedule: event.start.format('Y-MM-DD'),
+									date_executed_schedule_end:  event.end.toISOString(),
+									updated_by: <?= $this->user->id; ?>
+								})
+								.then(function (b){
+									if(b.data > 0){									
+										self.createLogSchedule({
+											schedule: event.id,
+											action: 'edit',
+											data: {
+												id: event.id,
+												group: event.resourceId,
+												date_executed_schedule_end: event.end.format('Y-MM-DD'),
+												date_executed_schedule: event.start.format('Y-MM-DD'),
+												updated_by: <?= $this->user->id; ?>
+											},
+											response: b,
+										}, function(w){
+											event.date_executed_schedule = event.start.format('Y-MM-DD');
+											event.date_executed_schedule_end = event.end.format('Y-MM-DD');
+											event.group = event.resourceId;
+											
+											new PNotify({
+												"title": "¡Éxito!",
+												"text": "Modificado con éxito",
+												"styling":"bootstrap3",
+												"type":"success",
+												"icon":true,
+												"animation":"zoom",
+												"hide":true
+											});
+											
+										});
+									}
+								})
+								.catch(function (e) {
+									//console.error(e);
+									self.createLogSchedule({
+										schedule: event.id,
+										action: 'edit-error',
+										data: {
+											id: event.id,
+											group: event.resourceId,
+											date_executed_schedule: event.start.format('Y-MM-DD'),
+											updated_by: <?= $this->user->id; ?>
+										},
+										response: e.response,
+									}, function(w){
+										
+										revertFunc();
+									});
+									
+								});
+								subDialog.modal('hide');
+							} else {
+								revertFunc();
+							}
 						}
 					}
 				},
 				eventRender: function(eventObj, element) {
-					// console.log('eventRender: element', element);
-					
-					element.prepend( "<span class='closeon' style='z-index: 99999;position: relative;color: black;padding:2px;'>X</span>" );
-					element.find(".closeon").click(function() {
-						if (confirm("Desea Eliminar este evento?")) {
-							api.delete('/records/emvarias_schedule/' + eventObj.id, {})
-							.then(function (b){
-								if(b.status == 200){
-									self.createLogSchedule({
-										action: 'delete',
-										data: { id: eventObj.id },
-										response: b,
-									}, function(w){
-										$('.popover.fade.top').remove();
-										$('#calendar-schedule').fullCalendar('removeEvents',eventObj._id);
+					//console.log('eventRender: eventObj', eventObj);
+					if(moment().diff(eventObj.start, 'days') > 0 || moment().diff(eventObj.end, 'days') > 0){
+						eventObj.resourceEditable = false;
+					} else {
+						element.prepend( "<span class='closeon' style='z-index: 99999;position: relative;color: black;padding:2px;'>X</span>" );
+						element.find(".closeon").click(function() {
+							if (confirm("Desea Eliminar este evento?")) {
+								api.delete('/records/emvarias_schedule/' + eventObj.id, {})
+								.then(function (b){
+									if(b.status == 200){
+										self.createLogSchedule({
+											action: 'delete',
+											data: { id: eventObj.id },
+											response: b,
+										}, function(w){
+											$('.popover.fade.top').remove();
+											$('#calendar-schedule').fullCalendar('removeEvents',eventObj._id);
+											
+											IndexOne = self.records.findIndex(x => (x.id == eventObj.id));
+											IndexTwo = self.records_org.findIndex(x => (x.id == eventObj.id));
+											if(IndexOne > -1){ self.records.splice(IndexOne, 1); }
+											if(IndexTwo > -1){ self.records_org.splice(IndexTwo, 1); }
 										
-										IndexOne = self.records.findIndex(x => (x.id == eventObj.id));
-										IndexTwo = self.records_org.findIndex(x => (x.id == eventObj.id));
-										if(IndexOne > -1){ self.records.splice(IndexOne, 1); }
-										if(IndexTwo > -1){ self.records_org.splice(IndexTwo, 1); }
-									
+											new PNotify({
+												"title": "Éxito!",
+												"text": "La programacion se eliminó con éxito.",
+												"styling":"bootstrap3",
+												"type":"error",
+												"icon":true,
+												"animation":"zoom",
+												"hide":true
+											});
+										});									
+									}
+								})
+								.catch(function (e) {
+									// console.log('Error al eliminar schedule');
+									self.createLogSchedule({
+										schedule: eventObj.id,
+										action: 'delete-error',
+										data: { id: eventObj.id },
+										response: e.response,
+									}, function(w){
 										new PNotify({
-											"title": "Éxito!",
-											"text": "La programacion se eliminó con éxito.",
+											"title": "Error eliminando",
+											"text": "La programacion no se puede modificar, posiblemente hay contanido anexido a ellá.",
 											"styling":"bootstrap3",
 											"type":"error",
 											"icon":true,
 											"animation":"zoom",
 											"hide":true
 										});
-									});									
-								}
-							})
-							.catch(function (e) {
-								// console.log('Error al eliminar schedule');
-								self.createLogSchedule({
-									schedule: eventObj.id,
-									action: 'delete-error',
-									data: { id: eventObj.id },
-									response: e.response,
-								}, function(w){
-									new PNotify({
-										"title": "Error eliminando",
-										"text": "La programacion no se puede modificar, posiblemente hay contanido anexido a ellá.",
-										"styling":"bootstrap3",
-										"type":"error",
-										"icon":true,
-										"animation":"zoom",
-										"hide":true
 									});
 								});
-							});
-						}
-					});
+							}
+						});
+					}
 					
 					// console.log('lot ', eventObj.objectMV.microroute.lot.description);
 					element.popover({
@@ -922,7 +925,7 @@ var app = new Vue({
 			var self = this;
 			paramsIn = paramsIn !== null ? paramsIn : {};
 			call = call !== null ? call : function(e){
-				console.log('e',e);
+				//console.log('e',e);
 			};
 			table = table !== null ? '/records/' + table : '/openapi';
 			

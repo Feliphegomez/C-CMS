@@ -1120,7 +1120,15 @@ class SiteController extends ControladorBase{
 	// Manejador para la biblioteca garden
 	public function actionGarden(){
 		$error = null;
-        if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 		
 		$this->render("libraries_garden", [
             "title" => "Bilbiotecas",
@@ -1130,7 +1138,15 @@ class SiteController extends ControladorBase{
 	
 	// Manejador para candidatos / aspirantes
 	public function actionCandidates_list(){
-        if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 		$error = null;		
 		$this->render("candidates", [
             "title" => "Candidatos / Aspirantes",
@@ -1140,7 +1156,15 @@ class SiteController extends ControladorBase{
 	
 	// Candidatos - Search Return IDs
 	public function actionSearchCandidates(){
-        if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('candidates:admin') !== true)){ 
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 		$error = isset($_GET['searchText']) ? false : true;
 		$text = isset($_GET['searchText']) ? $_GET['searchText'] : "";
 		$items = array();
@@ -1454,7 +1478,15 @@ print_r($files);
 	}
 	
 	function actionMy_Webmail(){
-        if ($this->isGuest || ($this->checkPermission('my:webmail') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('my:webmail') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 		if (!isset($_GET['_box']) || (int) $_GET['_box'] <= 0) { header('HTTP/1.0 404 Forbidden'); exit(); }
 		$mailBox = new EmailBox($this->adapter);
 		$mailBox->getById($_GET['_box']);
@@ -1732,7 +1764,15 @@ print_r($files);
 	*/
 	
     function actionProgramming(){
-        if ($this->isGuest || ($this->checkPermission('schedule:programming') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('schedule:programming') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
         $this->render("emvarias_programming", [
             "title" => "Programacion",
             "subtitle" => "Crear",
@@ -1744,7 +1784,15 @@ print_r($files);
 		$error = null;
 		// if ($this->isGuest){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		
-        if (($this->checkPermission('reports:photographic:back') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if (($this->checkPermission('reports:photographic:back') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 		
 		$this->render("schedule_revision", [
             "title" => "Informe Registro Fotografico",
@@ -1753,7 +1801,15 @@ print_r($files);
 	}
 
     function actionSchedule_Group(){
-        if ($this->isGuest || ($this->checkPermission('schedule:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('schedule:general') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 
         // $this->render("schedule_emvarias", [
         $this->render("schedule_group", [
@@ -1763,11 +1819,38 @@ print_r($files);
     }
 	
 	function actionSchedule_Report_Before(){
-        if ($this->isGuest || ($this->checkPermission('schedule:reports:create:before') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('schedule:reports:create:before') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
 
         $this->render("schedule_report_before_create", [
             "title" => "Reportar",
             "subtitle" => "Antes",
         ]);
 	}
+	
+	function actionSchedule_Revision_Tinder(){
+        if ($this->isGuest || ($this->checkPermission('schedule:revision:tinder:admin') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+
+        $this->render("schedule_revision_tinder", [
+            "title" => "Reportar",
+            "subtitle" => "Antes",
+        ]);
+	}
+
+
 }

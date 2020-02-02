@@ -769,6 +769,10 @@ var app = new Vue({
 		},
 		loadMicroroutesSchedule(){
 			var self = this;
+			var subDialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
 			try {
 				$("#contentScheduleSelected").html('');
 				MV.api.readList('/emvarias_schedule', {
@@ -822,6 +826,7 @@ var app = new Vue({
 						$(".select2_single2").append($option);
 						
 					});
+					subDialog.modal('hide');
 					
 					$(".select2_single2").select2({
 					  placeholder: "Seleccione Microruta/Lote",
@@ -834,6 +839,7 @@ var app = new Vue({
 				});
 			} catch(e){
 				console.log('error en loadMicroroutesSchedule');
+				subDialog.modal('hide');
 			}
 		}
 	}
