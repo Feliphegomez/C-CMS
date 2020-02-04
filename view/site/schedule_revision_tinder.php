@@ -1,58 +1,58 @@
-<script src="https://hammerjs.github.io/dist/hammer.js"></script>
 <style>
 .tinder {
-  width: 100%;
-  min-height: 87vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  opacity: 0;
-  transition: opacity 0.1s ease-in-out;
+	width: 100%;
+	min-height: 87vh;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	opacity: 0;
+	transition: opacity 0.1s ease-in-out;
+	/* background: brown; */
 }
 
 .loaded.tinder {
-  opacity: 1;
+	opacity: 1;
 }
 
 .tinder--status {
-  position: absolute;
-  top: 50%;
-  margin-top: -30px;
-  z-index: 2;
-  width: 100%;
-  text-align: center;
-  pointer-events: none;
+	position: absolute;
+	top: 50%;
+	/* margin-top: -30px; */
+	z-index: 2;
+	width: 100%;
+	text-align: center;
+	pointer-events: none;
 }
 
 .tinder--status i {
-  font-size: 100px;
-  opacity: 0;
-  transform: scale(0.3);
-  transition: all 0.2s ease-in-out;
-  position: absolute;
-  width: 100px;
-  margin-left: -50px;
+	font-size: 100px;
+	opacity: 0;
+	transform: scale(0.3);
+	transition: all 0.2s ease-in-out;
+	position: absolute;
+	width: 100px;
+	margin-left: -50px;
 }
 
 .tinder_love .fa-heart {
-  opacity: 0.7;
-  transform: scale(1);
+	opacity: 0.7;
+	transform: scale(1);
 }
 
 .tinder_nope .fa-remove {
-  opacity: 0.7;
-  transform: scale(1);
+	opacity: 0.7;
+	transform: scale(1);
 }
 
 .tinder--cards {
-  flex-grow: 1;
-  padding-top: 40px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  z-index: 1;
+	flex-grow: 1;
+	padding-top: 40px;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	z-index: 1;
 }
 
 .tinder--card {
@@ -138,50 +138,61 @@
 	<!-- // <router-view :key="$route.fullPath" ></router-view>-->
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="tinder">
-			  <div class="tinder--status">
-				<i class="fa fa-remove"></i>
-				<i class="fa fa-heart"></i>
-			  </div>
-
-			  <div class="tinder--cards">
-				<!-- // 
-				<div class="tinder--card">
-				  <img src="https://placeimg.com/600/300/people">
-				  <h3>Demo card 1</h3>
-				  <p>This is a demo for Tinder like swipe cards</p>
+			<div class="tinder col-md-12">
+				<div class="tinder--status">
+					<i class="fa fa-remove"></i>
+					<i class="fa fa-heart"></i>
 				</div>
-				<div class="tinder--card">
-				  <img src="https://placeimg.com/600/300/animals">
-				  <h3>Demo card 2</h3>
-				  <p>This is a demo for Tinder like swipe cards</p>
+				<div class="tinder--cards col-md-12">
+					<!-- // <div v-for-callback="{key: record.id, array: records, callback: callback}" v-for="(record, record_i) in records" class="tinder--card"> -->
+					<div v-for="(record, record_i) in records" class="tinder--card" id="record.id">
+						<img :src="record.file_path_short">
+						<h3>
+							<a @click="selected = record;" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-plus-circle"></i></a> 
+							{{ record.schedule.microroute.name }} - {{ record.created }} 
+						</h3>
+						<p>
+							{{ record.period.name }} - {{ record.year }}<br>
+							{{ record.group.name }}<br>
+							{{ record.schedule.date_executed_schedule }}<br>
+							{{ record.schedule.date_executed_schedule }}<br>
+						</p>
+					</div>
+					<!-- // 
+					<div class="tinder--card">
+					  <img src="https://placeimg.com/600/300/people">
+					  <h3>Demo card 1</h3>
+					  <p>This is a demo for Tinder like swipe cards</p>
+					</div>
+					<div class="tinder--card">
+					  <img src="https://placeimg.com/600/300/animals">
+					  <h3>Demo card 2</h3>
+					  <p>This is a demo for Tinder like swipe cards</p>
+					</div>
+					<div class="tinder--card">
+					  <img src="https://placeimg.com/600/300/nature">
+					  <h3>Demo card 3</h3>
+					  <p>This is a demo for Tinder like swipe cards</p>
+					</div>
+					<div class="tinder--card">
+					  <img src="https://placeimg.com/600/300/tech">
+					  <h3>Demo card 4</h3>
+					  <p>This is a demo for Tinder like swipe cards</p>
+					</div>
+					<div class="tinder--card">
+					  <img src="https://placeimg.com/600/300/arch">
+					  <h3>Demo card 5</h3>
+					  <p>This is a demo for Tinder like swipe cards</p>
+					</div>
+					-->
 				</div>
-				<div class="tinder--card">
-				  <img src="https://placeimg.com/600/300/nature">
-				  <h3>Demo card 3</h3>
-				  <p>This is a demo for Tinder like swipe cards</p>
+				<div class="tinder--buttons col-md-12">
+					<button id="nope"> <i class="fa fa-remove"></i>
+					<button id="popup" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-info"></i></button>
+					<button id="love"><i class="fa fa-heart"></i></button>
 				</div>
-				<div class="tinder--card">
-				  <img src="https://placeimg.com/600/300/tech">
-				  <h3>Demo card 4</h3>
-				  <p>This is a demo for Tinder like swipe cards</p>
-				</div>
-				<div class="tinder--card">
-				  <img src="https://placeimg.com/600/300/arch">
-				  <h3>Demo card 5</h3>
-				  <p>This is a demo for Tinder like swipe cards</p>
-				</div>
-				-->
-			  </div>
-
-			  <div class="tinder--buttons">
-				<button id="nope"> <i class="fa fa-remove"></i>
-				
-				  <button id="love"><i class="fa fa-heart"></i></button>
-			  </div>
 			</div>
 		</div>
-		
 		<div class="col-xs-12">
 			<div class="row">
 				<div class="col-xs-12">
@@ -245,6 +256,8 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
+		</div>
+		
 			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 				  <div class="modal-content">
@@ -344,7 +357,6 @@
 				</div>
 			  </div>
 			  <!-- /modals -->
-			</div>
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -479,12 +491,54 @@ var app = new Vue({
 		var self = this;
 		self.load();
 	},
+	directives: {
+		forCallback(el, binding) {
+			var self = this;
+			let element = binding.value
+			element.callback()
+			if(self.loading == true){
+				var key = element.key
+				var len = 0
+				
+				if (Array.isArray(element.array)) {
+					len = element.array.length
+				}
+				else if (typeof element.array === 'object') {
+					var keys = Object.keys(element.array)
+					key = keys.indexOf(key)
+					len = keys.length
+				}
+				
+				if (key == len - 1) {
+					if (typeof element.callback === 'function') {
+						element.callback()
+					}
+				}
+			}
+		}
+	},
+	computed: {
+	},
 	methods: {
+		callback() {
+			var self = this;
+			console.log('v-for loop finished');3
+			if(self.loading == true){
+				self.runTinder();
+				self.loading = false;
+			}
+		},
 		load(){
 			var self = this;
 			self.loading = true;
 			self.records = [];
 			self.total = 0;
+			var subDialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
+			
+			
 			MV.apiFG('/api.php/records/emvarias_reports_photographic', {
 				params: {
 					filter: [
@@ -504,39 +558,22 @@ var app = new Vue({
 					page: self.page + "," + self.limit
 				}
 			}).then(function (response) {
-				if(response.data.records && response.data.records.length > 0){
+				if(response.status == 200){
 					self.total = response.data.results;
 					self.records = response.data.records;
-					
-					$(".tinder--cards").html('');
-					
-					response.data.records.forEach(function(ax){
-						console.log('ax', ax);
-						try {
-							$html = '';
-							$html += '<div class="tinder--card">';
-								$html += '<img src="' + ax.file_path_short + '" class="img img-responsive" style="width:100%;">';
-								$html += '<p>' + ax.file_name + '</p>';
-							$html += '</div>';
-							  
-							  
-							  
-							  console.log('$html', $html);
-							$(".tinder--cards").append($html);
-						}
-						catch(e){
-							console.error(e);
-						}
-					
-					});
-					
-					self.runTinder();
+					setTimeout(function(){
+						self.runTinder();
+						subDialog.modal('hide');
+					}, 3000);
+					// $(".tinder--cards").html('');
+				} else {
+					subDialog.modal('hide');
 				}
-				self.loading = false;
 			}).catch(function (error) {
 				console.log('error list-routes::methods::load()');
 				console.log(error.response);
 				self.loading = false;
+				subDialog.modal('hide');
 			});
 		},
 		initCards(card, index) {
@@ -554,6 +591,7 @@ var app = new Vue({
 		  tinderContainer.classList.add('loaded');
 		},
 		createButtonListener(love) {
+			var self = this;
 		  return function (event) {
 			var cards = document.querySelectorAll('.tinder--card:not(.removed)');
 			var moveOutWidth = document.body.clientWidth * 1.5;

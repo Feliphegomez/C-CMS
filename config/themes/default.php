@@ -502,6 +502,10 @@ return [
                     'type' => 'script',
                     'file' => '/vendors/tinymce/4.7.7/tinymce.min.js', // Custom Theme Style
                 ],
+                [
+                    'type' => 'script',
+                    'file' => '/vendors/hammer/hammer.js', // Hammer
+                ]
             ],
             'footer_scripts' => [
                 [

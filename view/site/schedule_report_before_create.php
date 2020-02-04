@@ -95,21 +95,23 @@ video {
 				<p>{{ descriptionSelected }}</p>
 				-->
 			</form>
-		
-					<div class=" col-xs-12" style="border:0px solid #e5e5e5;">
-						
-						<!-- // 
-						<div class="product_social">
-							<ul class="list-inline">
-								<li><a href="#" data-toggle="tooltip" title="Hooray!">Hover over me</a></li>
-								<li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
-								<li><a href="#"><i class="fa fa-envelope-square"></i></a></li>
-								<li><a href="#"><i class="fa fa-rss-square"></i></a></li>
-							</ul>
-						</div>
-						-->
-					</div>
+
+			<div class=" col-xs-12" style="border:0px solid #e5e5e5;">
+				<!-- // 
+					{{ createForm }}
+				-->
+				<!-- // 
+				<div class="product_social">
+					<ul class="list-inline">
+						<li><a href="#" data-toggle="tooltip" title="Hooray!">Hover over me</a></li>
+						<li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+						<li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+						<li><a href="#"><i class="fa fa-envelope-square"></i></a></li>
+						<li><a href="#"><i class="fa fa-rss-square"></i></a></li>
+					</ul>
+				</div>
+				-->
+			</div>
 		</div>
 		
 		
@@ -244,9 +246,9 @@ var app = new Vue({
 	},
 	mounted(){
 		var self = this;
+		self.loadOptions();
 		self.canvas = document.createElement('canvas');
 		self.camera.videoElement = document.querySelector('video');
-		self.loadOptions();
 					
 		$(document).ready(function(){
 		  $('[data-toggle="tooltip"]').popover({
@@ -348,6 +350,8 @@ var app = new Vue({
 					url += "&group=" + self.createForm.group;
 					url += "&date_executed=" + self.dateUpda;
 					url += "&group_name=" + btoa(self.groupName);
+					url += "&lat=" + btoa(self.createForm.lat);
+					url += "&lng=" + btoa(self.createForm.lng);
 					// console.log(url);
 					
 				}

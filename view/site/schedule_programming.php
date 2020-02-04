@@ -30,6 +30,19 @@
 .tile-stats .icon i {
 	font-size: 120px;
 }
+
+/* Popover Header */
+.popover-title {
+  font-size: 11px;
+}
+/* Popover Body */
+.popover-content {
+  font-size: 11px;
+}
+.fc-timeline-event {
+	font-size: 10px;
+	color: #666;
+}
 </style>
 
 <div id="schedule-programming">
@@ -242,6 +255,7 @@ function FormException(error, aviso){
 	this.message = aviso;
 };
 
+	   
 var app = new Vue({
 	data: function () {
 		return {
@@ -254,7 +268,7 @@ var app = new Vue({
 				microroutes: [],
 			},
 			calendar: {
-				colors: ["gray", "#bbe069", "#61adee", "#ff7777", "yellow", "#ffa62c", "#ae93df", "#cecece"],
+				colors: ["gray", "#3fa741", "#61adee", "#ff7777", "#8a6d3b", "#ffa62c", "#5d3b9b", "#b22f7e"],
 				resources: []
 			},
 			form_search_create: {
@@ -269,6 +283,10 @@ var app = new Vue({
 	},
 	mounted(){
 		var self = this;
+		var subDialog = bootbox.dialog({
+			message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+			closeButton: false
+		});
 		self.$root.loadAPI_List('emvarias_microroutes', {
 			join: [
 				'emvarias_lots',
@@ -276,9 +294,10 @@ var app = new Vue({
 			],
 		}, function(e){
 			self.options.emvarias_microroutes = e;
-			
+			subDialog.modal('hide');
 			self.loadOptions();
 		});
+		
 		$('#CreateScheduleModal').on('show.bs.modal', function (e) {
 			$('.modal .modal-dialog').attr('class', 'modal-lg modal-dialog  ' + 'zoomIn' + '  animated');
 			$('.datatable-buttons2-message').html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> Cargando...');
@@ -439,7 +458,7 @@ var app = new Vue({
 					'Z' + a.zone + 'CC' + self.$root.zfill(a.name, 4) + 'FM' + a.repeat, 
 					(a.lot.id_ref.length > 1 || a.lot.id_ref.length !== 'N/A') ? a.lot.id_ref : 'N/A', 
 					a.lot.address_text, 
-					self.$root.formatMoney(a.lot.area_m2, 2, ',', '.') + ' m2', 
+					a.lot.area_m2.toLocaleString() + ' m2', 
 					a.zone, 
 					self.$root.zfill(a.name, 4), 
 					'<font id="repeats-microroute-' + a.id + '">' + self.repeatsDetect(a) + '</font>' + '/' + a.repeat, 
@@ -449,20 +468,7 @@ var app = new Vue({
 					(a.lot.description.length > 1) ? a.lot.description : 'Sin Descripcion',
 				]),
 				"order": [[1, 'asc']],
-				columns: [
-					{ title: "Id INT" },
-					{ title: "Microruta" },
-					{ title: "Lote Ref" },
-					{ title: "Direccion(es)" },
-					{ title: "Area m2" },
-					{ title: "Zona" },
-					{ title: "CC" },
-					{ title: "Repeticiones" },
-					{ title: "Añadir" },
-					{ title: "Contrato" },
-					{ title: "Obs lote" },
-					{ title: "Descripcion", class: "child" },
-				],
+				columns: [ { title: "Id INT" }, { title: "Microruta" }, { title: "Lote Ref" }, { title: "Direccion(es)" }, { title: "Area m2" }, { title: "Zona" }, { title: "CC" }, { title: "Repeticiones" }, { title: "Añadir" }, { title: "Contrato" }, { title: "Obs lote" }, { title: "Descripcion", class: "child" } ],
 				initComplete: function( settings, json ) {
 					//subDialog.modal('hide');
 					var apiTables = this.api();
@@ -513,6 +519,11 @@ var app = new Vue({
 		},
 		loadOptions(){
 			var self = this;
+			var subDialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
+			
 			self.$root.loadAPI_List('photographic_periods', {}, function(e){
 				self.options.photographic_periods = e;
 				self.$root.loadAPI_List('photographic_groups', {}, function(e){				
@@ -521,9 +532,15 @@ var app = new Vue({
 						self.calendar.resources.push({
 							id: a.id,
 							title: a.name,
+							building: a.name,
 							eventColor: (self.calendar.colors[a.id] !== undefined) ? self.calendar.colors[a.id] : "gray",
+							eventBackgroundColor: (self.calendar.colors[a.id] !== undefined) ? self.calendar.colors[a.id] + "80" : "gray",
+							building: '460 Bryant',
+							// eventBorderColor: '#ddd',
+							//eventColor: '#ddd'
 						});
 					});
+					subDialog.modal('hide');
 					self.loadCalendar();
 				});
 			});
@@ -622,6 +639,11 @@ var app = new Vue({
 			$('#calendar-schedule').fullCalendar( 'removeEventSource', self.records );
 			self.records = [];
 			if(self.form_search_create.period <= 0 || self.form_search_create.year <= 1950){ return false; };
+			var subDialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
+			
 			api.get('/records/emvarias_schedule', {
 				params: {
 					join: [
@@ -642,6 +664,7 @@ var app = new Vue({
 					self.records = c.data.records.map(function(eventEl) {
 						return self.scheduleToEvent(eventEl);
 					});
+					
 				};
 			})
 			.catch(function (e) {
@@ -653,10 +676,18 @@ var app = new Vue({
 				// console.log('carga finalizada...');
 				$('#calendar-schedule').fullCalendar( 'addEventSource', self.records );
 				$('#calendar-schedule').fullCalendar( 'gotoDate', self.periodDateStart );
+				subDialog.modal('hide');
+			
 			});			
 		},
 		loadCalendar(){
 			var self = this;
+			var subDialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
+			
+			
 			$('#calendar-schedule').fullCalendar({
 				dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
 				dayNamesShort: ['Dom','Lun','Mar','Mie','Jue','Vie','Sáb'],
@@ -666,19 +697,28 @@ var app = new Vue({
 				defaultButtonText: { prev: "Anterior", next: "Siguiente", prevYear: "Ant Año", nextYear: "Sig Año", today: 'Hoy', month: 'mes', week: 'Semana', day: 'Día' },
 				plugins: [ 'interaction', 'resourceTimeline' ],
 				timeZone: 'UTC',
-				header: { left: 'timelineWeek,timelineYear list timelineDay', center: 'title', right: 'today prev,next timelineMonth' },
+				header: { left: 'timelineWeek,timelineYear list timelineDay', center: 'title', right: 'today prev,next resourceTimelineFourDays timelineMonth' },
 				defaultView: 'timelineMonth',
 				resourceLabelText: 'Cuadrillas',
 				resources: self.calendar.resources,
 				events: self.records,
-				duration: { days: parseInt(moment(self.periodDateEnd).format('D')) - parseInt(moment(self.periodDateStart).format('D')) },
+				resourceAreaWidth: "15%",
+				// duration: { days: parseInt(moment(self.periodDateEnd).format('D')) - parseInt(moment(self.periodDateStart).format('D')) },
 				dateAlignment: self.periodDateStart,
 				defaultDate: self.periodDateStart,
 				visibleRange: {
 					start: self.periodDateStart,
 					end: self.periodDateEnd
 				},
-				//dateIncrement: { days: 15 },
+				slotLabelFormat: [
+					'MMMM YYYY', // top level of text
+					'ddd'        // lower level of text
+				],
+				// dateIncrement: { days: 15 },
+				eventAfterAllRender: function (view) {
+					var self = this;
+					subDialog.modal('hide');
+				},
 				dayClick: function (date, jsEvent, view, resourceOb) {
 					if(date.format('Y-MM-DD') == self.form_search_create.date_executed_schedule && parseInt(resourceOb.id) == self.form_search_create.group){
 						if (confirm("Desea continuar?")) {
@@ -688,7 +728,8 @@ var app = new Vue({
 					self.form_search_create.date_executed_schedule = date.format('Y-MM-DD');
 					self.form_search_create.group = parseInt(resourceOb.id);
 				},
-				resourceRender: function(resourceObj, $td) {
+				resourceRender: function(resourceObj, $td, $bodyTds) {
+					// $td.find(".fc-cell-text").addClass("fc-expander");
 					$td.eq(0).find('.fc-cell-content')
 					.append(
 						$('<strong>(?)</strong>').popover({
@@ -699,6 +740,8 @@ var app = new Vue({
 							container: 'body'
 						})
 					);
+					
+					$bodyTds.css('background', resourceObj.eventBackgroundColor);
 				},
 				editable: true,
 				droppable: true,
@@ -920,6 +963,7 @@ var app = new Vue({
 					});
 				},
 			});
+			
 		},
 		loadAPI_List(table=null, paramsIn=null, call=null){
 			var self = this;

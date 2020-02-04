@@ -1630,6 +1630,8 @@ print_r($files);
 		
 		$group_name = isset($_GET['group_name']) ? base64_decode((string) $_GET['group_name']) : false;
 		$period_name = isset($_GET['period_name']) ? base64_decode((string) $_GET['period_name']) : false;
+		$lat = isset($_GET['period_name']) ? float(base64_decode((string) $_GET['lat'])) : false;
+		$lng = isset($_GET['period_name']) ? float(base64_decode((string) $_GET['lng'])) : false;
 		
 		$type = isset($_GET['type']) ? $_GET['type'] : false;
 		$typeText = ($type !== "A") ? ($type == "D") ? 'DESPUES' : 'OTRO' : 'ANTES';
@@ -1852,5 +1854,14 @@ print_r($files);
         ]);
 	}
 
+    function actionSchedule_Live(){
+        if ($this->isGuest || ($this->checkPermission('schedule:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        // $this->render("schedule_emvarias", [
+        $this->render("schedule_live", [
+            "title" => "Revision General",
+            "subtitle" => "Listado General",
+        ]);
+    }
 
 }
