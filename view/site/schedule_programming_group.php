@@ -88,6 +88,15 @@
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Cuadrilla</label>
+									<div class="col-md-9 col-sm-9 col-xs-12">
+										<select @change="submitFormSearch" v-model="form_search_create.group" class="select2_single form-control" tabindex="-1">
+											<option value="0">Seleccione una opcion</option>
+											<option v-for="(option, i_option) in options.photographic_groups" :value="option.id">{{ option.name }}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="control-label col-md-3 col-sm-3 col-xs-12">Año <span class="required">*</span></label>
 									<div class="col-md-9 col-sm-9 col-xs-12">
 										<input @change="submitFormSearch" v-model="form_search_create.year" id="birthday" class="date-picker form-control col-md-7 col-xs-12" min="2018" required="required" type="number">
@@ -641,7 +650,7 @@ var app = new Vue({
 			var self = this;
 			$('#calendar-schedule').fullCalendar( 'removeEventSource', self.records );
 			self.records = [];
-			if(self.form_search_create.period <= 0 || self.form_search_create.year <= 1950){ return false; };
+			if(self.form_search_create.period <= 0 || self.form_search_create.year <= 1950 || self.form_search_create.group <= 0){ return false; };
 			var subDialog = bootbox.dialog({
 				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
 				closeButton: false
@@ -656,6 +665,7 @@ var app = new Vue({
 						'photographic_groups'
 					],
 					filter: [
+						'group,eq,' + self.form_search_create.group,
 						'period,eq,' + self.form_search_create.period,
 						'year,eq,' + self.form_search_create.year
 					],
@@ -700,11 +710,9 @@ var app = new Vue({
 				defaultButtonText: { prev: "Anterior", next: "Siguiente", prevYear: "Ant Año", nextYear: "Sig Año", today: 'Hoy', month: 'mes', week: 'Semana', day: 'Día' },
 				plugins: [ 'interaction', 'resourceTimeline' ],
 				timeZone: 'UTC',
-				selectable: true,
-				selectHelper: true,
 				// header: { left: 'timelineWeek,timelineYear list timelineDay', center: 'title', right: 'today prev,next resourceTimelineFourDays timelineMonth' },
-				header: { left: 'timelineWeek,timelineYear list timelineDay', center: 'title', right: 'timelineMonth' },
-				defaultView: 'timelineMonth',
+				header: { left: 'agendaFourDay,timeFourDay prev,next today', center: 'title', right: 'timelineMonth' },
+				// defaultView: 'timelineMonth',
 				resourceLabelText: 'Cuadrillas',
 				resources: self.calendar.resources,
 				events: self.records,
@@ -715,6 +723,19 @@ var app = new Vue({
 				visibleRange: {
 					start: self.periodDateStart,
 					end: self.periodDateEnd
+				},
+				defaultView: 'timelineMonth',
+				views: {
+					agendaFourDay: {
+						buttonText: 'Agenda',
+					  type: 'agenda',
+					  dayCount: 15
+					},
+					timeFourDay: {
+						buttonText: 'Gantt',
+					  type: 'timeline',
+					  dayCount: 15
+					}
 				},
 				/*
 				slotLabelFormat: [

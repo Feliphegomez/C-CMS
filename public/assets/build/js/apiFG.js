@@ -57,18 +57,19 @@ MV.api = {
 			})
 			.then(function (a){
 				if(a.status == 200){
-					outData = (a.data !== undefined && c.data.records === undefined) ? a.data : (a.data !== undefined && c.data.records !== undefined) ? c.data.records : {};
+					outData = (a.data !== undefined && a.data.records === undefined) ? a.data : (a.data !== undefined && a.data.records !== undefined) ? a.data.records : {};
 					callback(outData)
 				};
 			})
 			.catch(function (e) {
-				throw new eException(e.response.code, e.response.message);
+				callback(e);
 			}).finally(function(){
 				console.log('carga finalizada...');
 			});
 		} catch(e){
 			console.log('error get api.');
 			console.error(e);
+			callback(e);
 		}
 	},
 	create(urlIn=null, paramsIn=null, callback=null){
@@ -77,21 +78,23 @@ MV.api = {
 		paramsIn = paramsIn !== null ? paramsIn : {};
 		
 		try {
-			MV.apiFG.post('/api.php/records' + urlIn, paramsIn)
+			MV.apiFG.post('/api.php' + urlIn, paramsIn)
 			.then(function (a){
 				if(a.status == 200){
-					outData = (a.data !== undefined && parseInt(c.data) > 0) ? a.data : 0;
+					outData = (a.data !== undefined && parseInt(a.data) > 0) ? a.data : 0;
 					callback(outData)
 				};
 			})
 			.catch(function (e) {
-				throw new eException(e.response.code, e.response.message);
+				if(e.response) { console.log(e.response); }
+				return callback(e);
 			}).finally(function(){
 				console.log('Subida finalizada...');
 			});
 		} catch(e){
 			console.log('error post api.');
 			console.error(e);
+			return callback(e.response);
 		}
 	},
 	update(urlIn=null, paramsIn=null, callback=null){
@@ -103,18 +106,23 @@ MV.api = {
 			MV.apiFG.put('/api.php' + urlIn, paramsIn)
 			.then(function (a){
 				if(a.status == 200){
-					outData = (a.data !== undefined && parseInt(c.data) > 0) ? a.data : 0;
+					outData = (a.data !== undefined && parseInt(a.data) > 0) ? a.data : 0;
 					callback(outData)
 				};
 			})
 			.catch(function (e) {
-				throw new eException(e.response.code, e.response.message);
+				if(!(e.response.code) || !!(e.response.message)){
+					return callback(e);
+				}else{
+					throw new eException(e.response.code, e.response.message);
+				}
 			}).finally(function(){
-				console.log('Actualizacion finalizada...');
+				console.log('Subida finalizada...');
 			});
 		} catch(e){
-			console.log('error put api.');
+			console.log('error post api.');
 			console.error(e);
+			return callback(e.response);
 		}
 	},
 	remove(urlIn=null, callback=null, paramsIn=null){
@@ -126,7 +134,7 @@ MV.api = {
 			MV.apiFG.delete('/api.php' + urlIn, paramsIn)
 			.then(function (a){
 				if(a.status == 200){
-					outData = (a.data !== undefined && parseInt(c.data) > 0) ? a.data : 0;
+					outData = (a.data !== undefined && parseInt(a.data) > 0) ? a.data : 0;
 					callback(outData)
 				};
 			})

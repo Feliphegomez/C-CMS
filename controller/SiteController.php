@@ -1622,7 +1622,6 @@ print_r($files);
 		$year = (isset($_GET['year']) && (int) $_GET['year'] >= date("Y")) ? (int) $_GET['year'] : date("Y");
 		
 		$schedule = isset($_GET['schedule']) ? ($_GET['schedule']) : false;
-		$contract_name = isset($_GET['contract_name']) ? base64_decode((string) $_GET['contract_name']) : false;
 		$route_name = isset($_GET['route_name']) ? base64_decode((string) $_GET['route_name']) : false;
 		$group = isset($_GET['group']) ? ($_GET['group']) : false;
 		$period = isset($_GET['period']) ? ($_GET['period']) : false;
@@ -1630,8 +1629,8 @@ print_r($files);
 		
 		$group_name = isset($_GET['group_name']) ? base64_decode((string) $_GET['group_name']) : false;
 		$period_name = isset($_GET['period_name']) ? base64_decode((string) $_GET['period_name']) : false;
-		$lat = isset($_GET['period_name']) ? float(base64_decode((string) $_GET['lat'])) : false;
-		$lng = isset($_GET['period_name']) ? float(base64_decode((string) $_GET['lng'])) : false;
+		$lat = isset($_GET['lat']) ? (float) $_GET['lat'] : false;
+		$lng = isset($_GET['lng']) ? (float) $_GET['lng'] : false;
 		
 		$type = isset($_GET['type']) ? $_GET['type'] : false;
 		$typeText = ($type !== "A") ? ($type == "D") ? 'DESPUES' : 'OTRO' : 'ANTES';
@@ -1654,7 +1653,6 @@ print_r($files);
 		
 		if(
 			$route_name !== false
-			&& $contract_name !== false
 			&& $schedule !== false
 			&& $group !== false
 			&& $group_name !== false
@@ -1662,36 +1660,22 @@ print_r($files);
 			&& $period_name !== false
 			&& $date_executed !== false
 			&& $type !== false
+			&& $lat !== false
+			&& $lng !== false
 		){
 			$folderBase = [
-				"reports",
-				"photographics",
-				"{$contract_name}",
+				"reports-photographics",
 				"{$year}",
 				"{$period_name}",
 				"{$group_name}",
 				$route_name,
 				$typeText,
+				"en-revision",
 				// $date_executed
 			];
 			$targetPath = PUBLIC_PATH . $ds . implode($ds, $folderBase) . $ds;
 			$returning->text = $targetPath;
 			$returning->folderBase = $folderBase;
-			
-			
-			/*
-			$fichero_subido = $dir_subida . basename($_FILES['archivoDesarrolloHidrocalido']['name']);
-			echo '<pre>';
-			if (move_uploaded_file($_FILES['archivoDesarrolloHidrocalido']['tmp_name'], $fichero_subido)) {
-				echo "El fichero es válido y se subió con éxito.\n";
-			} else {
-				echo "¡Posible ataque de subida de ficheros!\n";
-			}
-			echo 'Más información de depuración:';
-			print_r($_FILES);
-			print "</pre>";
-			*/
-			
 			
 			if (!empty($_FILES)) {
 				$isArray = is_array($files) ? true : [$files];
@@ -1711,7 +1695,8 @@ print_r($files);
 							$model->type = $type;
 							$model->group = $group;
 							$model->period = $period;
-							
+							$model->lat = $lat;
+							$model->lng = $lng;
 							$model->file_name = randomString(6, $files[$i]['name']);
 							$model->file_type = $files[$i]['type'];
 							$model->file_size = $files[$i]['size'];
@@ -1820,8 +1805,8 @@ print_r($files);
         ]);
     }
 	
-	function actionSchedule_Report_Before(){
-        if ($this->isGuest || ($this->checkPermission('schedule:reports:create:before') !== true)){
+	function actionSchedule_Report_Live(){
+        if ($this->isGuest || ($this->checkPermission('schedule:reports:create:before') !== true) || empty($_GET['type'])){
 			header('HTTP/1.0 403 Forbidden');
 			$this->render("errors", 
 				[
@@ -1831,7 +1816,24 @@ print_r($files);
 			]); exit();	
 		}
 
-        $this->render("schedule_report_before_create", [
+        $this->render("schedule_report_live_create", [
+            "title" => "Reportar",
+            "subtitle" => "Antes",
+        ]);
+	}
+	
+	function actionSchedule_Report_Live_Offline(){
+        if ($this->isGuest || ($this->checkPermission('schedule:reports:create:before') !== true) || empty($_GET['type'])){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+
+        $this->render("schedule_report_live_create_offline", [
             "title" => "Reportar",
             "subtitle" => "Antes",
         ]);
@@ -1863,5 +1865,305 @@ print_r($files);
             "subtitle" => "Listado General",
         ]);
     }
+	
+	function actionTest_replace_photo(){
+		try{
+			$urlPicture = '/home/admin/web/micuenta.monteverdeltda.com/public_html/public/assets/images/default_user.png';
+			if(empty($_GET['file_id']) || !isset($_GET['file_id'])){
+				$txt = "Error: Falta ID";
+			} else {
+				$file_id = $_GET['file_id'];
+				$fileModel = new ReportPhotographicFile($this->adapter);
+				$fileModel->getById($file_id);
+				
+				if($fileModel->id <= 0){
+					$txt = "Error: 404";
+				} else {
+					$schedule = new EmvariasSchedule($this->adapter);
+					$schedule->getById($fileModel->schedule);
+					$contract = "Contrato: ";
+					$microruote = "";
+					$FyH = "";
+					$LatyLng = "";
+					$AddressText = "";
+					$period_group_year = "";
+					
+					if($schedule->id > 0){
+						$contract .= "{$schedule->microroute->contract->name}" . "\r\n";
+						$textCC = str_pad($schedule->microroute->name, 4, "0", STR_PAD_LEFT);
+						#$microruote .= "Z{$schedule->microroute->zone}CC{$textCC}FM{$schedule->microroute->repeat}" . " - " . strtoupper($schedule->microroute->lot->address_text) . "\r\n";
+						$dateProgramm = new DateTime($schedule->date_executed_schedule);
+						#$FyH .= $dateProgramm->format('Y-m-d') . " - ";
+						
+						$latDSM = DDtoDMS($fileModel->lat);
+						$latDSMText = $latDSM['deg'] . "°" . $latDSM['min'] . "'" . $latDSM['sec'] . "''" . (($fileModel->lat > 0) ? "N" : "S");
+						
+						$lngDSM = DDtoDMS($fileModel->lng);
+						$lngDSMText = $lngDSM['deg'] . "°" . $lngDSM['min'] . "'" . $lngDSM['sec'] . "''" . (($fileModel->lng > 0) ? "O" : "W");
+						
+						$LatyLng .=   "{$latDSMText} {$lngDSMText}" . "\r\n";
+						
+						//$period_group_year .= "{$schedule->period->name} {$schedule->year} - {$schedule->group->name}" . "\r\n";
+						
+						$ctx = stream_context_create(array(
+							'http' => array(
+								'timeout' => 1
+								)
+							)
+						);
+						$result = json_decode(@file_get_contents("https://eu1.locationiq.com/v1/reverse.php?key=e5e2e6ef0e7892&postaladdress=1&format=json&zoom=18&lat={$fileModel->lat}&lon={$fileModel->lng}", 0, $ctx));
+						
+						if(isset($result->display_name)){
+							$AddressText .= "{$result->display_name}" . "\r\n";
+						}
+					}
+					
+					$dateSchedule = new DateTime($fileModel->created);
+					$FyH .= $dateSchedule->format('Y-m-d H:i:s') . "\r\n";
+					
+					$urlPicture = $fileModel->file_path_full;
+					
+					$txt = "MONTEVERDE Servicios Ambientales y Forestales LTDA\r\n" 
+						. $contract
+						. $microruote
+						. $FyH
+						. $LatyLng
+						. $AddressText
+						. $period_group_year;
+				}
+				
+			}
+			
+			$infoFile = pathinfo($urlPicture);
+			if($infoFile['extension'] == 'png'){ $img = imagecreatefrompng($urlPicture); } 
+			else if($infoFile['extension'] == 'jpg' || $infoFile['extension'] == 'jpeg'){ $img = imagecreatefromjpeg($urlPicture); } 
+			else if($infoFile['extension'] == 'gif'){ $img = imagecreatefromgif($urlPicture); } 
+			else if($infoFile['extension'] == 'bmp'){ $img = imagecreatefrombmp($urlPicture); } 
+			else if($infoFile['extension'] == 'wbmp'){ $img = imagecreatefromwbmp($urlPicture); } 
+			else if($infoFile['extension'] == 'webp'){ $img = imagecreatefromwebp($urlPicture); }
+			
+			// FETCH IMAGE & WRITE TEXT
+			//$img = imagecreatefrompng($urlPicture);
+			# $font = "/home/admin/web/micuenta.monteverdeltda.com/public_html/public/assets/build/fonts/arial.ttf";
+			#$font = "/home/admin/web/micuenta.monteverdeltda.com/public_html/public/assets/build/fonts/OCRAEXT.TTF";
+			$font = "/home/admin/web/micuenta.monteverdeltda.com/public_html/public/assets/build/fonts/arial-bold.ttf";
+			
+			if(imagesy($img) > imagesx($img)){ $img = imagerotate($img, 90, 0); }
+			// THE IMAGE SIZE
+			//imagecopyresized($img, $img, 0, 0, 0, 0, 1366, 768, imagesx($img), imagesy($img));
+			
+			
+			// imagecopyresized($img, $img2, 0, 0, 0, 0, 1366, 768, imagesx($img), imagesy($img));
+			
+			$width = imagesx($img);
+			$height = imagesy($img);
+			$white = imagecolorallocate($img, 255, 255, 255);
+			// THE TEXT SIZE
+			$text_size = imagettfbbox(10, 0, $font, $txt);
+			$text_width = max([$text_size[2], $text_size[4]]) - min([$text_size[0], $text_size[6]]);
+			$text_height = max([$text_size[5], $text_size[7]]) - min([$text_size[1], $text_size[3]]);
 
+			// CENTERING THE TEXT BLOCK
+			$centerX = CEIL(($width - $text_width) / 2);
+			$centerX = $centerX<0 ? 0 : $centerX;
+			//$centerX = $width - ($text_width*2);
+			$centerY = CEIL(($height - $text_height) / 2);
+			$centerY = $centerY<0 ? 0 : $centerY;
+			//$centerY = -100
+			imagettftext($img, 13, 0, CEIL(($width - $text_width) / 22) + 1, CEIL(($height - $text_height) / 1.3) - 1, imagecolorallocate($img, 0, 0, 0), $font, $txt);
+			imagettftext($img, 13, 0, CEIL(($width - $text_width) / 22), CEIL(($height - $text_height) / 1.3), $white, $font, $txt);
+
+			// OUTPUT IMAGE
+			header('Content-type: image/jpeg');
+			imagejpeg($img);
+			imagedestroy($img);
+		} catch(Exception $e){
+			
+		}
+
+		// OR SAVE TO A FILE
+		// THE LAST PARAMETER IS THE QUALITY FROM 0 to 100
+		// imagejpeg($img, "test.jpg", 100);
+	}
+
+    function actionSchedule_Programming_Group(){
+        if ($this->isGuest || ($this->checkPermission('schedule:programming:group') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("schedule_programming_group", [
+            "title" => "Programacion Grupo",
+            "subtitle" => "Crear",
+        ]);
+    }
+	
+	
+	
+	
+	// Reporte media - 
+	public function actionReport_Photo_Approve(){
+        if ($this->isGuest || ($this->checkPermission('schedule:reports:status:change') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$_get = (!empty($_GET)) ? $_GET : [];
+		$error = null;
+		$file_id = (isset($_GET['file_id']) && (int) $_GET['file_id'] > 0) ? (int) $_GET['file_id'] : 0;
+		$fileModel = new ReportPhotographicFile($this->adapter);
+		$fileModel->getById($file_id);
+		$ds          = DIRECTORY_SEPARATOR;
+		
+		
+		if($fileModel->status !== 1 && file_exists($fileModel->file_path_full)){
+			// echo "Vamos" . "\r\n";
+			
+			$path_full = $fileModel->file_path_full;
+			$parts_path_full = explode($ds, $path_full);
+			$array_finish_pf = [];
+			foreach($parts_path_full as $f){ if($f == 'en-revision' || $f == 'no-aprobado'){ $f = 'aprobado'; } $array_finish_pf[] = $f; }
+			$new_path_full = implode($ds, $array_finish_pf);
+			$nameDir = dirname($new_path_full);
+			
+			# echo $nameDir ."\r\n";
+			
+			
+			$path_short = $fileModel->file_path_short;
+			$parts_path_short = explode($ds, $path_short);
+			$array_finish_ps = [];
+			foreach($parts_path_short as $f){ if($f == 'en-revision' || $f == 'no-aprobado'){ $f = 'aprobado'; } $array_finish_ps[] = $f; }
+			$new_path_short = implode($ds, $array_finish_ps);
+			
+			# echo $new_path_short ."\r\n";
+			
+			if ( !file_exists($nameDir) && !is_dir($nameDir) ) { mkdir($nameDir, 0755, true); };
+			if ( file_exists($nameDir) && is_dir($nameDir) ) {
+				if ( is_writable($nameDir) ) {
+					echo "Podemos escribir en el directorio de destino.";
+					$success = (rename($path_full, $new_path_full));
+					if($success == true){
+						echo "Resultado 1 : " . json_encode($success);
+						
+						$fileModel->status = 1;
+						$fileModel->updated_by = $this->user->id;
+						$fileModel->file_path_full = $new_path_full;
+						$fileModel->file_path_short = $new_path_short;
+						$succes = $fileModel->saveFolders();
+						echo "Resultado 2 : " . json_encode($succes);
+					}
+				} else {
+					echo "No podemos escribir en el directorio de destino.";
+				}
+			} else {
+				echo "Compruebe si la carpeta se creo o si existe";
+			}
+		}
+	}
+	
+	// Reporte media - 
+	public function actionReport_Photo_NoPass(){
+        if ($this->isGuest || ($this->checkPermission('schedule:reports:status:change') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		$_get = (!empty($_GET)) ? $_GET : [];
+		$error = null;
+		$file_id = (isset($_GET['file_id']) && (int) $_GET['file_id'] > 0) ? (int) $_GET['file_id'] : 0;
+		$fileModel = new ReportPhotographicFile($this->adapter);
+		$fileModel->getById($file_id);
+		$ds          = DIRECTORY_SEPARATOR;
+		
+		
+		if($fileModel->status !== 2 && file_exists($fileModel->file_path_full)){
+			// echo "Vamos" . "\r\n";
+			
+			$path_full = $fileModel->file_path_full;
+			$parts_path_full = explode($ds, $path_full);
+			$array_finish_pf = [];
+			foreach($parts_path_full as $f){ if($f == 'en-revision' || $f == 'aprobado'){ $f = 'no-aprobado'; } $array_finish_pf[] = $f; }
+			$new_path_full = implode($ds, $array_finish_pf);
+			$nameDir = dirname($new_path_full);
+			
+			# echo $nameDir ."\r\n";
+			
+			
+			$path_short = $fileModel->file_path_short;
+			$parts_path_short = explode($ds, $path_short);
+			$array_finish_ps = [];
+			foreach($parts_path_short as $f){ if($f == 'en-revision' || $f == 'aprobado'){ $f = 'no-aprobado'; } $array_finish_ps[] = $f; }
+			$new_path_short = implode($ds, $array_finish_ps);
+			
+			# echo $new_path_short ."\r\n";
+			
+			if ( !file_exists($nameDir) && !is_dir($nameDir) ) { mkdir($nameDir, 0755, true); };
+			if ( file_exists($nameDir) && is_dir($nameDir) ) {
+				if ( is_writable($nameDir) ) {
+					echo "Podemos escribir en el directorio de destino.";
+					$success = (rename($path_full, $new_path_full));
+					if($success == true){
+						echo "Resultado 1 : " . json_encode($success);
+						
+						$fileModel->status = 2;
+						$fileModel->updated_by = $this->user->id;
+						$fileModel->file_path_full = $new_path_full;
+						$fileModel->file_path_short = $new_path_short;
+						$succes = $fileModel->saveFolders();
+						echo "Resultado 2 : " . json_encode($succes);
+					}
+				} else {
+					echo "No podemos escribir en el directorio de destino.";
+				}
+			} else {
+				echo "Compruebe si la carpeta se creo o si existe";
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	# CALENDARIO
+    function actionMeEvents(){
+        if ($this->isGuest || ($this->checkPermission('me:events') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("me_calendar", [
+            "title" => "Mis eventos",
+            "subtitle" => "",
+        ]);
+    }
+	
+	# PROGRAMACION EMVARIAS X Lotes
+	function actionProgramming_Lots(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:programming:lots:master') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("programming_lots", [
+            "title" => "Mis eventos",
+            "subtitle" => "",
+        ]);
+	}
+	
+	# REPORTE EMVARIAS
+	function actionPhotographic_Report_Live_Offline(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:offline') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("photographic_reporting_offline", [
+            "title" => "Mis eventos",
+            "subtitle" => "",
+        ]);
+	}
+
+	# REVISION FOTOS EMVARIAS
+	function actionPhotographic_Report_Tinder(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:revision:style:tinder') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        $this->render("photographic_report_tinder", [
+            "title" => "Revisar fotografias",
+            "subtitle" => "",
+        ]);
+	}
+	
+	# PROGRAMACION EN CURSO EMVARIAS
+    function actionTrackingProgramming(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:revision:style:table') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("tracking_programming", [
+            "title" => "Programacion",
+            "subtitle" => "Crear",
+        ]);
+    }
 }

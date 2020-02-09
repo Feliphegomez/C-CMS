@@ -3,9 +3,9 @@ self.addEventListener('install', function(event) {
 	// Instalar de inmediato
 	if (self.skipWaiting) { self.skipWaiting(); }
 	event.waitUntil(
-		caches.open('cache00000001').then(function(cache) {
+		caches.open('cache00000002').then(function(cache) {
 			return cache.addAll([
-				'/',
+				'/favicon.ico',
 			]);
 		})
 	);
@@ -26,7 +26,7 @@ caches.keys().then(function(cacheKeys) {
 });
 
 // Elimina archivos de cache viejos
-var cacheWhitelist = ['cache01']; // 
+var cacheWhitelist = ['cache01', 'cache00000001']; // 
 caches.keys().then(function(cacheNames) {
 	return Promise.all(
 		cacheNames.map(function(cacheName) {

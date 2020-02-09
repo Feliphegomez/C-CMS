@@ -75,7 +75,6 @@ class Me extends Usuario{
 		}
 		return $formulario;
 	}
-
 	
     public function rules($dataAccess = "complete"){
 		if($dataAccess == "complete"){

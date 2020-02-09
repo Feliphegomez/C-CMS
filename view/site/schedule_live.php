@@ -62,7 +62,7 @@
 	<div>
 		<div class="page-title">
 			<div class="title_left">
-				<h3>Contrato: <small>{{ contractName }}</small></h3>
+				<h3>Contrato: <small>{}</small></h3>
 			</div>
 			<div class="title_right">
 			</div>
@@ -75,33 +75,20 @@
 						The Buttons extension for DataTables provides a common set of options, API methods and styling to display buttons on a page that will interact with a DataTable. The core library provides the based framework upon which plug-ins can built.
 					</p>-->
 					<div class="row">
-						<div class="col-md-4 col-xs-12">
+						<div class="col-md-5 col-xs-12">
 							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12" for="contract">Contrato<span class="required"></span></label>
-								<div class="col-md-8 col-xs-12">
-									<select id="contract" required="required" v-model="contract" class="form-control">
-										<option value="0">Seleccione una opcion</option>
-										<option v-for="(option, i_option) in options.emvarias_contracts" :value="option.id">{{ option.name }}</option>
-									</select>
-								</div>
-							</div>
-							<div class="clearfix"></div>
-						</div>
-						
-						<div class="col-md-4 col-xs-12">
-							<div class="form-group">
-								<label class="control-label col-md-3 col-sm-3 col-xs-12" for="period">Periodo<span class="required"></span></label>
+								<label class="control-label col-md-3 col-sm-3 col-xs-12" for="period">Periodo <span class="required"></span></label>
 								<div class="col-md-8 col-xs-12">
 									<select id="period" required="required" v-model="period" class="form-control">
 										<option value="0">Seleccione una opcion</option>
-										<option v-for="(option, i_option) in options.photographic_periods" :value="option.id">{{ option.name }}</option>
+										<option v-for="(option, i_option) in options.emvarias_periods" :value="option.id">{{ option.name }}</option>
 									</select>
 								</div>
 							</div>
 							<div class="clearfix"></div>
 						</div>
 						
-						<div class="col-md-2 col-xs-12">
+						<div class="col-md-5 col-xs-12">
 							<div class="form-group">
 								<label class="control-label col-md-3 col-sm-3 col-xs-12" for="year">Año <span class="required"></span></label>
 								<div class="col-md-9 col-sm-9 col-xs-12">
@@ -111,7 +98,7 @@
 						</div>
 						
 						<div class="col-md-2 col-xs-12">
-							<button @click="load" type="button" class="btn btn-success pull-right">Continuar</button>
+							<button @click="load" type="button" class="btn btn-success pull-right">Continuar </button>
 						</div>
 						<div class="clearfix"></div>
 					</div>
@@ -125,7 +112,7 @@
 			  <div class="icon"><i class="fa fa-globe"></i></div>
 			  <div class="count">{{ total_m2.toLocaleString() }} m²</div>			  
 			  <h3>Lote(s)</h3>
-			  <p>El total de lotes es XXX.</p>
+			  <p>El total de lotes es {{ total }}.</p>
 			</div>
 		  </div>
 		  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -133,7 +120,7 @@
 			  <div class="icon"><i class="fa fa-calendar"></i></div>
 			  <div class="count">{{ total_m2_schedule.toLocaleString() }} m²</div>
 			  <h3>Programado(s)</h3>
-			  <p>El total de lotes programados es XXX.</p>
+			  <p>El total de lotes programados es {{ total_schedule }}.</p>
 			</div>
 		  </div>
 		  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -141,7 +128,7 @@
 			  <div class="icon"><i class="fa fa-thumbs-up"></i></div>
 			  <div class="count">{{ total_m2_executed.toLocaleString() }} m²</div>
 			  <h3>Ejecutado(s)</h3>
-			  <p>Lorem ipsum psdea itgum rixt.</p>
+			  <p>El total de lotes ejecutados es {{ total_executed }}.</p>
 			</div>
 		  </div>
 		  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -149,7 +136,7 @@
 			  <div class="icon"><i class="fa fa-check-square-o"></i></div>
 			  <div class="count">{{ total_m2_approved.toLocaleString() }} m²</div>
 			  <h3>Aprobado(s)</h3>
-			  <p>Lorem ipsum psdea itgum rixt.</p>
+			  <p>El total de lotes aprobados es {{ total_approved }}.</p>
 			</div>
 		  </div>
 		</div>
@@ -159,7 +146,8 @@
 				<div class="x_panel">
 					<div class="x_title">
 						<h2>Resumen <small>Periodo</small></h2>
-						  <ul class="nav navbar-right panel_toolbox">
+						<!-- // 
+						<ul class="nav navbar-right panel_toolbox">
 							<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
 							</li>
 							<li class="dropdown">
@@ -174,6 +162,7 @@
 							<li><a class="close-link"><i class="fa fa-close"></i></a>
 							</li>
 						  </ul>
+						-->
 						<div class="clearfix"></div>
 					</div>
 					<div class="x_content">
@@ -188,8 +177,8 @@
 							  <div id="sparkline22" class="demo-placeholder"></div>
 							</div>
 							  <div class="col-md-4">
-								<div id="echart_pie2" style="height:350px;"></div>
-								<canvas class="canvasDoughnut_02" width="100%" style="margin: 5px 10px 10px 0;width:100%"></canvas>
+								<div id="echart_pie2" style="margin: 5px 10px 10px 0;width:100%"></div>
+								<canvas class="canvasDoughnut_02 hide" width="100%" style="margin: 5px 10px 10px 0;width:100%"></canvas>
 							  </div>
 						  </div>
 
@@ -225,7 +214,9 @@
 											</template>
 										</a>
 										<div class="media-body">
-											<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">{{ a.name }}</a>
+											<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
+												{{ a.name }}
+											</a>
 											
 											<p>
 												<strong>{{ $root.formatMoney(a.lot.area_m2, 2, ',', '.') }} m² </strong>
@@ -255,21 +246,6 @@
 			<div class="x_panel">
 			  <div class="x_title">
 				<h2>Consola general <small>Vista Rapida</small></h2>
-				<ul class="nav navbar-right panel_toolbox">
-				  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-				  </li>
-				  <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-					<ul class="dropdown-menu" role="menu">
-					  <li><a href="#">Settings 1</a>
-					  </li>
-					  <li><a href="#">Settings 2</a>
-					  </li>
-					</ul>
-				  </li>
-				  <li><a class="close-link"><i class="fa fa-close"></i></a>
-				  </li>
-				</ul>
 				<div class="clearfix"></div>
 			  </div>
 			  <div class="x_content">
@@ -333,37 +309,23 @@
 		  <div class="col-md-4">
 			<div class="x_panel">
 			  <div class="x_title">
-				<h2>En progreso <small>Todo</small></h2>
-				<ul class="nav navbar-right panel_toolbox">
-				  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-				  <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-					<ul class="dropdown-menu" role="menu">
-					  <li><a href="#">Settings 1</a>
-					  </li>
-					  <li><a href="#">Settings 2</a>
-					  </li>
-					</ul>
-				  </li>
-				  <li><a class="close-link"><i class="fa fa-close"></i></a></li>
-				</ul>
+				<h2>En progreso <small></small></h2>
 				<div class="clearfix"></div>
 			  </div>
-			  <div class="x_content">
+			  <div class="x_content" style="max-height: calc(50vh);overflow: auto;">
 				<article class="media event" v-for="(a,record_i) in records" v-if="a.isSchedule === true && a.isExecuted === false && a.isApproved === false">
 				  <a class="pull-left date" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
-					<p class="month">{{ monthText[new Date().getMonth()] }}</p>
+					<p class="month">{{ monthText[new Date(a.schedule.date_executed_schedule.split('-')[1]).getMonth()] }}</p>
 					<p class="day">{{ a.schedule.date_executed_schedule.split('-')[2] }}</p>
 				  </a>
 				  <div class="media-body">
-					<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">{{ a.name }} </a>
+					<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
+						{{ a.name }}
+					</a>
+					<p>{{ a.lot.area_m2.toLocaleString() }} m²</p>
 					<p>{{ a.schedule.group.name }}</p>
-					<p>{{ $root.formatMoney(a.lot.area_m2, 2, ',', '.') }} m²</p>
 				  </div>
 				</article>
-				
-					
-					
 			  </div>
 			</div>
 		  </div>
@@ -371,40 +333,23 @@
 		  <div class="col-md-4">
 			<div class="x_panel">
 			  <div class="x_title">
-				<h2>Ejecutado(s) <small>Todo</small></h2>
-				<ul class="nav navbar-right panel_toolbox">
-				  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-				  </li>
-				  <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-					<ul class="dropdown-menu" role="menu">
-					  <li><a href="#">Settings 1</a>
-					  </li>
-					  <li><a href="#">Settings 2</a>
-					  </li>
-					</ul>
-				  </li>
-				  <li><a class="close-link"><i class="fa fa-close"></i></a>
-				  </li>
-				</ul>
+				<h2>Ejecutado(s) <small></small></h2>
 				<div class="clearfix"></div>
 			  </div>
-			  <div class="x_content">
-				
+			  <div class="x_content" style="max-height: calc(50vh);overflow: auto;">
 				<article class="media event" v-for="(a,record_i) in records" v-if="a.isSchedule === true && a.isExecuted === true && a.isApproved === false">
 				  <a class="pull-left date" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
-					<p class="month">{{ monthText[new Date().getMonth()] }}</p>
+					<p class="month">{{ monthText[new Date(a.schedule.date_executed_schedule.split('-')[1]).getMonth()] }}</p>
 					<p class="day">{{ a.schedule.date_executed_schedule.split('-')[2] }}</p>
 				  </a>
 				  <div class="media-body">
-					<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">{{ a.name }} </a>
-					<p>Fecha Ejecutado: {{ a.schedule.date_executed }}</p>
+					<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
+						{{ a.name }}
+					</a>
+					<p>{{ a.lot.area_m2.toLocaleString() }} m²</p>
 					<p>{{ a.schedule.group.name }}</p>
-					<p>{{ $root.formatMoney(a.lot.area_m2, 2, ',', '.') }} m²</p>
 				  </div>
 				</article>
-				
-				
 			  </div>
 			</div>
 		  </div>
@@ -412,34 +357,21 @@
 		  <div class="col-md-4">
 			<div class="x_panel">
 			  <div class="x_title">
-				<h2>Aprobado(s) <small>Todo</small></h2>
-				<ul class="nav navbar-right panel_toolbox">
-				  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-				  </li>
-				  <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-					<ul class="dropdown-menu" role="menu">
-					  <li><a href="#">Settings 1</a>
-					  </li>
-					  <li><a href="#">Settings 2</a>
-					  </li>
-					</ul>
-				  </li>
-				  <li><a class="close-link"><i class="fa fa-close"></i></a>
-				  </li>
-				</ul>
+				<h2>Aprobado(s) <small></small></h2>
 				<div class="clearfix"></div>
 			  </div>
-			  <div class="x_content">
+			  <div class="x_content" style="max-height: calc(50vh);overflow: auto;">
 				<article class="media event" v-for="(a,record_i) in records" v-if="a.isSchedule === true && a.isExecuted === true && a.isApproved === true">
 				  <a class="pull-left date" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
-					<p class="month">{{ monthText[new Date().getMonth()] }}</p>
+					<p class="month">{{ monthText[new Date(a.schedule.date_executed_schedule.split('-')[1]).getMonth()] }}</p>
 					<p class="day">{{ a.schedule.date_executed_schedule.split('-')[2] }}</p>
 				  </a>
 				  <div class="media-body">
-					<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">{{ a.name }} </a>
+					<a class="title" href="#" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a">
+						{{ a.name }}
+					</a>
+					<p>{{ a.lot.area_m2.toLocaleString() }} m²</p>
 					<p>{{ a.schedule.group.name }}</p>
-					<p>{{ $root.formatMoney(a.lot.area_m2, 2, ',', '.') }} m²</p>
 				  </div>
 				</article>
 			  </div>
@@ -453,7 +385,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel">Contrato {{ contractName }} - {{ periodName }} {{ year }} | Informe general de progreso</h4>
+						<h4 class="modal-title" id="myModalLabel"> {{ periodName }} {{ year }} | Informe general de progreso | Z{{ generalSelected.zone }}CC{{ $root.zfill(generalSelected.name, 4) }}FM{{ generalSelected.repeat }}</h4>
 					</div>
 					<div class="modal-body">
 						<h4></h4>
@@ -720,7 +652,7 @@
 									</div>
 									-->
 									<div class="x_title">
-										<h2 class="" title="Microruta"><i class="fa fa-location-arrow"></i> {{ generalSelected.name }}</h2>
+										<h2 class="" title="Microruta"><i class="fa fa-location-arrow"></i> Z{{ generalSelected.zone }}CC{{ $root.zfill(generalSelected.name, 4) }}FM{{ generalSelected.repeat }}</h2>
 										<div class="clearfix"></div>
 									</div>
 									<div class="panel-body">
@@ -816,7 +748,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel">Contrato {{ contractName }} - {{ periodName }} {{ year }} | Informe Registro Fotografico</h4>
+						<h4 class="modal-title" id="myModalLabel">{{ periodName }} {{ year }} | Informe Registro Fotografico | Z{{ generalSelected.zone }}CC{{ $root.zfill(generalSelected.name, 4) }}FM{{ generalSelected.repeat }}</h4>
 					</div>
 					<div class="modal-body row" v-if="fileSelected.id > 0">
 						<div class="col-md-7 col-sm-7 col-xs-12">
@@ -825,7 +757,7 @@
 							</div>
 						</div>
 						<div class="col-md-5 col-sm-5 col-xs-12" style="border:0px solid #e5e5e5;">
-							<h3 class="prod_title">{{ generalSelected.name }} - {{ ((fileSelected.type == 'D')?'DESPUES':(fileSelected.type == 'A') ? 'ANTES':'OTRO') }}</h3>
+							<h3 class="prod_title">RF{{ $root.zfill(fileSelected.id, 8) }} - {{ ((fileSelected.type == 'D')?'DESPUES':(fileSelected.type == 'A') ? 'ANTES':'OTRO') }}</h3>
 							<p>
 								<b>ID del archivo: </b>
 								<br>
@@ -878,12 +810,14 @@
 						<br />
 					</div>
 					<div class="modal-footer">
+						<!-- // 
 						<button @click="scheduleApprovedToFile" type="button" class="btn btn-app pull-left" data-dismiss="modal" v-if="fileSelected.status == 0 || fileSelected.status == 2">
 							<i class="fa fa-thumbs-up"></i> Aprobar Fotografía
 						</button>
 						<button @click="scheduleDeclineToFile" type="button" class="btn btn-app pull-left" data-dismiss="modal" v-if="fileSelected.status == 1 || fileSelected.status == 0">
 							<i class="fa fa-thumbs-up"></i> Rechazar Fotografía
 						</button>
+						-->
 						<!-- // 
 						<button type="button" class="btn btn-app pull-left" data-dismiss="modal" v-if="fileSelected.status == 0">
 							<i class="fa fa-thumbs-down"></i> Rechazar Fotografía
@@ -913,8 +847,23 @@ var List = Vue.extend({
 			},
 			options: {
 				emvarias_contracts: [],
-				photographic_periods: [],
-				photographic_groups: [],
+				emvarias_periods: [],
+				emvarias_groups: [],
+			},
+			geo: {
+				active: false,
+				msg: '',
+				urlMap: '/index.php?controller=sw&action=staticmap&maptype=wikimedia&zoom=16&center=6.2386064999999995,-75.58853739999999&size=450x450',
+				lat: 0,
+				lng: 0,
+				options: {
+					// enableHighAccuracy = should the device take extra time or power to return a really accurate result, or should it give you the quick (but less accurate) answer?
+					enableHighAccuracy: false,
+					// timeout = how long does the device have, in milliseconds to return a result?
+					timeout: 5000,
+					// maximumAge = maximum age for a possible previously-cached position. 0 = must return the current position, not a prior cached position
+					maximumAge: 0
+				},
 			},
 			
 			
@@ -932,8 +881,10 @@ var List = Vue.extend({
 			total_m2_executed: 0,
 			total_m2_approved: 0,
 			total: 0,
+			total_schedule: 0,
+			total_executed: 0,
+			total_approved: 0,
 			period: 0,
-			contract: 0,
 			"year": moment().format('Y'),
 			records: [],
 			dataTable: null,
@@ -950,7 +901,6 @@ var List = Vue.extend({
 				"zone_client": "",
 				"obs": ""
 			  },
-			  "contract": 0,
 			  "emvarias_schedule": [
 				{
 				  "id": 0,
@@ -1040,7 +990,6 @@ var List = Vue.extend({
 			url = "/index.php?action=send_photo_schedule";
 			
 			if(self.generalSelected.isSchedule == true && self.generalSelected.id > 0 && self.generalSelected.schedule.id !== undefined && self.generalSelected.schedule.id > 0){			
-				url += "&contract_name=" + btoa(self.contractName);
 				url += "&period_name=" + btoa(self.periodName);
 				url += "&year=" + self.year;
 				url += "&period=" + self.generalSelected.schedule.period.id;
@@ -1049,22 +998,16 @@ var List = Vue.extend({
 				url += "&group=" + self.generalSelected.schedule.group.id;
 				url += "&date_executed=" + self.generalSelected.schedule.date_executed_schedule;
 				url += "&group_name=" + btoa(self.generalSelected.schedule.group.name);
+				url += "&lat=" + (self.geo.lat);
+				url += "&lng=" + (self.geo.lng);
 				// console.log(url);
 			}
 			return url;
 		},
-		contractName(){
-			var self = this;
-			try{
-				return self.options.emvarias_contracts.find(x => x.id == self.contract).name;
-			} catch(e){
-				return "";
-			}
-		},
 		periodName(){
 			var self = this;
 			try{
-				return self.options.photographic_periods.find(x => x.id == self.period).name;
+				return self.options.emvarias_periods.find(x => x.id == self.period).name;
 			} catch(e){
 				return "";
 			}
@@ -1072,7 +1015,7 @@ var List = Vue.extend({
 		groupName(){
 			var self = this;
 			try{
-				return self.options.photographic_groups.find(x => x.id == self.generalSelected).name;
+				return self.options.emvarias_groups.find(x => x.id == self.generalSelected).name;
 			} catch(e){
 				return "";
 			}
@@ -1080,7 +1023,7 @@ var List = Vue.extend({
 		periodDateStart(){
 			var self = this;
 			try{
-				period = self.options.photographic_periods.find(x => x.id == self.period);
+				period = self.options.emvarias_periods.find(x => x.id == self.period);
 				if(period.start_month == null || period.start_day == null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
 				return (moment().format('Y') + '-' + ((String(period.start_month).length > 1) ? period.start_month : '0' + period.start_month) + '-' + ((String((period.start_day)).length > 1) ? period.start_day : '0' + (period.start_day)));
 			} catch(e){
@@ -1090,7 +1033,7 @@ var List = Vue.extend({
 		periodDateEnd(){
 			var self = this;
 			try{
-				period = self.options.photographic_periods.find(x => x.id == self.period);
+				period = self.options.emvarias_periods.find(x => x.id == self.period);
 				if(period.end_month === null || period.end_day === null){ throw new FormException('noDates', 'No hay fechas establecidas en la tabla de periodos'); }
 				return (moment().format('Y') + '-' + ((String((period.end_month)).length > 1) ? period.end_month : '0' + (period.end_month)) + '-' + ((String((period.end_day)).length > 1) ? period.end_day : '0' + (period.end_day)));
 			} catch(e){
@@ -1100,6 +1043,7 @@ var List = Vue.extend({
 	},
 	mounted: function () {
 		var self = this;
+		
 		self.listOptions();
 		self.loadDropzone();
 		self.loadDropzone2();
@@ -1107,6 +1051,46 @@ var List = Vue.extend({
 		//self.load();
 	},
 	methods: {
+		getLocation(){
+			var self = this;
+			if('geolocation' in navigator){
+				// geolocation is supported :)
+				self.requestLocation();
+			}else{
+				self.geo.msg = "Sorry, looks like your browser doesn't support geolocation";
+			}
+		},
+		requestLocation(){
+			var self = this;
+			navigator.geolocation.getCurrentPosition(self.successGEO, self.errorGEO, self.geo.options);
+		},
+		successGEO(pos){
+			var self = this;
+			// console.log('pos', pos);
+			try {				
+				//self.createForm.lng = self.geo.lng = pos.coords.longitude;
+				//self.createForm.lat = self.geo.lat = pos.coords.latitude;
+				// and presto, we have the device's location!
+				self.geo.msg = 'lon: ' + self.geo.lng + ' and lat: ' + self.geo.lat;
+				self.geo.urlMap = '/index.php?controller=sw&action=staticmap&maptype=wikimedia&zoom=16&center=' + self.geo.lat + ',' + self.geo.lng + '&size=450x450&markers=' + self.geo.lat + ',' + self.geo.lng + ',bullseye';
+				//var boxImgMap = document.querySelector('#boxImgMap');
+				// boxImgMap.src = self.geo.urlMap;
+				//$('.pure-button').removeClass('pure-button-primary').addClass('btn-success'); // change button style
+			} catch(e){
+				console.error(e);
+			}
+		},
+		errorGEO(err){
+			var self = this;
+			// return the error message
+			self.geo.msg = 'Error: ' + err + ' -------- ' + JSON.stringify(err) + ' :(';
+			//self.outputResult(self.geo.msg); // output button
+			//$('.pure-button').removeClass('pure-button-primary').addClass('pure-button-error'); // change button style
+		},		
+		outputResult(msg){
+			var self = this;
+			// $('.result').addClass('result').html(self.geo.msg);
+		},
 		loadDropzone(){
 			var self = this;
 			// Dropzone class:
@@ -1295,19 +1279,16 @@ var List = Vue.extend({
 			  myDropzone.removeAllFiles(true);
 			};*/
 			// "myAwesomeDropzone" is the camelized version of the HTML element's ID
-			
+			//window.scrollTo(0, 0);
 		},
 		listOptions(){
 			var self = this;
-			MV.api.readList('photographic_periods', {}, function(e){
-				self.options.photographic_periods = e;
+			MV.api.readList('emvarias_periods', {}, function(e){
+				self.options.emvarias_periods = e;
 				e.forEach(function(b){ if((self.current.dateISO.day >= b.start_day && self.current.dateISO.day <= b.end_day) == true && b.start_month == self.current.dateISO.month){ self.period = b.id; } });					
 			});
-			MV.api.readList('emvarias_contracts', {}, function(e){
-				self.options.emvarias_contracts = e;
-			});
-			MV.api.readList('photographic_groups', {}, function(e){
-				self.options.photographic_groups = e;
+			MV.api.readList('emvarias_groups', {}, function(e){
+				self.options.emvarias_groups = e;
 			});
 		},
 		isExecuted(item){
@@ -1612,152 +1593,9 @@ var List = Vue.extend({
 			});
 		},
 		
-		
-		scheduleApprovedToFile(){
-			var self = this;
-			bootbox.confirm({
-				message: "Debes confirmar antes de continuar.",
-				locale: 'es',
-				buttons: {
-					confirm: {
-						label: 'Continuar',
-						className: 'btn-success'
-					},
-					cancel: {
-						label: 'Cancelar',
-						className: 'btn-default'
-					}
-				},
-				callback: function (result) {
-					if(result === true){
-						console.log('self.fileSelected.id', self.fileSelected.id);
-						api.put('/records/emvarias_reports_photographic/' + self.fileSelected.id, {
-							id: self.fileSelected.id,
-							status: 1,
-							updated_by: <?= $this->user->id; ?>,
-						}).then(function (response) {
-							if(response.status == 200){
-								self.fileSelected.status = 1;
-								indexSheduled = self.records.findIndex(x => (x.id == self.generalSelected.id));
-								if(indexSheduled > -1){
-									indexFile = self.records[indexSheduled].schedule.emvarias_reports_photographic.findIndex(x => (x.id == self.fileSelected.id));
-									if(indexFile > -1){
-										self.records[indexSheduled].schedule.emvarias_reports_photographic[indexFile].status = 1;
-									}
-								}
-							}
-						}).catch(function (error) {
-							console.error(error);
-							console.log(error.response);
-						});
-					}
-				}
-			});
-		},
-		
-		scheduleDeclineToFile(){
-			var self = this;
-			bootbox.confirm({
-				message: "Debes confirmar antes de continuar.",
-				locale: 'es',
-				buttons: {
-					confirm: {
-						label: 'Continuar',
-						className: 'btn-success'
-					},
-					cancel: {
-						label: 'Cancelar',
-						className: 'btn-default'
-					}
-				},
-				callback: function (result) {
-					if(result === true){
-						console.log('self.fileSelected.id', self.fileSelected.id);
-						api.put('/records/emvarias_reports_photographic/' + self.fileSelected.id, {
-							id: self.fileSelected.id,
-							status: 2,
-							updated_by: <?= $this->user->id; ?>,
-						}).then(function (response) {
-							if(response.status == 200){
-								self.fileSelected.status = 2;
-								indexSheduled = self.records.findIndex(x => (x.id == self.generalSelected.id));
-								if(indexSheduled > -1){
-									indexFile = self.records[indexSheduled].schedule.emvarias_reports_photographic.findIndex(x => (x.id == self.fileSelected.id));
-									if(indexFile > -1){
-										self.records[indexSheduled].schedule.emvarias_reports_photographic[indexFile].status = 2;
-									}
-								}
-							}
-						}).catch(function (error) {
-							console.error(error);
-							console.log(error.response);
-						});
-					}
-				}
-			});
-		},
-		
-		
-		declineFile(){
-			var self = this;
-			
-			bootbox.confirm({
-				message: "Debes confirmar antes de continuar.",
-				locale: 'es',
-				buttons: {
-					confirm: {
-						label: 'Aprobar',
-						className: 'btn-success'
-					},
-					cancel: {
-						label: 'Cancelar',
-						className: 'btn-default'
-					}
-				},
-				callback: function (result) {
-					if(result === true){
-						api.put('/records/emvarias_schedule/' + self.generalSelected.schedule.id, {
-							id: self.generalSelected.schedule.id,
-							status: 2,
-							updated_by: <?= $this->user->id; ?>,
-						}).then(function (response) {
-							if(response.status == 200){
-								self.generalSelected.schedule.status = 2;
-									bootbox.confirm({
-										message: "Deseas enviar una notificacion del rechazo?.",
-										locale: 'es',
-										buttons: {
-											confirm: {
-												label: 'Enviar',
-												className: 'btn-success'
-											},
-											cancel: {
-												label: 'Cerrar',
-												className: 'btn-default'
-											}
-										},
-										callback: function (result) {
-											if(result === true){
-												// urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.' + '%20https%3A%2F%2Fmicuenta.monteverdeltda.com' + encodeURI(self.selected.media.path_short);
-												urlWA = 'https://wa.me/57' + self.generalSelected.schedule.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.';
-												window.open(urlWA,'popUpWindow','height=500,width=600,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
-											}
-										}
-									});
-							}
-						}).catch(function (error) {
-							console.log('error list-routes::methods::load()');
-							console.log(error.response);
-							self.search.loading = false;
-						});
-					}
-					console.log('This was logged in the callback: ' + result);
-				}
-			});
-		},
-		
 		load(){
 			var self = this;
+			self.getLocation();
 			self.loading = true;
 			self.records = [];
 			self.charts.plot01 = [];
@@ -1773,14 +1611,9 @@ var List = Vue.extend({
 				closeButton: false
 			});
 			
-			
 			startDate = new Date(self.periodDateStart);
 			// endDate = new Date(self.periodDateStart).addDays(15);
 			endDate = new Date(self.periodDateEnd);
-			console.log('startDate', startDate);
-			console.log('endDate', endDate);
-			
-			
 			
 			for (var i = -1; i < ((((((endDate-startDate)/1000)/60)/60)/24)+2); i++) {
 				var dat = new Date(startDate).add(i).days();
@@ -1790,7 +1623,7 @@ var List = Vue.extend({
 				self.charts.plot04.push([dat.getTime(), 0]);
 			}
 			
-			self.options.photographic_groups.forEach(function(xa){
+			self.options.emvarias_groups.forEach(function(xa){
 				self.charts.plot05.push({
 					id: xa.id,
 					label: xa.name,
@@ -1799,15 +1632,12 @@ var List = Vue.extend({
 			});
 			
 			
-			api.get('/records/emvarias_microroutes', { params: {
+			api.get('/records/emvarias_lots', { params: {
 				filter: [
-					'contract,eq,' + self.contract,
 				],
 				join: [
-					'emvarias_lots',
-					'emvarias_schedule,emvarias_contracts',
-					'emvarias_schedule,photographic_periods',
-					'emvarias_schedule,photographic_groups',
+					'emvarias_schedule,emvarias_periods',
+					'emvarias_schedule,emvarias_groups',
 					'emvarias_schedule,emvarias_reports_photographic',
 					'emvarias_schedule,users',
 					'emvarias_schedule,emvarias_schedule_comments,users',
@@ -1815,6 +1645,7 @@ var List = Vue.extend({
 			} }).then(function (a) {
 				if(a.status === 200){
 					self.total = a.data.records.length;
+					self.total_schedule = 0;
 					var recordsSends = [];
 					
 					var theme = {
@@ -2030,44 +1861,45 @@ var List = Vue.extend({
 					  };
 
 					a.data.records.forEach(function(b){
+						console.log('B',b);
+						
 						self.lastDayExecuted = -1;
-						self.total_m2 += (b.lot.area_m2) * b.repeat;
+						self.total_m2 += (b.area_m2);
 						detectCalendar = (b.emvarias_schedule[0] !== undefined) ? true : false;
 						
 						if(detectCalendar == true){
 							b.emvarias_schedule.forEach(function(c){
 								self.lastDayExecuted = -1;
-								self.total_m2_schedule += b.lot.area_m2;
+								self.total_m2_schedule += b.area_m2;
 								// Charts
 								indexSheduled = self.charts.plot01.findIndex(x => (x[0] == new Date(c.date_executed_schedule).getTime()));
 								if(indexSheduled > -1){
-									self.charts.plot01[indexSheduled][1] += (b.lot.area_m2);
+									self.charts.plot01[indexSheduled][1] += (b.area_m2);
 								}
 								
 								
 								if(c.is_executed == 1){
-									self.total_m2_executed += b.lot.area_m2;
+									self.total_m2_executed += b.area_m2;
 									indexExecuted = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_executed).getTime()));
 									console.log('indexExecuted', indexExecuted);
 									if(indexExecuted > -1){
-										self.charts.plot02[indexExecuted][1] += parseFloat(b.lot.area_m2);
-										self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
-										
-								}
+										self.charts.plot02[indexExecuted][1] += parseFloat(b.area_m2);
+										self.charts.plot04[indexExecuted][1] += (parseFloat(b.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
+									}
 									indexGroupChart = self.charts.plot05.findIndex(x => (x.id == c.group.id));
 									if(indexGroupChart > -1){
-										// self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
-										self.charts.plot05[indexGroupChart].data += parseFloat(b.lot.area_m2);
+										// self.charts.plot04[indexExecuted][1] += (parseFloat(b.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
+										self.charts.plot05[indexGroupChart].data += parseFloat(b.area_m2);
 									}
 									
 									self.lastDayExecuted = indexExecuted;
 								}
 								
 								if(c.is_approved == 1){
-									self.total_m2_approved += b.lot.area_m2;
+									self.total_m2_approved += b.area_m2;
 									indexApproved = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_approved).getTime()));
 									if(indexApproved > -1){
-										self.charts.plot03[indexApproved][1] += parseFloat(b.lot.area_m2);
+										self.charts.plot03[indexApproved][1] += parseFloat(b.area_m2);
 									}
 								}
 								
@@ -2075,27 +1907,24 @@ var List = Vue.extend({
 								
 								recordsSends.push({
 									id: b.id,
-									name: b.name,
-									area_m2: b.lot.area_m2,
-									repeat: b.repeat,
-									repeatDetect: b.repeat,
-									lot: b.lot,
-									contract: b.contract,
+									name: b.microroute_name,
+									area_m2: b.area_m2,
+									lot: b,
 									isSchedule: true,
 									isExecuted: c.is_executed == 1 ? true : false,
 									isApproved: c.is_approved == 1 ? true : false,
 									schedule: c,
 								});
+								self.total_schedule++;
+								if(c.is_executed == 1) { self.total_executed++; }
+								if(c.is_approved == 1) { self.total_approved++; }
 							});
 						} else {
 							recordsSends.push({
 								id: b.id,
-								name: b.name,
-								area_m2: b.lot.area_m2,
-								repeat: b.repeat,
-								repeatDetect: b.repeat,
-								lot: b.lot,
-								contract: b.contract,
+								name: b.microroute_name,
+								area_m2: b.area_m2,
+								lot: b,
 								isSchedule: false,
 								isExecuted: false,
 								isApproved: false,

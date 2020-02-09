@@ -133,121 +133,35 @@
 }
 </style>
 <div id="reporting-app">
-<div class="container">
-	<!-- // <router-view :key="$route.fullPath" ></router-view>-->
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="tinder col-md-12">
-				<div class="tinder--status">
-					<i class="fa fa-remove"></i>
-					<i class="fa fa-heart"></i>
-				</div>
-				<div class="tinder--cards col-md-12">
-					<!-- // <div v-for-callback="{key: record.id, array: records, callback: callback}" v-for="(record, record_i) in records" class="tinder--card"> -->
-					<div v-for="(record, record_i) in records" class="tinder--card" :id="record.id">
-						<img :src="record.file_path_short">
-						<h3>
-							{{ record.schedule.microroute.name }} - {{ record.created }} 
-						</h3>
-						<p>
-							{{ record.period.name }} - {{ record.year }}<br>
-							{{ record.group.name }}<br>
-							{{ record.schedule.date_executed_schedule }}<br>
-							{{ record.schedule.date_executed_schedule }}<br>
-						</p>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="tinder col-md-12">
+					<div class="tinder--status">
+						<i class="fa fa-remove"></i>
+						<i class="fa fa-heart"></i>
 					</div>
-					<!-- // 
-					<div class="tinder--card">
-					  <img src="https://placeimg.com/600/300/people">
-					  <h3>Demo card 1</h3>
-					  <p>This is a demo for Tinder like swipe cards</p>
+					<div class="tinder--cards col-md-12">
+						<div v-for="(record, record_i) in records" class="tinder--card" :id="record.id">
+							<img :src="record.file_path_short">
+							<h3>
+								{{ record.schedule.lot.microroute_name }} - {{ record.created }} 
+							</h3>
+							<p>
+								{{ record.schedule.period.name }} - {{ record.year }}<br>
+								{{ record.schedule.group.name }}<br>
+								{{ record.schedule.date_executed_schedule }}<br>
+								{{ record.schedule.date_executed_schedule_end }}<br>
+							</p>
+						</div>
 					</div>
-					<div class="tinder--card">
-					  <img src="https://placeimg.com/600/300/animals">
-					  <h3>Demo card 2</h3>
-					  <p>This is a demo for Tinder like swipe cards</p>
+					<div class="tinder--buttons col-md-12">
+						<button @click="declineReport" id="nope"> <i class="fa fa-remove"></i></button>
+						<button id="popup" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-info"></i></button>
+						<button @click="aprobeReport" id="love"><i class="fa fa-heart"></i></button>
 					</div>
-					<div class="tinder--card">
-					  <img src="https://placeimg.com/600/300/nature">
-					  <h3>Demo card 3</h3>
-					  <p>This is a demo for Tinder like swipe cards</p>
-					</div>
-					<div class="tinder--card">
-					  <img src="https://placeimg.com/600/300/tech">
-					  <h3>Demo card 4</h3>
-					  <p>This is a demo for Tinder like swipe cards</p>
-					</div>
-					<div class="tinder--card">
-					  <img src="https://placeimg.com/600/300/arch">
-					  <h3>Demo card 5</h3>
-					  <p>This is a demo for Tinder like swipe cards</p>
-					</div>
-					-->
-				</div>
-				<div class="tinder--buttons col-md-12">
-					<button @click="declineReport" id="nope"> <i class="fa fa-remove"></i></button>
-					<button id="popup" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-info"></i></button>
-					<button @click="aprobeReport" id="love"><i class="fa fa-heart"></i></button>
 				</div>
 			</div>
-		</div>
-					<!-- //
-		<div class="col-xs-12">
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="table-responsive">
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>Microruta</th>
-									<th>Área</th>
-									<th>Año</th>
-									<th>Periodo</th>
-									<th>Cuadrilla/Grupo</th>
-									<th>F. Programacion</th>
-									<th>F. Reporte</th>
-									<th></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(record, record_i) in records">
-									<td>{{ record.schedule.microroute.name }}</td>
-									<td>{{ record.schedule.microroute.lot.area_m2.toLocaleString() }} m²</td>
-									<td>{{ record.year }}</td>
-									<td>{{ record.period.name }}</td>
-									<td>{{ record.group.name }}</td>
-									<td>{{ record.schedule.date_executed_schedule }}</td>
-									<td>{{ record.created }}</td>
-									<td><a @click="selected = record;" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-camera-retro"></i></a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-				<div class="col-xs-12 col-sm-12">
-					<ul class="nav navbar-right panel_toolbox">
-						<li>
-							Viendo: {{ page }} / {{ parseInt(total/limit) }}
-							- 
-							{{ (page * limit) }} / Total: {{ total }}
-							| 
-							Limite x Página: {{ limit }}
-						</li>
-					</ul>
-					<div class="clearfix"></div>
-				</div>
-				<div class="col-md-12 col-sm-12 col-xs-12 text-center">
-					<ul class="pagination pagination-split pull-right">
-						<li :class="(page == 1) ? 'active' : ''"><a @click="page=1;load();"> Inicio </a></li>
-						<template v-if="total > (limit*3) && parseInt(total/limit) > 1" v-for="npage in parseInt(total/limit)"><li :class="(npage == page) ? 'active' : ''" v-if="npage > 1 && npage < parseInt(total/limit)"><a @click="page=npage;load();"> {{npage}} </a></li></template>
-						<li v-if="total > (limit+1)" :class="(page == parseInt(total/limit)) ? 'active' : ''"><a @click="page=parseInt(total/limit);load();"> Fín </a></li>
-					</ul>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-		</div>
-		-->
 			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 				  <div class="modal-content">
@@ -258,65 +172,76 @@
 					</div>
 					<div class="modal-body">
 						<h4></h4>
-						<div class="table-responsive">
+						<div class="row">
+							<div class="col-xs-12">
+								
+								<div class="table-responsive">
+									<table class="table table-bordered" v-if="selected.id > 0">
+										<tr>
+											<th width="25%">Año</th>
+											<td width="25%">{{ selected.year }}</td>
+											<th width="25%">Periodo</th>
+											<td width="25%">{{ selected.period.name }}</td>
+										</tr>
+										<tr>
+											<th>Fecha y Hora del Reporte</th>
+											<td colspan="3">{{ selected.created }}</td>
+										</tr>
+										<tr>
+											<th>Microruta</th>
+											<td>{{ selected.schedule.lot.microroute_name }}</td>
+											<th>Área</th>
+											<td>{{ selected.schedule.lot.area_m2.toLocaleString() }} m²</td>
+										</tr>
+										<tr>
+											<th>Direccion del Lote</th>
+											<td colspan="3">{{ selected.schedule.lot.address_text }}</td>
+										</tr>
+										<tr>
+											<th>Descripción</th>
+											<td colspan="3">
+												<template v-if="selected.schedule.lot.description !== null && selected.schedule.lot.description !== ''">
+													{{ selected.schedule.lot.description }}
+												</template>
+												<template v-else>
+													Sin descripción.
+												</template>
+											</td>
+										</tr>
+										<tr>
+											<th>Observaciones</th>
+											<td colspan="3">
+												<template v-if="selected.schedule.lot.obs !== null && selected.schedule.lot.obs !== ''">
+													{{ selected.schedule.lot.obs }}
+												</template>
+												<template v-else>
+													Sin observaciones.
+												</template>
+											</td>
+										</tr>
+										<tr>
+											<th>Cuadrilla/Grupo</th>
+											<td>{{ selected.group.name }}</td>
+											<th>Reportado por</th>
+											<td>{{ selected.create_by.username }}</td>
+										</tr>
+										<tr>
+											<th colspan="2">Tipo de Foto</th>
+											<td colspan="2">{{ (selected.type == 'A') ? 'Antes' : (selected.type == 'D') ? 'Despues' : 'Desconocido' }}</td>
+										</tr>
+										<!-- // 
+										<tr>
+											<td colspan="4">
+												<img class="img img-responsive" width="100%" :src="selected.file_path_short" alt="image" />	
+											</td>
+										</tr>
+										-->
+									</table>
+								</div>
+
+							</div>
+						</div>						<div class="table-responsives">
 							<table class="table table-bordered" v-if="selected.id > 0">
-								<tr>
-									<th width="25%">Año</th>
-									<td width="25%">{{ selected.year }}</td>
-									<th width="25%">Periodo</th>
-									<td width="25%">{{ selected.period.name }}</td>
-								</tr>
-								<tr>
-									<th>Fecha y Hora del Reporte</th>
-									<td colspan="3">{{ selected.created }}</td>
-								</tr>
-								<tr>
-									<th>Microruta</th>
-									<td>{{ selected.schedule.microroute.name }}</td>
-									<th>Área</th>
-									<td>{{ selected.schedule.microroute.lot.area_m2.toLocaleString() }} m²</td>
-								</tr>
-								<tr>
-									<th>Direccion del Lote</th>
-									<td colspan="3">{{ selected.schedule.microroute.lot.address_text }}</td>
-								</tr>
-								<tr>
-									<th>Descripción</th>
-									<td colspan="3">
-										<template v-if="selected.schedule.microroute.lot.description !== null && selected.schedule.microroute.lot.description !== ''">
-											{{ selected.schedule.microroute.lot.description }}
-										</template>
-										<template v-else>
-											Sin descripción.
-										</template>
-									</td>
-								</tr>
-								<tr>
-									<th>Observaciones</th>
-									<td colspan="3">
-										<template v-if="selected.schedule.microroute.lot.obs !== null && selected.schedule.microroute.lot.obs !== ''">
-											{{ selected.schedule.microroute.lot.obs }}
-										</template>
-										<template v-else>
-											Sin observaciones.
-										</template>
-									</td>
-								</tr>
-								<tr>
-									<th>Cuadrilla/Grupo</th>
-									<td>{{ selected.group.name }}</td>
-									<th>Reportado por</th>
-									<td>{{ selected.create_by.username }}</td>
-								</tr>
-								<tr>
-									<th colspan="2">Tipo de Foto</th>
-									<td colspan="2">{{ (selected.type == 'A') ? 'Antes' : (selected.type == 'D') ? 'Despues' : 'Desconocido' }}</td>
-								</tr>
-								<tr>
-									<td colspan="4">
-										<img class="img-responsive" style="width: 100%; display: block;" :src="selected.file_path_short" alt="image" />
-									</td>
-								</tr>
 								<tr>
 									<td colspan="4">
 										<a class="btn btn-default pull-right" :href="selected.file_path_short" target="_blank"><i class="fa fa-search-plus"></i></a>
@@ -325,19 +250,15 @@
 								</tr>
 							</table>
 						</div>
+						<!-- // 
+						-->
 					</div>
 					<div class="modal-footer">
-						<!-- //
-							<button @click="declineReport" type="button" class="btn btn-danger pull-left">Rechazar</button>
-							<button @click="aprobeReport" type="button" class="btn btn-primary pull-left">Aprobar</button>
-						-->
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 					</div>
-
 				  </div>
 				</div>
 			  </div>
-			  <!-- /modals -->
 		</div>
 	</div>
 	<div class="clearfix"></div>
@@ -492,13 +413,13 @@ var app = new Vue({
 						'status,eq,0'
 					],
 					join: [
-						'emvarias_schedule',
-						'photographic_groups',
-						'photographic_periods',
-						'emvarias_schedule,emvarias_microroutes',
-						'emvarias_schedule,emvarias_microroutes,emvarias_lots',
-						'emvarias_schedule,emvarias_microroutes,emvarias_contracts',
+						'emvarias_schedule,emvarias_lots',
+						'emvarias_schedule,emvarias_groups',
+						'emvarias_schedule,emvarias_periods',
+						'emvarias_schedule,users',
 						'emvarias_schedule,emvarias_schedule_comments,users',
+						'emvarias_groups',
+						'emvarias_periods',
 						'users',
 					],
 					order: "id",
@@ -507,9 +428,15 @@ var app = new Vue({
 			}).then(function (response) {
 				if(response.status == 200){
 					self.total = response.data.results;
+					console.log('response', response.data.records);
 					self.records = response.data.records;
 					setTimeout(function(){
-						self.runTinder();
+						if(self.records.length == 0){
+							alert('No hay fotografias pendientes por revision...');
+							/*$('.tinder').append('<h3>No hay resultados.</h3>' + '<p>No hay fotografias pendientes por revision...</p>');*/
+						} else {
+							self.runTinder();
+						}
 						subDialog.modal('hide');
 					}, 3000);
 					// $(".tinder--cards").html('');
@@ -664,22 +591,6 @@ var app = new Vue({
 				console.log(error.response);
 			});
 			
-			
-			/*
-			api.put('/records/emvarias_reports_photographic/' + self.selected.id, {
-				id: self.selected.id,
-				status: 1,
-				updated_by: <?= $this->user->id; ?>,
-			}).then(function (response) {
-				if(response.status == 200){
-					index = self.records.findIndex(x => x.id === self.selected.id);
-					if(index > -1){ self.records.splice(index, 1); }
-				}
-			}).catch(function (error) {
-				console.log('error list-routes::methods::load()');
-				console.log(error.response);
-				self.search.loading = false;
-			});*/
 		},
 		declineReport(){
 			var self = this;
@@ -689,48 +600,32 @@ var app = new Vue({
 				action: 'Report_Photo_NoPass',
 				file_id: self.selected.id
 			}}).then(function (response) {
-				console.log(response)
+				console.log(response);
+				bootbox.confirm({
+					message: "Deseas enviar una notificacion del rechazo?.",
+					locale: 'es',
+					buttons: {
+						confirm: {
+							label: 'Enviar',
+							className: 'btn-success'
+						},
+						cancel: {
+							label: 'Cerrar',
+							className: 'btn-default'
+						}
+					},
+					callback: function (result) {
+						if(result === true){
+							// urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.' + '%20https%3A%2F%2Fmicuenta.monteverdeltda.com' + encodeURI(self.selected.media.path_short);
+							urlWA = 'https://wa.me/57' + self.selected.create_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '%20M:%20' + self.selected.schedule.lot.microroute_name + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.';
+							window.open(urlWA,'popUpWindow','height=500,width=600,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+						}
+					}
+				});
 			}).catch(function (error) {
 				console.error(error);
 				console.log(error.response);
 			});
-			/*
-			api.put('/records/emvarias_reports_photographic/' + self.selected.id, {
-				id: self.selected.id,
-				status: 2,
-				updated_by: <?= $this->user->id; ?>,
-			}).then(function (response) {
-				if(response.status == 200){
-					bootbox.confirm({
-						message: "Deseas enviar una notificacion del rechazo?.",
-						locale: 'es',
-						buttons: {
-							confirm: {
-								label: 'Enviar',
-								className: 'btn-success'
-							},
-							cancel: {
-								label: 'Cerrar',
-								className: 'btn-default'
-							}
-						},
-						callback: function (result) {
-							if(result === true){
-								// urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.' + '%20https%3A%2F%2Fmicuenta.monteverdeltda.com' + encodeURI(self.selected.media.path_short);
-								urlWA = 'https://wa.me/57' + self.selected.create_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.';
-								window.open(urlWA,'popUpWindow','height=500,width=600,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
-							}
-						}
-					});
-					// self.load();
-					index = self.records.findIndex(x => x.id === self.selected.id);
-					if(index > -1){ self.records.splice(index, 1); }
-				}
-			}).catch(function (error) {
-				console.log('error list-routes::methods::load()');
-				console.log(error.response);
-				self.search.loading = false;
-			});*/
 		},
 	}
 }).$mount('#reporting-app');
