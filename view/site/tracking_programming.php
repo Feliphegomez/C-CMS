@@ -186,8 +186,8 @@ var List = Vue.extend({
 	template: '#list',
 	data(){
 		return {
-			baseAreaCalc_m2_photos: 0.00006896551724137931,
-			minPhotosSpaceSmall: 7,
+			baseAreaCalc_m2_photos: 0.0001,
+			minPhotosSpaceSmall: 8,
 			options: {
 				emvarias_groups: [],
 				emvarias_periods: [],
@@ -249,9 +249,13 @@ var List = Vue.extend({
 	methods: {
 		progressHtml(total, color){
 			var self = this;
+			total = (total > 100) ? 100 : total;
+			$html = '';
 			try {
-				return '<div class="progress-bar progress-bar-striped progress-bar-animated bg-' + color + '" role="progressbar" data-transitiongoal="' + total + '" aria-valuenow="' + total + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + total + '%"></div>' +
-				'<div class="progress progress_sm"></div><small>' + parseInt(total) + '%</small>';
+				$html += '<div title="' + parseInt(total) + '" class="progress-bar progress-bar-striped progress-bar-animated bg-' + color + '" role="progressbar" data-transitiongoal="' + total + '" aria-valuenow="' + total + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + total + '%;height: 17px;"></div>';
+				
+				//$html += '<div class="progress progress_sm"></div><small>' + parseInt(total) + '%</small>';
+				return $html;
 			} catch(e){
 				console.log(e);
 				return "";
@@ -280,7 +284,7 @@ var List = Vue.extend({
 					}, function(w){
 						new PNotify({
 							"title": "¡Éxito!",
-							"text": "Aprobado con éxito",
+							"text": "Rechazado con éxito",
 							"styling":"bootstrap3",
 							"type":"success",
 							"icon":true,
@@ -432,15 +436,19 @@ var List = Vue.extend({
 			ret.push(a.group.name);
 			ret.push(a.date_executed_schedule + ':I');
 			ret.push(a.date_executed_schedule_end + ':F');
-			// ret.push('<div id="progress-A-' + a.id + '">' + self.progressHtml(porcCurA, porcColorA) + '</div>');
+			ret.push(a.lot.area_m2.toLocaleString());
+			ret.push(photosReq);
+			ret.push(porcCurA);
+			ret.push('<div id="progress-A-' + a.id + '">' + self.progressHtml(porcCurA, porcColorA) + '</div>');
 			ret.push('<span data-schedule="' + a.id + '" data-type="A" data-status="0" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-blue"><i class="fa fa-circle"></i> <font id="total-pendientes-A-' + a.id + '">' + totalAntesPendientes + '</font></span>' 
 				+ '<span data-schedule="' + a.id + '" data-type="A" data-status="1" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-green"><i class="fa fa-thumbs-o-up"></i>  <font id="total-aprobadas-A-' + a.id + '">' + totalAntesAprobadas + '</font></span>' + 
 				'<span data-schedule="' + a.id + '" data-type="A" data-status="2" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-red"><i class="fa fa-thumbs-o-down"></i> <font id="total-rechazadas-A-' + a.id + '">' + totalAntesDeclinadas + '</font></span>');
-			// ret.push('<div id="progress-D-' + a.id + '">' + self.progressHtml(porcCurD, porcColorD) + '</div>');
+			ret.push(porcCurD);
+			ret.push('<div id="progress-D-' + a.id + '">' + self.progressHtml(porcCurD, porcColorD) + '</div>');
 			ret.push('<span data-schedule="' + a.id + '" data-type="D" data-status="0" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-blue"><i class="fa fa-circle"></i> <font id="total-pendientes-D-' + a.id + '">' + totalDespuesPendientes + '</font></span>' 
 				+ '<span data-schedule="' + a.id + '" data-type="D" data-status="1" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-green"><i class="fa fa-thumbs-o-up"></i> <font id="total-aprobadas-D-' + a.id + '">' + totalDespuesAprobadas + '</font></span>' + 
 				'<span data-schedule="' + a.id + '" data-type="D" data-status="2" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-red"><i class="fa fa-thumbs-o-down"></i> <font id="total-rechazadas-D-' + a.id + '">' + totalDespuesDeclinadas + '</font></span>');
-			ret.push(a.lot.area_m2.toLocaleString());
+			
 			/*ret.push(
 				(a.is_executed == 0 && a.is_approved == 0) ? '<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> Mover a Ejecutado </a>' : 
 					(a.is_executed == 1 && a.is_approved == 0) ? ' <a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Aprobar </a>' : 
@@ -450,12 +458,6 @@ var List = Vue.extend({
 			ret.push(
 				(a.is_executed == 0 && a.is_approved == 0) ? '<a class="btn btn-primary btn-xs send-to-executed" data-schedule="' + a.id + '"><i class="fa fa-check"></i> Ejecutado </a>' : ''
 			);
-			/*
-			ret.push(a.lot.address_text);
-			ret.push(a.lot.obs);
-			ret.push(a.lot.description);
-			*/
-			
 			//console.log('ret', ret);
 			return ret;
 		},
@@ -562,11 +564,14 @@ var List = Vue.extend({
 								{ title: "Cuadrilla" },
 								{ title: "Fec. Inicio" },
 								{ title: "Fec. Fin" },
-								// { title: "Proceso Ant." },
-								{ title: "F. Ant" },
-								// { title: "Proceso Desp." },
-								{ title: "T. Desp" },
 								{ title: "Area m2" },
+								{ title: "Req." },
+								{ title: "% Ant." },
+								{ title: "Proceso Ant." },
+								{ title: "F. Ant" },
+								{ title: "% Desp." },
+								{ title: "Proceso Desp." },
+								{ title: "T. Desp" },
 								{ title: "Acciones" },
 								// { title: "Direccion(es)" },
 								// { title: "Obs." },
@@ -601,7 +606,6 @@ var List = Vue.extend({
 														time_executed: moment().format('HH:mm:ss'),
 														updated_by: <?= ($this->user->id); ?>
 													},function(xs){
-														
 														self.createLogSchedule({
 															schedule: schedule,
 															action: 'event-executed',
@@ -654,7 +658,6 @@ var router = new VueRouter({
 		{ path: '/', component: List, name: 'Home' },
 	]
 });
-
 
 app = new Vue({
 	router: router,

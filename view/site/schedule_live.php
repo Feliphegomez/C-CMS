@@ -385,7 +385,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel"> {{ periodName }} {{ year }} | Informe general de progreso | Z{{ generalSelected.zone }}CC{{ $root.zfill(generalSelected.name, 4) }}FM{{ generalSelected.repeat }}</h4>
+						<h4 class="modal-title" id="myModalLabel"> {{ periodName }} {{ year }} | Informe general de progreso | {{ generalSelected.lot.microroute_name }}</h4>
 					</div>
 					<div class="modal-body">
 						<h4></h4>
@@ -449,45 +449,7 @@
 									<div class="row">
 										<div class="col-xs-6">
 											ANTES
-											<hr>
-											<div class="actions fileinput-button">
-												<button v-if="generalSelected.isSchedule == true && generalSelected.isApproved === false" class="btn btn-sm btn-warning "> <i class="fa fa-search"></i> Cargar Archivo </button>
-											</div>
-											<div class="col-xs-12 dropzone1"></div>
-											<div class="table table-striped" class="files" id="previews">
-												<div id="template" class="file-row">
-													<!-- This is used as the file preview template -->
-													<div>
-														<span class="preview"><img data-dz-thumbnail /></span>
-													</div>
-													<div>
-														<p class="name" data-dz-name></p>
-														<strong class="error text-danger" data-dz-errormessage></strong>
-													</div>
-													<div>
-														<p class="size" data-dz-size></p>
-														<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-														  <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-														</div>
-													</div>
-													<div>
-														<button class="btn btn-primary start hidden">
-															<i class="glyphicon glyphicon-upload"></i>
-															<span>Start</span>
-														</button>
-														<button data-dz-remove class="btn btn-warning cancel">
-															<i class="glyphicon glyphicon-ban-circle"></i>
-															<span>Cancel</span>
-														</button>
-														<button data-dz-remove class="btn btn-danger delete hidden">
-															<i class="glyphicon glyphicon-trash"></i>
-															<span>Delete</span>
-														</button>
-													</div>
-												</div>
-											</div>
-											<hr>
-											
+											<div class="clearfix"></div>
 											<div id="main_area">
 												<!-- Slider -->
 												<div class="row">
@@ -520,44 +482,7 @@
 										</div>
 										<div class="col-xs-6">
 											DESPUES
-											<hr>
-											<div class="actions fileinput-button2">
-												<button v-if="generalSelected.isSchedule == true && generalSelected.isApproved === false" class="btn btn-sm btn-warning "> <i class="fa fa-search"></i> Cargar Archivo </button>
-											</div>
-											<div class="col-xs-12 dropzone2"></div>
-											<div class="table table-striped" class="files" id="previews2">
-												<div id="template2" class="file-row">
-													<!-- This is used as the file preview template -->
-													<div>
-														<span class="preview"><img data-dz-thumbnail /></span>
-													</div>
-													<div>
-														<p class="name" data-dz-name></p>
-														<strong class="error text-danger" data-dz-errormessage></strong>
-													</div>
-													<div>
-														<p class="size" data-dz-size></p>
-														<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-														  <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-														</div>
-													</div>
-													<div>
-														<button class="btn btn-primary start hidden">
-															<i class="glyphicon glyphicon-upload"></i>
-															<span>Start</span>
-														</button>
-														<button data-dz-remove class="btn btn-warning cancel">
-															<i class="glyphicon glyphicon-ban-circle"></i>
-															<span>Cancel</span>
-														</button>
-														<button data-dz-remove class="btn btn-danger delete hidden">
-															<i class="glyphicon glyphicon-trash"></i>
-															<span>Delete</span>
-														</button>
-													</div>
-												</div>
-											</div>
-											<hr>
+											<div class="clearfix"></div>
 											<div id="main_area">
 												<!-- Slider -->
 												<div class="row">
@@ -652,7 +577,7 @@
 									</div>
 									-->
 									<div class="x_title">
-										<h2 class="" title="Microruta"><i class="fa fa-location-arrow"></i> Z{{ generalSelected.zone }}CC{{ $root.zfill(generalSelected.name, 4) }}FM{{ generalSelected.repeat }}</h2>
+										<h2 class="" title="Microruta"><i class="fa fa-location-arrow"></i> {{ generalSelected.lot.microroute_name }}</h2>
 										<div class="clearfix"></div>
 									</div>
 									<div class="panel-body">
@@ -718,13 +643,13 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button @click="scheduleChangeToExecuted" type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === false && generalSelected.isApproved === false">
+						<button @click="scheduleChangeToExecuted" type="button" class="btn btn-app pull-left hide" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === false && generalSelected.isApproved === false">
 							<i class="fa fa-thumbs-up"></i> Pasar a "Ejecutado"
 						</button>
-						<button @click="scheduleChangeToNotExecuted" type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
+						<button @click="scheduleChangeToNotExecuted" type="button" class="btn btn-app pull-left hide" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
 							<i class="fa fa-calendar"></i> Pasar a "En Progreso..."
 						</button>
-						<button @click="scheduleChangeToApproved" type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
+						<button @click="scheduleChangeToApproved" type="button" class="btn btn-app pull-left hide" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
 							<i class="fa fa-check-square-o"></i> Aprobar
 						</button>
 						
@@ -748,7 +673,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel">{{ periodName }} {{ year }} | Informe Registro Fotografico | Z{{ generalSelected.zone }}CC{{ $root.zfill(generalSelected.name, 4) }}FM{{ generalSelected.repeat }}</h4>
+						<h4 class="modal-title" id="myModalLabel">{{ periodName }} {{ year }} | Informe Registro Fotografico | {{ generalSelected.lot.microroute_name }}</h4>
 					</div>
 					<div class="modal-body row" v-if="fileSelected.id > 0">
 						<div class="col-md-7 col-sm-7 col-xs-12">
@@ -1045,8 +970,6 @@ var List = Vue.extend({
 		var self = this;
 		
 		self.listOptions();
-		self.loadDropzone();
-		self.loadDropzone2();
 		
 		//self.load();
 	},
@@ -1090,196 +1013,6 @@ var List = Vue.extend({
 		outputResult(msg){
 			var self = this;
 			// $('.result').addClass('result').html(self.geo.msg);
-		},
-		loadDropzone(){
-			var self = this;
-			// Dropzone class:
-			// Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-			var previewNode = document.querySelector("#template");
-			previewNode.id = "";
-			var previewTemplate = previewNode.parentNode.innerHTML;
-			previewNode.parentNode.removeChild(previewNode);
-			
-			var myDropzone = new Dropzone(".dropzone1", { // Make the whole body a dropzone
-			  url: self.urlForm, // Set the url
-			  thumbnailWidth: 80,
-			  thumbnailHeight: 80,
-			  parallelUploads: 3,
-			  previewTemplate: previewTemplate,
-			  autoQueue: true, // Make sure the files aren't queued until manually added
-			  previewsContainer: "#previews", // Define the container to display the previews
-			  clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-			  ,init: function() {
-				this.on("processing", function(file) {
-					// console.log('processing');
-					this.options.url = self.urlForm + "&type=A";
-				});
-			  }
-				
-			});
-			
-			myDropzone.on("addedfile", function(file) {
-			  // Hookup the start button
-			  file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
-			});
-			
-			// Update the total progress bar
-			myDropzone.on("totaluploadprogress", function(progress) {
-			  $("#total-progress .progress-bar").css('width', progress + "%");
-			});
-
-			myDropzone.on("sending", function(file) {
-			  // Show the total progress bar when upload starts
-			  $("#total-progress").css('opacity', "1");
-			  // And disable the start button
-			  file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-			});
-			// Hide the total progress bar when nothing's uploading anymore
-			myDropzone.on("queuecomplete", function(progress) {
-			  $("#total-progress").css('opacity', "0");
-			});
-			// Hide the total progress bar when nothing's uploading anymore
-			myDropzone.on("success", function(file, response) {
-				// console.log('response ', response);
-				if(response.error == false){
-					console.log('eliminar');
-					myDropzone.removeFile(file);
-					self.generalSelected.schedule.emvarias_reports_photographic.push({
-						id: response.files[0].id,
-						schedule: self.generalSelected.schedule.id,
-						year: self.generalSelected.schedule.year,
-						type: "A",
-						group: self.generalSelected.schedule.group.id,
-						period: self.generalSelected.schedule.period.id,
-						status: 0,
-						file_name: response.files[0].name,
-						file_type: response.files[0].type,
-						file_size: response.files[0].size,
-						file_path_full: response.files[0].path_full,
-						file_path_short: response.files[0].path_short,
-					});
-				}
-			});
-			
-			// Setup the buttons for all transfers
-			// The "add files" button doesn't need to be setup because the config
-			// `clickable` has already been specified.
-			$("#actions .start").onclick = function() {
-			  myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
-			};
-			$("#actions .start").onclick = function() {
-			  myDropzone.removeAllFiles(true);
-			};
-			// "myAwesomeDropzone" is the camelized version of the HTML element's ID
-			
-			var randNum = function() {
-				return (Math.floor(Math.random() * (1 + 40 - 20))) + 20;
-			};
-			
-			/*
-			$('#myCarousel').carousel({
-					interval: 5000
-			});
-	 
-			//Handles the carousel thumbnails
-			$('[id^=carousel-selector-]').click(function () {
-				var id_selector = $(this).attr("id");
-				try {
-					var id = /-(\d+)$/.exec(id_selector)[1];
-					console.log(id_selector, id);
-					jQuery('#myCarousel').carousel(parseInt(id));
-				} catch (e) {
-					console.log('Regex failed!', e);
-				}
-			});
-			// When the carousel slides, auto update the text
-			$('#myCarousel').on('slid.bs.carousel', function (e) {
-					 var id = $('.item.active').data('slide-number');
-					$('#carousel-text').html($('#slide-content-'+id).html());
-			});*/
-		},
-		loadDropzone2(){
-			var self = this;
-			// Dropzone class:
-			// Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-			var previewNode = document.querySelector("#template2");
-			previewNode.id = "";
-			var previewTemplate = previewNode.parentNode.innerHTML;
-			previewNode.parentNode.removeChild(previewNode);
-			
-			var myDropzone = new Dropzone(".dropzone2", { // Make the whole body a dropzone
-			  url: self.urlForm, // Set the url
-			  thumbnailWidth: 80,
-			  thumbnailHeight: 80,
-			  parallelUploads: 3,
-			  previewTemplate: previewTemplate,
-			  autoQueue: true, // Make sure the files aren't queued until manually added
-			  previewsContainer: "#previews2", // Define the container to display the previews
-			  clickable: ".fileinput-button2" // Define the element that should be used as click trigger to select files.
-			  ,init: function() {
-				this.on("processing", function(file) {
-					// console.log('processing');
-					this.options.url = self.urlForm + "&type=D";
-				});
-			  }
-				
-			});
-			
-			myDropzone.on("addedfile", function(file) {
-				// Hookup the start button
-				// file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
-			});
-			
-			// Update the total progress bar
-			myDropzone.on("totaluploadprogress", function(progress) {
-				$("#total-progress2 .progress-bar").css('width', progress + "%");
-			});
-
-			myDropzone.on("sending", function(file) {
-				// Show the total progress bar when upload starts
-				$("#total-progress2").css('opacity', "1");
-				// And disable the start button
-				//file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-			});
-			// Hide the total progress bar when nothing's uploading anymore
-			myDropzone.on("queuecomplete", function(progress) {
-				$("#total-progress2").css('opacity', "0");
-			});
-			// Hide the total progress bar when nothing's uploading anymore
-			myDropzone.on("success", function(file, response) {
-				// console.log('response ', response);
-				if(response.error == false){
-					console.log('eliminar');
-					myDropzone.removeFile(file);
-					self.generalSelected.schedule.emvarias_reports_photographic.push({
-						id: response.files[0].id,
-						schedule: self.generalSelected.schedule.id,
-						year: self.generalSelected.schedule.year,
-						type: "D",
-						group: self.generalSelected.schedule.group.id,
-						period: self.generalSelected.schedule.period.id,
-						status: 0,
-						file_name: response.files[0].name,
-						file_type: response.files[0].type,
-						file_size: response.files[0].size,
-						file_path_full: response.files[0].path_full,
-						file_path_short: response.files[0].path_short,
-					});
-				}
-			});
-			
-			// Setup the buttons for all transfers
-			// The "add files" button doesn't need to be setup because the config
-			// `clickable` has already been specified.
-			/*
-			$("#actions .start").onclick = function() {
-			  myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
-			};
-			$("#actions .start").onclick = function() {
-			  myDropzone.removeAllFiles(true);
-			};*/
-			// "myAwesomeDropzone" is the camelized version of the HTML element's ID
-			//window.scrollTo(0, 0);
 		},
 		listOptions(){
 			var self = this;
@@ -1860,9 +1593,7 @@ var List = Vue.extend({
 						  }
 					  };
 
-					a.data.records.forEach(function(b){
-						console.log('B',b);
-						
+					a.data.records.forEach(function(b){						
 						self.lastDayExecuted = -1;
 						self.total_m2 += (b.area_m2);
 						detectCalendar = (b.emvarias_schedule[0] !== undefined) ? true : false;

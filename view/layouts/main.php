@@ -43,10 +43,9 @@
                             ?>
                             <?php /* PHPStrap\Util\Html::tag('div', $profile_pic . $profile_info . PHPStrap\Util\Html::clearfix(), ['profile clearfix']); */ ?>
                             <!-- /menu profile quick info -->
-                        <br />
-                        <!-- sidebar menu -->
-                        <?php 
-							
+							<br />
+							<!-- sidebar menu -->
+							<?php 
 							$sidebarItems = new Menus($this->adapter);
 							$sidebarItems->setPermissions($this->user->permissions->list);
 							$sidebarItems->getBySlug("sidebar");
@@ -168,7 +167,8 @@
                 <div class="top_nav">
                     <div class="nav_menu">
 						<?php 
-							$html_mail = '
+							// NAVBAR 
+							$html_notif_reports_create = '
 							<template v-if="mails.length > 0">
 								<li @click="openUrlMailPending(mail.url)" v-for="(mail, mails_index) in mails">
 									<a>
@@ -190,27 +190,24 @@
 								</li>
 							</template>';
 							
-							$inboxSuccess = ($this->checkPermission('my:webmail') == true || $this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
-								FelipheGomez\Url::a(
-										'javascript:void(0);'
-										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', "", ['total-mails-count badge bg-green'])
-										, ['dropdown-toggle info-number']
-										, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-									)
-								. PHPStrap\Util\Html::tag('ul', $html_mail, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-mails', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;' ])
-							, ['dropdown menu-mails-box'], ['@click' => 'load()', 'role' => 'presentation']) : "";
+							$inboxSuccess = "";
+							if($this->checkPermission('emvarias:beta:reports:notifications:create') == true){
+								$modelFilesReports = new ReportPhotographicFile($this->adapter);
+								$total = $modelFilesReports->getTotalPendings();
+								
+								$inboxSuccess = PHPStrap\Util\Html::tag('li', 
+									FelipheGomez\Url::a(
+											'/index.php?controller=site&action=TrackingProgramming'
+											, PHPStrap\Util\Html::tag('i', '', ['fa fa-eye-slash']) . PHPStrap\Util\Html::tag('span', $total, ['total-mails-count badge bg-green'])
+											, ['dropdown-toggle-not info-number']
+											, ['data-toggle' => 'dropdown-not', 'aria-expanded' => 'false']
+										)
+									. PHPStrap\Util\Html::tag('ul', $html_notif_reports_create, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-mails', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;' ])
+								, ['dropdown-not menu-mails-box'], ['role' => 'presentation']);
+							}
 							
 							
-							$iconBarTop_reports_declines = ($this->checkPermission('my:webmail') == true || $this->checkPermission('my:emails') == true) ? PHPStrap\Util\Html::tag('li', 
-								FelipheGomez\Url::a(
-										'javascript:void(0);'
-										, PHPStrap\Util\Html::tag('i', '', ['fa fa-envelope-o']) . PHPStrap\Util\Html::tag('span', "", ['total-mails-count badge bg-green'])
-										, ['dropdown-toggle info-number']
-										, ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
-									)
-								. PHPStrap\Util\Html::tag('ul', $html_mail, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-mails', 'role' => 'menu'], ['style' => 'max-height: 250px;overflow: auto;' ])
-							, ['dropdown menu-mails-box'], ['@click' => 'load()', 'role' => 'presentation']) : "";
-
+							
 								echo PHPStrap\Util\Html::tag('nav', 
 									$navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
 									. PHPStrap\Util\Html::tag('ul', 
@@ -264,8 +261,8 @@
 												, ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu1', 'role' => 'menu'])
 										, ['dropdown'], ['role' => 'presentation'])
 										*/
-										// Icono 2 - Mails
-										// . $inboxSuccess
+										// Icono 2 - Notificaciones Reportes Fotograficos Creados o Pendientes
+										. $inboxSuccess
 										
 									, ['nav navbar-nav navbar-right mail-navbar'])
 								);

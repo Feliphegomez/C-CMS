@@ -10,20 +10,9 @@
     padding: 5px;
 }
 
-.dropzone1 {
-	display: grid;
-	width: calc(80vw);
-	height: 250px;
-    background: white;
-    border-radius: 5px;
-    border: 2px dashed rgb(0, 135, 247);
-    border-image: none;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
+
 </style>
-					
+
 <div class="container" id="schedule-report-before-creator">
 	<div class="page-title">
 	  <div class="title_left">
@@ -36,12 +25,12 @@
 		
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<!-- start form for validation -->
-			<form id="demo-form" data-parsley-validate>
-				<div class="col-md-6 col-sm-6 col-xs-6">
+			<form action="javascript:return false;">
+				<div class="col-md-4 col-sm-6 col-xs-6">
 					<div class="form-group">
 						<label class="control-label col-md-12 col-sm-12 col-xs-12">Periodo</label>
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<select @change="loadLots" v-model="createForm.period" class="select2_single form-control" tabindex="-1">
+							<select v-model="createForm.period" class="select2_single form-control" tabindex="-1">
 								<option value="0">Seleccione una opcion</option>
 								<option v-for="(option, i_option) in options.emvarias_periods" :value="option.id">{{ option.name }}</option>
 							</select>
@@ -49,11 +38,11 @@
 					</div>
 				</div>
 				
-				<div class="col-md-6 col-sm-6 col-xs-6">
+				<div class="col-md-4 col-sm-6 col-xs-6">
 					<div class="form-group">
 						<label class="control-label col-md-12 col-sm-12 col-xs-12">Cuadrilla</label>
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<select @change="loadLots" v-model="createForm.group" class="select2_single form-control" tabindex="-1">
+							<select v-model="createForm.group" class="select2_single form-control" tabindex="-1">
 								<option value="0">Seleccione una opcion</option>
 								<option v-for="(option, i_option) in options.emvarias_groups" :value="option.id">{{ option.name }}</option>
 							</select>
@@ -61,97 +50,59 @@
 					</div>
 				</div>
 				
-				<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="col-md-4 col-sm-6 col-xs-6">
 					<div class="form-group">
-						<label class="control-label col-md-12 col-sm-12 col-xs-12">Microruta/Lote *</label>
+						<label class="control-label col-md-12 col-sm-12 col-xs-12">Reportado para el día</label>
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<select v-model="createForm.schedule" class="select2_single2 form-control" tabindex="-1">
-								<!-- // <option v-for="(option, i_option) in options.emvarias_groups" :value="option.id">{{ option.name }}</option> -->
-							</select>
+							<input class="form-control" type="date" v-model="createForm.date_report" />
 						</div>
 					</div>
 				</div>
-				<br/>
-				<!-- // <img id="boxImgMap" class="img img-responsive hide" width="100%" :src="geo.urlMap" /> -->
-				<!-- // <br/>
-				<div class="">{{ geo.msg }}</div> -->
-				<!-- // 
-				<h3 class="prod_title">{{ addressSelected }}</h3>						
-				<p>{{ descriptionSelected }}</p>
-				-->
+				
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="form-group">
+						<label class="control-label col-md-12 col-sm-12 col-xs-12">Resumen de los hechos</label>
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<textarea class="form-control" v-model="createForm.notes" rows="5"></textarea>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="form-group">
+						<div :class="(idReport > 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
+							<button @click="idReport = 0; createForm.notes = ''" type="button" class="btn btn-warning">Nuevo Reporte</button>
+						</div>
+						<div :class="(idReport <= 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
+							<button @click="submitForm" type="button" class="btn btn-success">Reportar Novedad</button>
+						</div>
+					</div>
+				</div>
+				
 			</form>
 
-			<br />
-				<div :class="(createForm.schedule > 0) ? 'col-md-12 col-sm-12 col-xs-12' : 'hide'">
-					<div class="form-group pull-right">
-						<!-- //
-						<a class="btn btn-md btn-default fileinput-button">
-						  <i class="fa fa-camera-retro"></i> Subir Archivo
-						</a>-->
-						
-					</div>
-					<div class="actions-alls">
-						<button class="btn btn-success " @click="upAll">
-							<i class="glyphicon glyphicon-upload"></i>
-							<span>Subir todas</span>
-						</button>
-						<button class="btn btn-warning " @click="clearGalleryOut">
-							<i class="fa fa-eraser"></i>
-							<span>Limpiar Galeria</span>
-						</button>
-					</div>
-				</div>
-			<br />
-			<div class=" col-xs-12" style="border:0px solid #e5e5e5;">
-				<!-- // 
-					{{ createForm }}
-				-->
-				<!-- // 
-				<div class="product_social">
-					<ul class="list-inline">
-						<li><a href="#" data-toggle="tooltip" title="Hooray!">Hover over me</a></li>
-						<li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-						<li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
-						<li><a href="#"><i class="fa fa-envelope-square"></i></a></li>
-						<li><a href="#"><i class="fa fa-rss-square"></i></a></li>
-					</ul>
-				</div>
-				-->
-			</div>
 		</div>
 		
-		<div class="col-md-12 col-sm-12 col-xs-12">
+		<div :class="(idReport > 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
+			<br />
+			<div class="col-md-12 col-sm-12 col-xs-12'">
+				<div class="form-group pull-right">
+					<a class="btn btn-md btn-default fileinput-button">
+					  <i class="fa fa-camera-retro"></i> Subir Archivo
+					</a>
+				</div>
+			</div>
 			<div class="x_panel">
 				<div class="x_content">
 					<div class="row">
-						<p>Imagenes Subidas</p>
+						<p>Imagenes capturadas</p>
 						<div class="product_gallery">
 							<div class="row" id="screenshots-images"></div>
 						</div>
 						<div class="clearfix"></div>
 					</div>
 					
-					<div class="col-xs-12">
-						<div :class="(createForm.schedule > 0) ? 'col-md-12 col-sm-12 col-xs-12' : 'hide'">
-							<div class="form-group pull-right">
-								<a class="btn btn-md btn-default fileinput-button">
-								  <i class="fa fa-camera-retro"></i> Subir Archivo
-								  <!---// <input onclick="javascript:return false;" class="form-control" type="file" accepted="image/*" /> -->
-								</a>
-								
-							</div>
-						</div>
-						<div class="dropzone1 hide">
-						</div>
-					</div>
-					
-					<!--
-					<form action="/file-upload" class="dropzone1" id="">
-					  <div class="fallback">
-						<input name="file" type="file" multiple />
-					  </div>
-					</form>
-					-->
+					<div class="col-xs-12 dropzone1"></div>
 					<div class="table table-striped" class="files" id="previews">
 						<div id="template" class="file-row">
 							<!-- This is used as the file preview template -->
@@ -188,6 +139,8 @@
 				</div>
 			</div>
 		</div>
+			
+			{{ createForm }}
 	</div>
 </div>
 
@@ -201,14 +154,16 @@ var app = new Vue({
 				emvarias_schedule: [],
 			},
 			createForm: {
-				schedule: 0,
-				year: moment().format('Y'),
-				type: 'A',
+				date_report: moment().format('Y-MM-DD'),
 				group: 0,
 				period: 0,
+				year: moment().format('Y'),
 				lat: 0,
 				lng: 0,
+				notes: '',
+				created_by: '<?= $this->user->id; ?>',
 			},
+			idReport: 0,
 			current: {
 				dateISO: {
 					year: moment().format('Y'),
@@ -248,8 +203,9 @@ var app = new Vue({
 				container: 'body'
 			});
 		});
-		
 		self.loadDropzone();
+		
+		// self.loadDropzone();
 		/*
 		$('#CreateScheduleModal').on('show.bs.modal', function (e) {
 			$('.modal .modal-dialog').attr('class', 'modal-md modal-dialog  ' + 'zoomIn' + '  animated');
@@ -263,75 +219,11 @@ var app = new Vue({
 			var self = this;
 			return (self.geo.active == true) ? 'btn btn-md btn-success' : 'btn btn-md btn-default';
 		},
-		addressSelected(){
-			var self = this;
-			try{
-				return self.options.emvarias_schedule.find(x => x.id === self.createForm.schedule).address_text;
-			} catch(e){
-				return " - Complete el formulario para ver más información - ";
-			}
-		},
-		descriptionSelected(){
-			var self = this;
-			try{
-				return self.options.emvarias_schedule.find(x => x.id === self.createForm.schedule).description;
-			} catch(e){
-				return " - Complete el formulario para ver más información - ";
-			}
-		},
-		contractName(){
-			return "CW72436";
-		},
-		periodName(){
-			var self = this;
-			try{
-				return self.options.emvarias_schedule.find(x => x.id == self.createForm.schedule).period.name;
-			} catch(e){
-				return "";
-			}
-		},
-		groupName(){
-			var self = this;
-			try{
-				return self.options.emvarias_schedule.find(x => x.id == self.createForm.schedule).group.name;
-			} catch(e){
-				return "";
-			}
-		},
-		dateUpda(){
-			var self = this;
-			try{
-				return self.options.emvarias_schedule.find(x => x.id == self.createForm.schedule).date_executed_schedule;
-			} catch(e){
-				return ((Math.floor(Math.random() * (1 + 40 - 20))) + 20);
-			}
-		},
-		microrouterName(){
-			var self = this;
-			try{
-				var micr = self.options.emvarias_schedule.find(x => x.id == self.createForm.schedule).lot;
-				return micr.microroute_name;
-			} catch(e){
-				return "SIN-RUTA";
-			}
-		},
 		urlForm(){
 			var self = this;
-			url = "/index.php?action=send_photo_schedule";
+			url = "/index.php?action=send_file_novelty";
 			try {
-				if(self.createForm.schedule > 0){
-					url += "&period_name=" + btoa(self.periodName);
-					url += "&year=" + self.createForm.year;
-					url += "&period=" + self.createForm.period;
-					url += "&schedule=" + self.createForm.schedule;
-					url += "&route_name=" + btoa(self.microrouterName);
-					url += "&group=" + self.createForm.group;
-					url += "&date_executed=" + self.dateUpda;
-					url += "&group_name=" + btoa(self.groupName);
-					url += "&lat=" + (self.createForm.lat);
-					url += "&lng=" + (self.createForm.lng);
-				}
-				return url + "&type=<?= $_GET['type']; ?>";
+				return url;
 			} catch(e){
 				console.error(e)
 				return '';
@@ -339,41 +231,10 @@ var app = new Vue({
 		},
 	},
 	methods: {
-		clearGalleryOut(){
-			var self = this;
-			$('.product_gallery').html('<div class="row" id="screenshots-images"></div>');
-		},
 		abrir_Popup(url, title="Mi Cuenta") {
 			var objeto_window_referencia;
 			var configuracion_ventana = "width=800,height=800,menubar=no,location=yes,resizable=no,scrollbars=no,status=no";
 			objeto_window_referencia = window.open(url, title, configuracion_ventana);
-		},
-		canvasToElementMedia(fileResponse){
-			var self = this;
-			$htmlout = '';
-			try {
-				$htmlout += '<div class="col-md-55" data-path_short="' + fileResponse.path_short + '">';
-					$htmlout += '<div class="thumbnail">';
-						$htmlout += '<div class="image view view-first">';
-							$htmlout += '<img style="width: 100%; display: block;" src="' + fileResponse.path_short + '" alt="image" />';
-							$htmlout += '<div class="mask">';
-								$htmlout += '<p>' + fileResponse.size + '</p>';
-							$htmlout += '</div>';
-						$htmlout += '</div>';
-						$htmlout += '<div class="caption">';
-							$htmlout += '<p> ' + fileResponse.name + '</p>';
-						$htmlout += '</div>';
-					$htmlout += '</div>';
-				$htmlout += '</div>';
-				return $htmlout;
-			} catch(e) {
-				console.error(e);
-				return "$htmlout";
-			}
-		},
-		upAll(){
-			var self = this;
-			self.myDropzone.enqueueFiles(self.myDropzone.getFilesWithStatus(Dropzone.ADDED));
 		},
 		createLogSchedule(data, callb){
 			var self = this;
@@ -407,52 +268,51 @@ var app = new Vue({
 				// data
 			}
 		},
-		dataURItoBlob(dataURI) {
+		submitForm(){
 			var self = this;
+			var subDialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
 			
-			var byteString, mimestring;
-
-			if(dataURI.split(',')[0].indexOf('base64') !== -1 ) { byteString = atob(dataURI.split(',')[1]); } 
-			else { byteString = decodeURI(dataURI.split(',')[1]); };
-
-			mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-			var content = new Array();
-			for (var i = 0; i < byteString.length; i++) { content[i] = byteString.charCodeAt(i); }
-
-			return new Blob([new Uint8Array(content)], {type: mimestring});
-		},
-		dataURLtoFile(dataurl, filename) {
-			var arr = dataurl.split(','),
-				mime = arr[0].match(/:(.*?);/)[1],
-				bstr = atob(arr[1]), 
-				n = bstr.length, 
-				u8arr = new Uint8Array(n);
-				
-			while(n--){
-				u8arr[n] = bstr.charCodeAt(n);
+			try {
+				if(moment(self.createForm.date_report).isValid() == true 
+					&& self.createForm.group > 0
+					&& self.createForm.period > 0
+					&& self.createForm.year > 1950
+				){
+					console.log('Formulario correcto');
+					
+					console.log('Agregar: ', self.createForm);
+					
+					
+					MV.api.create('/emvarias_reports_novelty', self.createForm, function(a){
+						subDialog.modal('hide');
+						if(a > 0){
+							self.idReport = a;
+							
+							bootbox.confirm({
+								message: "¿Desea agregar fotos/archivos a este reporte?",
+								locale: "es",
+								callback: function (result) {
+									if(result == true){
+										
+									} else {
+										self.idReport = 0;
+										self.createForm.notes = '';
+									}
+								}
+							});
+						}
+					});
+				}else {
+					console.log('Formulario incompleto.');
+					subDialog.modal('hide');
+				}
+			} catch(e) {
+				console.log(e);
+				subDialog.modal('hide');
 			}
-			return new File([u8arr], filename, {type:mime});
-		},
-		save(dataURI) {
-			var self = this;
-			var blob = self.dataURItoBlob(dataURI);
-			return blob;
-		},
-		dataURItoBlob2(dataURI) {
-		  // http://stackoverflow.com/a/12300351/4578017
-		  var byteString = atob(dataURI.split(',')[1]);
-
-		  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-		  var ab = new ArrayBuffer(byteString.length);
-		  var ia = new Uint8Array(ab);
-		  for (var i = 0; i < byteString.length; i++) {
-			ia[i] = byteString.charCodeAt(i);
-		  }
-
-		  var blob = new Blob([ab], {type: mimeString});
-		  return blob;
 		},
 		loadDropzone(){
 			var self = this;
@@ -462,8 +322,6 @@ var app = new Vue({
 			previewNode.id = "";
 			var previewTemplate = previewNode.parentNode.innerHTML;
 			previewNode.parentNode.removeChild(previewNode);
-			
-
 			var myDropzone = self.myDropzone = new Dropzone(".dropzone1", {
 				// Make the whole body a dropzone
 				url: self.urlForm, // Set the url
@@ -479,21 +337,9 @@ var app = new Vue({
 						console.log('processing');
 						this.options.url = self.urlForm;
 					});
-					
-					
-
 				},
 				// acceptedFiles: 'image/*;capture=camera'
 				acceptedFiles: 'image/*'
-				/*onDropHandler(files) {      
-					  var file = files[0]
-					  const reader = new FileReader();
-					  reader.onload = (event) => {
-						console.log(event.target.result);
-					  };
-					  reader.readAsDataURL(file);
-				}
-				*/
 			});
 			
 			// "myAwesomeDropzone" is the camelized version of the HTML element's ID
@@ -564,7 +410,6 @@ var app = new Vue({
 			// image/*;capture=camera
 			//$("#actions .start").onclick = function() { myDropzone.removeAllFiles(true); };
 		},
-		
 		getLocation(){
 			var self = this;
 			if('geolocation' in navigator){
@@ -589,9 +434,8 @@ var app = new Vue({
 				self.geo.urlMap = '/index.php?controller=sw&action=staticmap&maptype=wikimedia&zoom=16&center=' + self.geo.lat + ',' + self.geo.lng + '&size=450x450&markers=' + self.geo.lat + ',' + self.geo.lng + ',bullseye';
 				//var boxImgMap = document.querySelector('#boxImgMap');
 				// boxImgMap.src = self.geo.urlMap;
-				$('.pure-button').removeClass('pure-button-primary').addClass('btn-success'); // change button style
 			} catch(e){
-				
+				console.log(e);
 			}
 		},
 		errorGEO(err){
@@ -622,82 +466,7 @@ var app = new Vue({
 				console.log('error en loadOptions');
 			}
 		},
-		loadLots(){
-			var self = this;
-			var subDialog = bootbox.dialog({
-				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
-				closeButton: false
-			});
-			try {
-				$("#contentScheduleSelected").html('');
-				MV.api.readList('/emvarias_schedule', {
-					filter: [
-						'period,eq,' + self.createForm.period,
-						'group,eq,' + self.createForm.group,
-						'year,eq,' + self.createForm.year
-					],
-					join: [
-						'emvarias_periods',
-						'emvarias_groups',
-						'emvarias_lots',
-					],
-					order: 'date_executed_schedule,asc'
-				}, function(a){
-					$(".select2_single2").html('<option value="">Seleccione una opcion</option><option value="0">Seleccione una opcion</option>');
-					self.options.emvarias_schedule = a;					
-					a.forEach(function(b){
-						$input = $('<input />')
-							.attr('id', 'shedule-option-' + b.id)
-							.attr('v-model', "createForm.schedule")
-							.attr('type', "radio")
-							.attr('class', "flat")
-							.attr('name', "schedule")
-							.attr('required', "true")
-							.val(b.id).change(function(c){
-								self.createForm.schedule = parseInt($(c.target).val());
-							});
-							
-						title = '(' + b.date_executed_schedule + ' - ' + moment(b.date_executed_schedule_end).subtract({ days: 1}).format('YYYY-MM-DD') + ') - ' + b.lot.microroute_name + ' - (Lote:' + b.lot.id_ref + ') - ' + b.lot.address_text;
-						
-						
-						$option = $('<option />')
-							.attr('id', 'shedule-option-select-' + b.id)
-							.text(title)
-							.attr('required', "true")
-							.val(b.id).change(function(c){
-								self.createForm.schedule = parseInt($(c.target).val());
-							});
-						
-						$inputText = $('<label></label>').text(title).attr('for', 'shedule-option-' + b.id);
-						$inputGroup = $('<div></div>').append($input,$inputText).popover({
-							title: b.address_text,
-							content: b.description,
-							trigger: 'focus',
-							placement: 'top',
-							// container: 'body'
-						});
-						//$("#contentScheduleSelected").append($inputGroup);
-						
-						$(".select2_single2").append($option);
-						
-					});
-					subDialog.modal('hide');
-					
-					$(".select2_single2").select2({
-					  placeholder: "Seleccione Microruta/Lote",
-					  allowClear: true
-					})
-					.on('select2:select', function (e) {
-						var data = e.params.data;
-						self.createForm.schedule = data.id;
-						$('.dropzone1').removeClass('hide');
-					});
-				});
-			} catch(e){
-				console.log('error en loadLots');
-				subDialog.modal('hide');
-			}
-		}
+		
 	}
 }).$mount('#schedule-report-before-creator');
 

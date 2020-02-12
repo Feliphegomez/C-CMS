@@ -26,7 +26,7 @@ caches.keys().then(function(cacheKeys) {
 });
 
 // Elimina archivos de cache viejos
-var cacheWhitelist = ['cache01', 'cache00000001']; // 
+var cacheWhitelist = ['cache00000002']; // 
 caches.keys().then(function(cacheNames) {
 	return Promise.all(
 		cacheNames.map(function(cacheName) {

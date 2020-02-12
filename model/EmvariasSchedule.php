@@ -52,5 +52,14 @@ class EmvariasSchedule extends ModeloBase{
 		}
 		return $items;
 	}
+	
+	public function getPeriodsGlobal(){
+		$sql = "SELECT `year` as year, B.* 
+			FROM {$this->getTableUse()} AS A
+		INNER JOIN `emvarias_periods` AS B
+			ON A.period = B.id
+		 GROUP BY A.`year`, A.`period`";
+		return $this->FetchAllObject($sql, []);
+	}
 }
 ?>

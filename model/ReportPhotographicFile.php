@@ -26,6 +26,23 @@ class ReportPhotographicFile extends ModeloBase{
 		}
 	}
 	
+	public function getTotalPendings(){
+		//$status = ($status !== null) ? is_numeric($status) ? [$status] : is_array($status) ? $status : [$status] : [0];
+		$total = 0;
+		$sql = "SELECT COUNT(*) AS total FROM {$this->getTableUse()} WHERE `status` IN (?) ";
+		
+		try {
+            $query = $this->db->prepare($sql);
+            $query->execute([0]);
+            $result = $query->fetchAll(PDO::FETCH_OBJ);
+            return (isset($result[0]->total) && $result[0]->total > 0) ? $result[0]->total : 0;
+        }
+        catch(Exception $e){
+            echo "<b>Error:</b> ".($e->getMessage() . " [SQL-FRONT]: $sql");
+            return 0;
+        }
+	}
+	
     public function save($columns = null){
 		if($this->create_by > 0){} else { return 0; }
 		$sql = "INSERT INTO {$this->getTableUse()} (`schedule`, `year`, `type`, `group`, `period`, `lat`, `lng`, `file_name`, `file_type`, `file_size`, `file_path_full`, `file_path_short`, `create_by`) 

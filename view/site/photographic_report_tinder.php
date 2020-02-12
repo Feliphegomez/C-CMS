@@ -145,13 +145,12 @@
 						<div v-for="(record, record_i) in records" class="tinder--card" :id="record.id">
 							<img :src="record.file_path_short">
 							<h3>
-								{{ record.schedule.lot.microroute_name }} - {{ record.created }} 
+								{{ record.schedule.lot.microroute_name }} - {{ (record.type == 'A') ? 'Antes' : (record.type == 'D') ? 'Despues' : 'Otro' }} - {{ record.created }} 
 							</h3>
 							<p>
 								{{ record.schedule.period.name }} - {{ record.year }}<br>
 								{{ record.schedule.group.name }}<br>
-								{{ record.schedule.date_executed_schedule }}<br>
-								{{ record.schedule.date_executed_schedule_end }}<br>
+								{{ record.schedule.date_executed_schedule }} - {{ record.schedule.date_executed_schedule_end }}<br>
 							</p>
 						</div>
 					</div>
@@ -585,12 +584,54 @@ var app = new Vue({
 				action: 'Report_Photo_Approve',
 				file_id: self.selected.id
 			}}).then(function (response) {
-				console.log(response)
+				// console.log(response);
+				self.createLogSchedule({
+					schedule: self.selected.schedule.id,
+					action: 'approved-file',
+					data: {
+						controller: 'site',
+						action: 'Report_Photo_Approve',
+						file_id: self.selected.id
+					},
+					response: response,
+				}, function(w){
+					new PNotify({
+						"title": "¡Éxito!",
+						"text": "Aprobado con éxito",
+						"styling":"bootstrap3",
+						"type":"success",
+						"icon":true,
+						"animation":"zoom",
+						"hide":true
+					});
+				});
 			}).catch(function (error) {
 				console.error(error);
 				console.log(error.response);
 			});
 			
+		},
+		createLogSchedule(data, callb){
+			var self = this;
+			try{
+				send = {};
+				send.schedule = data.schedule;
+				send.action = data.action;
+				send.data_in = JSON.stringify(data.data);
+				send.data_out = JSON.stringify(data.response);
+				send.created_by = <?= $this->user->id; ?>;
+				api.post('/records/emvarias_schedule_log', send).then(function (l){
+					if(l.status == 200){ callb(l); } 
+					else { throw new FormException('error_create_log', 'No se pudo crear el LOG.'); }
+				}).catch(function (e) {
+					callb(e);
+					return e;
+				});
+			}
+			catch(e){
+				console.error(e);
+				callb(e)
+			}
 		},
 		declineReport(){
 			var self = this;
@@ -601,6 +642,27 @@ var app = new Vue({
 				file_id: self.selected.id
 			}}).then(function (response) {
 				console.log(response);
+				self.createLogSchedule({
+					schedule: self.selected.schedule.id,
+					action: 'declined-file',
+					data: {
+						controller: 'site',
+						action: 'Report_Photo_Approve',
+						file_id: self.selected.id
+					},
+					response: response,
+				}, function(w){
+					new PNotify({
+						"title": "¡Éxito!",
+						"text": "Rechazado con éxito",
+						"styling":"bootstrap3",
+						"type":"success",
+						"icon":true,
+						"animation":"zoom",
+						"hide":true
+					});
+				});
+				
 				bootbox.confirm({
 					message: "Deseas enviar una notificacion del rechazo?.",
 					locale: 'es',

@@ -743,10 +743,10 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button @click="scheduleChangeToExecuted" type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === false && generalSelected.isApproved === false">
+						<button @click="scheduleChangeToExecuted" type="button" class="btn btn-app pull-left hide" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === false && generalSelected.isApproved === false">
 							<i class="fa fa-thumbs-up"></i> Pasar a "Ejecutado"
 						</button>
-						<button @click="scheduleChangeToNotExecuted" type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
+						<button @click="scheduleChangeToNotExecuted" type="button" class="btn btn-app pull-left hide" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
 							<i class="fa fa-calendar"></i> Pasar a "En Progreso..."
 						</button>
 						<button @click="scheduleChangeToApproved" type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
@@ -2002,7 +2002,6 @@ var List = Vue.extend({
 								if(c.is_executed == 1){
 									self.total_m2_executed += b.lot.area_m2;
 									indexExecuted = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_executed).getTime()));
-									console.log('indexExecuted', indexExecuted);
 									if(indexExecuted > -1){
 										self.charts.plot02[indexExecuted][1] += parseFloat(b.lot.area_m2);
 										self.charts.plot04[indexExecuted][1] += (parseFloat(b.lot.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));

@@ -1832,7 +1832,6 @@ print_r($files);
 				"description" => "",
 			]); exit();	
 		}
-
         $this->render("schedule_report_live_create_offline", [
             "title" => "Reportar",
             "subtitle" => "Antes",
@@ -1857,7 +1856,7 @@ print_r($files);
 	}
 
     function actionSchedule_Live(){
-        if ($this->isGuest || ($this->checkPermission('schedule:general') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:schedule:live') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
 
         // $this->render("schedule_emvarias", [
         $this->render("schedule_live", [
@@ -1994,12 +1993,9 @@ print_r($files);
         ]);
     }
 	
-	
-	
-	
 	// Reporte media - 
 	public function actionReport_Photo_Approve(){
-        if ($this->isGuest || ($this->checkPermission('schedule:reports:status:change') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:schedule:files:approved') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$_get = (!empty($_GET)) ? $_GET : [];
 		$error = null;
 		$file_id = (isset($_GET['file_id']) && (int) $_GET['file_id'] > 0) ? (int) $_GET['file_id'] : 0;
@@ -2055,7 +2051,7 @@ print_r($files);
 	
 	// Reporte media - 
 	public function actionReport_Photo_NoPass(){
-        if ($this->isGuest || ($this->checkPermission('schedule:reports:status:change') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:schedule:files:declined') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
 		$_get = (!empty($_GET)) ? $_GET : [];
 		$error = null;
 		$file_id = (isset($_GET['file_id']) && (int) $_GET['file_id'] > 0) ? (int) $_GET['file_id'] : 0;
@@ -2135,9 +2131,26 @@ print_r($files);
 	# REPORTE EMVARIAS
 	function actionPhotographic_Report_Live_Offline(){
         if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:offline') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		
+		$typeNol = isset($_GET['type']) ? (string) $_GET['type'] : 'O';
+		
+		$titleCompl = "";
+		switch($typeNol){
+			case "A":
+				$titleCompl = 'Antes';
+				break;
+			case "D":
+				$titleCompl = 'Despues';
+				break;
+			default:
+				$titleCompl = 'Otro';
+				break;
+		}
+		# $titleCompl = ($typeNol === "D") ? 'Despues' : ($typeNol === 'A') ? 'Antes' : 'Otro';
+
         $this->render("photographic_reporting_offline", [
-            "title" => "Mis eventos",
-            "subtitle" => "",
+            "title" => "Reportar ",
+            "subtitle" => "{$titleCompl}",
         ]);
 	}
 
@@ -2164,6 +2177,142 @@ print_r($files);
         $this->render("tracking_programming", [
             "title" => "Programacion",
             "subtitle" => "Crear",
+        ]);
+    }
+	
+	# MIS REPORTES X PERIODO
+    function actionMePhotographicReports(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:me:current:period') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("me_photographic_reports_current_period", [
+            "title" => "Mis reportes",
+            "subtitle" => "Actual",
+        ]);
+    }
+	
+	# MIS REPORTES PENDIENTES X PERIODO
+    function actionMePhotographicReportsPending(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:me:current:period') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("me_photographic_reports_current_period_pending", [
+            "title" => "Mis reportes",
+            "subtitle" => "Actual",
+        ]);
+    }
+	
+	# MIS REPORTES APROBADOS X PERIODO
+    function actionMePhotographicReportsApprove(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:me:current:period') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("me_photographic_reports_current_period_approve", [
+            "title" => "Mis reportes",
+            "subtitle" => "Actual",
+        ]);
+    }
+	
+	# MIS REPORTES RECHAZADOS X PERIODO
+    function actionMePhotographicReportsDecline(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:me:current:period') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("me_photographic_reports_current_period_decline", [
+            "title" => "Mis reportes",
+            "subtitle" => "Actual",
+        ]);
+    }
+	
+	# FOTOS EMVARIAS EXPLORER FOLDER
+    function actionExplorePhotographicReports(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:explore:folder') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("photographic_explore_reports", [
+            "title" => "Reportes",
+            "subtitle" => "Explorador",
+        ]);
+    }
+	
+	# FOTOS EMVARIAS EXPLORER TREE
+    function actionExplorePhotographicReports_Tree(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:explore:tree') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("photographic_explore_reports_tree", [
+            "title" => "Reportes",
+            "subtitle" => "Explorador",
+        ]);
+    }
+	
+	# EMVARIAS REPORTAR NOVEDAD
+    function actionPhotographicReportsNovelty(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:offline') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("photographic_report_novelty", [
+            "title" => "Reporte",
+            "subtitle" => "Novedades",
+        ]);
+    }
+	
+	# EMVARIAS GALERIA BETA DE REPORTES
+    function actionReportGalleryBeta(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:offline') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("photographic_report_gallery_beta", [
+            "title" => "Informe Registro Fotografico",
+            "subtitle" => "Contrato CW72436",
         ]);
     }
 }
