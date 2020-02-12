@@ -41,3 +41,4 @@ config/settings.php
 # Ignore Uploads adn Sync
 public/attachments/*
 public/files/*
+public/reports-photographics/*
