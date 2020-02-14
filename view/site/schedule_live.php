@@ -7,6 +7,9 @@
 .list-inline-sonar li{display:inline-block;}
 .list-inline-sonar li:after{content:'|'; margin:0 10px;}
 
+.sonar-wrapper .purple {
+	background-color: purple !important;
+}
 .sonar-wrapper .green {
 	background-color: green !important;
 }
@@ -60,13 +63,6 @@
 
 <template id="list">
 	<div>
-		<div class="page-title">
-			<div class="title_left">
-				<h3>Contrato: <small>{}</small></h3>
-			</div>
-			<div class="title_right">
-			</div>
-		</div>
 		<div class="clearfix"></div>
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
@@ -178,7 +174,7 @@
 							</div>
 							  <div class="col-md-4">
 								<div id="echart_pie2" style="margin: 5px 10px 10px 0;width:100%"></div>
-								<canvas class="canvasDoughnut_02 hide" width="100%" style="margin: 5px 10px 10px 0;width:100%"></canvas>
+								<canvas class="canvasDoughnut_02" width="100%" style="margin: 5px 10px 10px 0;width:100%"></canvas>
 							  </div>
 						  </div>
 
@@ -258,7 +254,12 @@
 						
 						<div class="fa-hover " v-for="(a,record_i) in records" v-if="(a.isSchedule == true)">
 							
-								<template v-if="a.isSchedule === true && a.isExecuted === false && a.isApproved === false">
+								<template v-if="a.isSchedule === true && a.inNovelty === true">
+									<a title="Pdte: Con observaciones." class="pull-left border-aero profile_thumb" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a" @click="generalSelected = a">
+										<div class="sonar-wrapper"><div class="sonar-emitter purple"><div class="sonar-wave"></div></div></div>
+									</a>
+								</template>
+								<template v-else-if="a.isSchedule === true && a.isExecuted === false && a.isApproved === false">
 									<a title="Programado: En espera de ejecucion." class="pull-left border-aero profile_thumb" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a" @click="generalSelected = a">
 										<div class="sonar-wrapper"><div class="sonar-emitter red"><div class="sonar-wave"></div></div></div>
 									</a>
@@ -274,7 +275,7 @@
 									</a>
 								</template>
 								<template v-else>
-								<a title="No programado para este periodo." class="pull-left border-aero profile_thumb" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a" @click="generalSelected = a">
+									<a title="No programado para este periodo." class="pull-left border-aero profile_thumb" data-toggle="modal" data-target=".bs-info-general-modal-lg" @click="generalSelected = a" @click="generalSelected = a">
 										<div class="sonar-wrapper"><div class="sonar-emitter"><div class="sonar-wave"></div></div></div>
 									</a>
 								</template>
@@ -385,7 +386,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
-						<h4 class="modal-title" id="myModalLabel"> {{ periodName }} {{ year }} | Informe general de progreso | {{ generalSelected.lot.microroute_name }}</h4>
+						<h4 class="modal-title" id="myModalLabel"> {{ periodName }} {{ year }} | Informe general de progreso | {{ generalSelected.lot.microroute_name }} - Lote: {{ $root.zfill(generalSelected.lot.id_ref, 4) }}</h4>
 					</div>
 					<div class="modal-body">
 						<h4></h4>
@@ -515,24 +516,34 @@
 										</div>
 									</div>
 								
-									<h4>Comentarios y Mensajes</h4>
-									<!-- end of user messages -->
-									
-									<div class="modal-body" style="overflow: auto;max-height: 430px;zoom: 0.8;">
+									<h4>Observacion(es)</h4>								
+									<div class="modal-body" style="overflow: auto;zoom: 0.8;"> <!-- max-height: 430px; -->
 										<ul class="messages">
-											<li v-for="(comment, comment_i) in generalSelected.schedule.emvarias_schedule_comments">
-													<br />
+											<br />
+											<li v-for="(comment, comment_i) in generalSelected.emvarias_schedule_execution_novelties">
 												<div class="message_date">
 													<h3 class="date text-info">{{ comment.created.split('-')[2].split(' ')[0] }}</h3>
 													<p class="month">{{ monthText[new Date(comment.created).getMonth()] }}</p>
 												</div>
 												<div class="message_wrapper">
-													<h4 class="heading">{{ comment.created_by.names }} {{ comment.created_by.surname }} ({{ comment.created_by.username }})</h4>
+													<h4 class="heading">@{{ comment.created_by.username }} - {{ comment.created_by.names }} {{ comment.created_by.surname }}</h4>
 													<blockquote class="message">
 														{{ comment.comment }}
 													</blockquote>
 													<br />
-													<!-- //
+													
+													
+													<p class="url">
+														<span class="fs1 text-info" aria-hidden="true" data-icon="camera-retro">
+															<template v-if="comment.status == 0">
+																<a href="#"><i class="fa fa-exchange"></i> Pdte por gestionar </a>
+															</template>
+															<template v-else-if="comment.status == 1">
+																<a href="#"><i class="fa fa-exchange"></i> Solucionado </a>
+															</template>
+														</span>
+													</p>
+												<!-- //
 													<br />
 													<p class="url">
 														<span class="fs1 text-info" aria-hidden="true" data-icon=""></span>
@@ -544,11 +555,12 @@
 											
 										</ul>
 									</div>
+									<!-- // 
 									<div class="modal-footer">
 										<ul class="messages">
 											<li>
 												<div class="message_date">
-													<!-- // <h3 class="date text-info">Hoy</h3>-->
+													<!-- // <h3 class="date text-info">Hoy</h3>-- >
 												</div>
 												<div class="message_wrapper">
 													<h4 class="heading">Quieres enviar un mensaje sobre este evento?</h4>
@@ -564,6 +576,7 @@
 											</li>
 										</ul>
 									</div>
+									-->
 								</div>
 							</div>
 							
@@ -628,6 +641,12 @@
 											</button>
 											<button type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === false">
 												<i class="fa fa-thumbs-up"></i> Ejecutado
+											</button>
+											<button type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.isExecuted === true && generalSelected.isApproved === true">
+												<i class="fa fa-check-square-o"></i> Aprobado
+											</button>
+											<button type="button" class="btn btn-app pull-left" v-if="generalSelected.isSchedule === true && generalSelected.inNovelty === true">
+												<i class="fa fa-times"></i> Con observacion(es)
 											</button>
 										
 											<!-- // <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target=".bs-view-photo-modal-lg">Agregar archivos</a> -->
@@ -810,7 +829,7 @@ var List = Vue.extend({
 			total_executed: 0,
 			total_approved: 0,
 			period: 0,
-			"year": moment().format('Y'),
+			year: moment().format('Y'),
 			records: [],
 			dataTable: null,
 			generalSelected: {
@@ -968,10 +987,7 @@ var List = Vue.extend({
 	},
 	mounted: function () {
 		var self = this;
-		
 		self.listOptions();
-		
-		//self.load();
 	},
 	methods: {
 		getLocation(){
@@ -1030,7 +1046,7 @@ var List = Vue.extend({
 			try {
 				if(item.emvarias_schedule.length > 0){
 					isSchedule = item.emvarias_schedule.find(x => (x.period.id == self.period && x.year == self.year) );
-					if(isSchedule !==undefined && isSchedule.id > 0 && isSchedule.is_executed == 1){
+					if(isSchedule !== undefined && isSchedule.id > 0 && isSchedule.is_executed == 1){
 						result = true;
 					} else {
 						result = false;
@@ -1085,7 +1101,6 @@ var List = Vue.extend({
 			}
 			//
 		},
-		
 		scheduleSendComment(){
 			var self = this;
 			if(self.commentSchedule.length < 9){ return false; }
@@ -1374,6 +1389,9 @@ var List = Vue.extend({
 					'emvarias_schedule,emvarias_reports_photographic',
 					'emvarias_schedule,users',
 					'emvarias_schedule,emvarias_schedule_comments,users',
+					'emvarias_schedule,emvarias_schedule_execution_novelties,emvarias_groups',
+					'emvarias_schedule,emvarias_schedule_execution_novelties,emvarias_periods',
+					'emvarias_schedule,emvarias_schedule_execution_novelties,users',
 				],
 			} }).then(function (a) {
 				if(a.status === 200){
@@ -1386,7 +1404,6 @@ var List = Vue.extend({
 							  '#26B99A', '#34495E', '#BDC3C7', '#3498DB',
 							  '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
 						  ],
-
 						  title: {
 							  itemGap: 8,
 							  textStyle: {
@@ -1394,15 +1411,12 @@ var List = Vue.extend({
 								  color: '#408829'
 							  }
 						  },
-
 						  dataRange: {
 							  color: ['#1f610a', '#97b58d']
 						  },
-
 						  toolbox: {
 							  color: ['#408829', '#408829', '#408829', '#408829']
 						  },
-
 						  tooltip: {
 							  backgroundColor: 'rgba(0,0,0,0.5)',
 							  axisPointer: {
@@ -1419,7 +1433,6 @@ var List = Vue.extend({
 								  }
 							  }
 						  },
-
 						  dataZoom: {
 							  dataBackgroundColor: '#eee',
 							  fillerColor: 'rgba(64,136,41,0.2)',
@@ -1428,7 +1441,6 @@ var List = Vue.extend({
 						  grid: {
 							  borderWidth: 0
 						  },
-
 						  categoryAxis: {
 							  axisLine: {
 								  lineStyle: {
@@ -1441,7 +1453,6 @@ var List = Vue.extend({
 								  }
 							  }
 						  },
-
 						  valueAxis: {
 							  axisLine: {
 								  lineStyle: {
@@ -1469,7 +1480,6 @@ var List = Vue.extend({
 								  emphasis: {color: '#408829'}
 							  }
 						  },
-
 						  k: {
 							  itemStyle: {
 								  normal: {
@@ -1599,56 +1609,62 @@ var List = Vue.extend({
 						detectCalendar = (b.emvarias_schedule[0] !== undefined) ? true : false;
 						
 						if(detectCalendar == true){
-							b.emvarias_schedule.forEach(function(c){
-								self.lastDayExecuted = -1;
-								self.total_m2_schedule += b.area_m2;
-								// Charts
-								indexSheduled = self.charts.plot01.findIndex(x => (x[0] == new Date(c.date_executed_schedule).getTime()));
-								if(indexSheduled > -1){
-									self.charts.plot01[indexSheduled][1] += (b.area_m2);
-								}
-								
-								
-								if(c.is_executed == 1){
-									self.total_m2_executed += b.area_m2;
-									indexExecuted = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_executed).getTime()));
-									console.log('indexExecuted', indexExecuted);
-									if(indexExecuted > -1){
-										self.charts.plot02[indexExecuted][1] += parseFloat(b.area_m2);
-										self.charts.plot04[indexExecuted][1] += (parseFloat(b.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
-									}
-									indexGroupChart = self.charts.plot05.findIndex(x => (x.id == c.group.id));
-									if(indexGroupChart > -1){
-										// self.charts.plot04[indexExecuted][1] += (parseFloat(b.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
-										self.charts.plot05[indexGroupChart].data += parseFloat(b.area_m2);
+							filterSchedule = b.emvarias_schedule.filter((f) => (f.period.id == self.period && f.year == self.year));
+							// b.emvarias_schedule.forEach(function(c){
+							filterSchedule.forEach(function(c){
+								if(c.period.id == self.period && c.year == self.year){
+									self.lastDayExecuted = -1;
+									self.total_m2_schedule += b.area_m2;
+									// Charts
+									indexSheduled = self.charts.plot01.findIndex(x => (x[0] == new Date(c.date_executed_schedule).getTime()));
+									if(indexSheduled > -1){
+										self.charts.plot01[indexSheduled][1] += (b.area_m2);
 									}
 									
-									self.lastDayExecuted = indexExecuted;
-								}
-								
-								if(c.is_approved == 1){
-									self.total_m2_approved += b.area_m2;
-									indexApproved = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_approved).getTime()));
-									if(indexApproved > -1){
-										self.charts.plot03[indexApproved][1] += parseFloat(b.area_m2);
+									
+									if(c.is_executed == 1){
+										self.total_m2_executed += b.area_m2;
+										indexExecuted = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_executed).getTime()));
+										console.log('indexExecuted', indexExecuted);
+										if(indexExecuted > -1){
+											self.charts.plot02[indexExecuted][1] += parseFloat(b.area_m2);
+											self.charts.plot04[indexExecuted][1] += (parseFloat(b.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
+										}
+										indexGroupChart = self.charts.plot05.findIndex(x => (x.id == c.group.id));
+										if(indexGroupChart > -1){
+											// self.charts.plot04[indexExecuted][1] += (parseFloat(b.area_m2) + ((self.lastDayExecuted > -1) ? self.charts.plot04[self.lastDayExecuted][1] : 0));
+											self.charts.plot05[indexGroupChart].data += parseFloat(b.area_m2);
+										}
+										
+										self.lastDayExecuted = indexExecuted;
 									}
+									
+									if(c.is_approved == 1){
+										self.total_m2_approved += b.area_m2;
+										indexApproved = self.charts.plot02.findIndex(x => (x[0] == new Date(c.date_approved).getTime()));
+										if(indexApproved > -1){
+											self.charts.plot03[indexApproved][1] += parseFloat(b.area_m2);
+										}
+									}
+									
+									// repeat
+									
+									recordsSends.push({
+										id: b.id,
+										name: b.microroute_name,
+										area_m2: b.area_m2,
+										lot: b,
+										isSchedule: true,
+										inNovelty: c.in_novelty == 1 ? true : false,
+										isExecuted: c.is_executed == 1 ? true : false,
+										isApproved: c.is_approved == 1 ? true : false,
+										schedule: c,
+										emvarias_schedule_execution_novelties: c.emvarias_schedule_execution_novelties,
+									});
+									self.total_schedule++;
+									if(c.is_executed == 1) { self.total_executed++; }
+									if(c.is_approved == 1) { self.total_approved++; }
 								}
-								
-								// repeat
-								
-								recordsSends.push({
-									id: b.id,
-									name: b.microroute_name,
-									area_m2: b.area_m2,
-									lot: b,
-									isSchedule: true,
-									isExecuted: c.is_executed == 1 ? true : false,
-									isApproved: c.is_approved == 1 ? true : false,
-									schedule: c,
-								});
-								self.total_schedule++;
-								if(c.is_executed == 1) { self.total_executed++; }
-								if(c.is_approved == 1) { self.total_approved++; }
 							});
 						} else {
 							recordsSends.push({
@@ -1659,7 +1675,9 @@ var List = Vue.extend({
 								isSchedule: false,
 								isExecuted: false,
 								isApproved: false,
+								inNovelty: false,
 								schedule: null,
+								emvarias_schedule_execution_novelties: [],
 							});
 						}
 					});
@@ -1782,61 +1800,42 @@ var List = Vue.extend({
 						chart3_data = [];
 						self.charts.plot05.forEach(function(x){ if(x.id > 0){ chart3_label.push(x.label); chart3_data.push(x.data); } });
 						
-						console.log('self.charts', self.charts);
-						console.log('self.chart1', chart1);
-						console.log('self.chart2', chart2);
-						console.log('self.chart3_data', chart3_data);
 						$.plot( $("#sparkline22"), [
-						{ 
-							label: "Programado", 
-							data: chart1, 
-							lines: { 
-								fillColor: "rgba(150, 100, 89, 0.12)" 
-							}, 
-							points: { 
-								fillColor: "#fff" } 
-						},{ 
-							label: "Ejecutado", 
-							data: chart2, 
-							lines: { 
-								fillColor: "rgba(63, 151, 235, 0.12)" 
-							}, 
-							points: { 
-								fillColor: "#fff" } 
-						}], chart_plot_02_settings);
-						
+							{ label: "Programado", data: chart1, lines: { fillColor: "rgba(150, 100, 89, 0.12)" }, points: { fillColor: "#fff" } },
+							{ label: "Ejecutado", data: chart2, lines: { fillColor: "rgba(63, 151, 235, 0.12)" }, points: { fillColor: "#fff" } }
+						], chart_plot_02_settings);
 						
 						var chart_doughnut_settings = {
-								type: 'pie',
-								tooltipFillColor: "rgba(51, 51, 51, 1)",
-								data: {
-									labels: chart3_label,
-									datasets: [{
-										data: chart3_data,
-										backgroundColor: [
-											"#BDC3C7",
-											"#9B59B6",
-											"#E74C3C",
-											"#26B99A",
-											"#3498DB",
-											"#72c380"
-										],
-										hoverBackgroundColor: [
-											"#CFD4D8",
-											"#B370CF",
-											"#E95E4F",
-											"#36CAAB",
-											"#49A9EA"
-										]
-									}]
-								},
-								options: { 
-									legend: true, 
-									responsive: true
-								}
+							type: 'pie',
+							tooltipFillColor: "rgba(51, 51, 51, 1)",
+							data: {
+								labels: chart3_label,
+								datasets: [{
+									data: chart3_data,
+									backgroundColor: [
+										"#BDC3C7",
+										"#9B59B6",
+										"#E74C3C",
+										"#26B99A",
+										"#3498DB",
+										"#72c380"
+									],
+									hoverBackgroundColor: [
+										"#CFD4D8",
+										"#B370CF",
+										"#E95E4F",
+										"#36CAAB",
+										"#49A9EA"
+									]
+								}]
+							},
+							options: { 
+								legend: true, 
+								responsive: true
 							}
+						};
+						
 						$('.canvasDoughnut_02').each(function(){
-							
 							var chart_element = $(this);
 							var chart_doughnut = new Chart( chart_element, chart_doughnut_settings);
 							
@@ -1852,100 +1851,98 @@ var List = Vue.extend({
 						});
 						
 						if ($('#echart_pie2').length ){ 
-						  var echartPieCollapse = echarts.init(document.getElementById('echart_pie2'));
-									/*
-								  echartPieCollapse.setOption({
-									tooltip: {
-										trigger: 'item',
-										formatter: '{a} <br/>{b}: {c} ({d}%)'
-									},
-									legend: {
-										orient: 'vertical',
-										left: 10,
-										data: ['直达', '营销广告', '搜索引擎', '邮件营销', '联盟广告', '视频广告', '百度', '谷歌', '必应', '其他']
-									},
-									series: [
-										{
-											name: '访问来源',
-											type: 'pie',
-											selectedMode: 'single',
-											radius: [0, '30%'],
+							var echartPieCollapse = echarts.init(document.getElementById('echart_pie2'));
+							/*
+							echartPieCollapse.setOption({
+								tooltip: {
+									trigger: 'item',
+									formatter: '{a} <br/>{b}: {c} ({d}%)'
+								},
+								legend: {
+									orient: 'vertical',
+									left: 10,
+									data: ['直达', '营销广告', '搜索引擎', '邮件营销', '联盟广告', '视频广告', '百度', '谷歌', '必应', '其他']
+								},
+								series: [
+									{
+										name: '访问来源',
+										type: 'pie',
+										selectedMode: 'single',
+										radius: [0, '30%'],
 
-											label: {
-												position: 'inner'
-											},
-											labelLine: {
-												show: false
-											},
-											data: [
-												{value: 335, name: '直达', selected: true},
-												{value: 679, name: '营销广告'},
-												{value: 1548, name: '搜索引擎'}
-											]
+										label: {
+											position: 'inner'
 										},
-										{
-											name: '访问来源',
-											type: 'pie',
-											radius: ['40%', '55%'],
-											label: {
-												formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
-												backgroundColor: '#eee',
-												borderColor: '#aaa',
-												borderWidth: 1,
-												borderRadius: 4,
-												// shadowBlur:3,
-												// shadowOffsetX: 2,
-												// shadowOffsetY: 2,
-												// shadowColor: '#999',
-												// padding: [0, 7],
-												rich: {
-													a: {
-														color: '#999',
-														lineHeight: 22,
-														align: 'center'
-													},
-													// abg: {
-													//     backgroundColor: '#333',
-													//     width: '100%',
-													//     align: 'right',
-													//     height: 22,
-													//     borderRadius: [4, 4, 0, 0]
-													// },
-													hr: {
-														borderColor: '#aaa',
-														width: '100%',
-														borderWidth: 0.5,
-														height: 0
-													},
-													b: {
-														fontSize: 16,
-														lineHeight: 33
-													},
-													per: {
-														color: '#eee',
-														backgroundColor: '#334455',
-														padding: [2, 4],
-														borderRadius: 2
-													}
+										labelLine: {
+											show: false
+										},
+										data: [
+											{value: 335, name: '直达', selected: true},
+											{value: 679, name: '营销广告'},
+											{value: 1548, name: '搜索引擎'}
+										]
+									},
+									{
+										name: '访问来源',
+										type: 'pie',
+										radius: ['40%', '55%'],
+										label: {
+											formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+											backgroundColor: '#eee',
+											borderColor: '#aaa',
+											borderWidth: 1,
+											borderRadius: 4,
+											// shadowBlur:3,
+											// shadowOffsetX: 2,
+											// shadowOffsetY: 2,
+											// shadowColor: '#999',
+											// padding: [0, 7],
+											rich: {
+												a: {
+													color: '#999',
+													lineHeight: 22,
+													align: 'center'
+												},
+												// abg: {
+												//     backgroundColor: '#333',
+												//     width: '100%',
+												//     align: 'right',
+												//     height: 22,
+												//     borderRadius: [4, 4, 0, 0]
+												// },
+												hr: {
+													borderColor: '#aaa',
+													width: '100%',
+													borderWidth: 0.5,
+													height: 0
+												},
+												b: {
+													fontSize: 16,
+													lineHeight: 33
+												},
+												per: {
+													color: '#eee',
+													backgroundColor: '#334455',
+													padding: [2, 4],
+													borderRadius: 2
 												}
-											},
-											data: [
-												{value: 335, name: '直达'},
-												{value: 310, name: '邮件营销'},
-												{value: 234, name: '联盟广告'},
-												{value: 135, name: '视频广告'},
-												{value: 1048, name: '百度'},
-												{value: 251, name: '谷歌'},
-												{value: 147, name: '必应'},
-												{value: 102, name: '其他'}
-											]
-										}
-									]
-								});
-								*/
-								
-						
-						  echartPieCollapse.setOption({
+											}
+										},
+										data: [
+											{value: 335, name: '直达'},
+											{value: 310, name: '邮件营销'},
+											{value: 234, name: '联盟广告'},
+											{value: 135, name: '视频广告'},
+											{value: 1048, name: '百度'},
+											{value: 251, name: '谷歌'},
+											{value: 147, name: '必应'},
+											{value: 102, name: '其他'}
+										]
+									}
+								]
+							});*/
+							
+							echartPieCollapse.setOption({
 							tooltip: {
 							  trigger: 'item',
 							  formatter: "{a} <br/>{b} : {c} ({d}%)"

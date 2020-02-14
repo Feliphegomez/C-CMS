@@ -261,6 +261,25 @@ var List = Vue.extend({
 				return "";
 			}
 		},
+		createNotification(data, callb){
+			var self = this;
+			try{
+				send = {};
+					
+				send.type = data.type;
+				send.datajson = JSON.stringify(data.data);
+				send.user = data.user;
+				send.created_by = <?= $this->user->id; ?>;
+				
+				MV.api.create('/notifications', send, function (l){
+					callb(l);
+				});
+			}
+			catch(e){
+				console.error(e);
+				callb(e)
+			}
+		},
 		declineFile(file, type){
 			var self = this;
 			try {
@@ -282,9 +301,17 @@ var List = Vue.extend({
 						},
 						response: response,
 					}, function(w){
+						self.createNotification({
+							user: file.create_by.id,
+							type: 'photographic-report-declined',
+							data: file,
+						}, function(w){
+						});
+						
+						
 						new PNotify({
 							"title": "¡Éxito!",
-							"text": "Rechazado con éxito",
+							"text": "Se rechazo con éxito y se envio una notificacion al propietario.",
 							"styling":"bootstrap3",
 							"type":"success",
 							"icon":true,
@@ -296,9 +323,10 @@ var List = Vue.extend({
 						self.modalGallery.splice(indexFile, 1);
 						$('#total-pendientes-'+type+'-' + file.schedule.id).html(parseInt($('#total-pendientes-'+type+'-' + file.schedule.id).html()) - 1);
 						$('#total-rechazadas-'+type+'-' + file.schedule.id).html(parseInt($('#total-rechazadas-'+type+'-' + file.schedule.id).html()) + 1);
-
+						
+						/*
 						bootbox.confirm({
-							message: "Deseas enviar una notificacion del rechazo?.",
+							message: "Deseas enviar una notificacion por Whatsapp del rechazo?.",
 							locale: 'es',
 							buttons: {
 								confirm: {
@@ -316,6 +344,7 @@ var List = Vue.extend({
 								}
 							}
 						});
+						*/
 					});
 				}).catch(function (error) {
 					console.error(error);
@@ -456,7 +485,7 @@ var List = Vue.extend({
 							: 'INFORMACION SIN PARAMETRIZAR'
 			);*/
 			ret.push(
-				(a.is_executed == 0 && a.is_approved == 0) ? '<a class="btn btn-primary btn-xs send-to-executed" data-schedule="' + a.id + '"><i class="fa fa-check"></i> Ejecutado </a>' : ''
+				(a.is_executed == 0 && a.is_approved == 0) ? '<a class="btn btn-primary btn-xs send-to-executed" data-schedule="' + a.id + '" data-group_notificacions="' + a.group.group_notification + '"><i class="fa fa-check"></i> Ejecutado </a>' : ''
 			);
 			//console.log('ret', ret);
 			return ret;
@@ -581,9 +610,12 @@ var List = Vue.extend({
 								//self.loadEvents();
 								var apiTables = this.api();
 								$( ".send-to-executed" ).click(function(event){
+									var schedule_obj = null;
 									var schedule = $(this).data('schedule');
-									if(schedule !== undefined && schedule > 0){
-										console.log(schedule);
+									var group_notificacions = $(this).data('group_notificacions');
+									if(schedule !== undefined && schedule > 0 && schedule !== undefined && schedule > 0){
+										
+										
 										bootbox.confirm({
 											message: "Deseas cambiar a ejecutado?.",
 											locale: 'es',
@@ -599,38 +631,64 @@ var List = Vue.extend({
 											},
 											callback: function (result) {
 												if(result === true){
-													MV.api.update('/emvarias_schedule/' + schedule, {
-														is_executed: 1,
-														is_approved: 0,
-														date_executed: moment().format('Y-MM-DD'),
-														time_executed: moment().format('HH:mm:ss'),
-														updated_by: <?= ($this->user->id); ?>
-													},function(xs){
-														self.createLogSchedule({
-															schedule: schedule,
-															action: 'event-executed',
-															data: {
-																is_executed: 1,
-																is_approved: 0,
-																date_executed: moment().format('Y-MM-DD'),
-																time_executed: moment().format('HH:mm:ss'),
-																updated_by: <?= ($this->user->id); ?>
-															},
-															response: xs,
-														}, function(w){
-															new PNotify({
-																"title": "¡Éxito!",
-																"text": "Actualizado con exito.",
-																"styling":"bootstrap3",
-																"type":"success",
-																"icon":true,
-																"animation":"zoom",
-																"hide":true
+												
+													MV.api.readList('/notifications_groups_users', {
+														filter: [
+															'group,eq,' + group_notificacions
+														],
+													},function(IdsNots){
+														MV.api.update('/emvarias_schedule/' + schedule, {
+															is_executed: 1,
+															is_approved: 0,
+															date_executed: moment().format('Y-MM-DD'),
+															time_executed: moment().format('HH:mm:ss'),
+															updated_by: <?= ($this->user->id); ?>
+														},function(xs){
+															self.createLogSchedule({
+																schedule: schedule,
+																action: 'event-executed',
+																data: {
+																	is_executed: 1,
+																	is_approved: 0,
+																	date_executed: moment().format('Y-MM-DD'),
+																	time_executed: moment().format('HH:mm:ss'),
+																	updated_by: <?= ($this->user->id); ?>
+																},
+																response: xs,
+															}, function(w){
+																new PNotify({
+																	"title": "¡Éxito!",
+																	"text": "Actualizado con exito.",
+																	"styling":"bootstrap3",
+																	"type":"success",
+																	"icon":true,
+																	"animation":"zoom",
+																	"hide":true
+																});
+																
+																MV.api.read('/emvarias_schedule/' + schedule, {
+																	join: [
+																		'emvarias_groups',
+																		'emvarias_periods',
+																		'emvarias_lots',
+																	]
+																}, function(scheduleObj){
+																	IdsNots.forEach(function(abc){
+																		self.createNotification({
+																			user: abc.user,
+																			type: 'schedule-executed',
+																			data: scheduleObj,
+																		}, function(wsa){
+																			console.log(wsa)
+																			console.log('ID NOTIFICADO: ', abc.user);
+																		});
+																	});
+																
+																	self.load();
+																});
 															});
-															self.load();
 														});
 													});
-													
 												}
 											}
 										});

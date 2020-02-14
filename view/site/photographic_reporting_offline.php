@@ -131,8 +131,8 @@
 						<div class="clearfix"></div>
 					</div>
 					
-					<div class="col-xs-12">
-						<div :class="(createForm.schedule > 0) ? 'col-md-12 col-sm-12 col-xs-12' : 'hide'">
+					<div :class="(createForm.schedule > 0) ? 'col-md-12 col-sm-12 col-xs-12' : 'hide'">
+						<div class="col-xs-12">
 							<div class="form-group pull-right">
 								<a class="btn btn-md btn-default fileinput-button">
 								  <i class="fa fa-camera-retro"></i> Subir Archivo

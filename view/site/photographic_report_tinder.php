@@ -100,9 +100,10 @@
 }
 
 .tinder--buttons {
-  flex: 0 0 100px;
-  text-align: center;
-  padding-top: 20px;
+	flex: 0 0 100px;
+	text-align: center;
+	padding-top: 20px;
+    z-index: 9999999999;
 }
 
 .tinder--buttons button {
@@ -271,7 +272,7 @@ var app = new Vue({
 			records: [],
 			total: 0,
 			page: 1,
-			limit: 25,
+			limit: 1000,
 			selected: {
 				"id": 0,
 				"route": {
@@ -389,7 +390,7 @@ var app = new Vue({
 	methods: {
 		callback() {
 			var self = this;
-			console.log('v-for loop finished');3
+			console.log('v-for loop finished');
 			if(self.loading == true){
 				self.runTinder();
 				self.loading = false;
@@ -404,7 +405,6 @@ var app = new Vue({
 				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
 				closeButton: false
 			});
-			
 			
 			MV.apiFG('/api.php/records/emvarias_reports_photographic', {
 				params: {
@@ -579,6 +579,7 @@ var app = new Vue({
 		},
 		aprobeReport(){
 			var self = this;
+			$count = $('#count-photografics-pending-revision');
 			MV.apiFG.get('/index.php', { params: {
 				controller: 'site',
 				action: 'Report_Photo_Approve',
@@ -604,6 +605,7 @@ var app = new Vue({
 						"animation":"zoom",
 						"hide":true
 					});
+					$count.text(parseInt($count.text())-1);
 				});
 			}).catch(function (error) {
 				console.error(error);
@@ -633,8 +635,28 @@ var app = new Vue({
 				callb(e)
 			}
 		},
+		createNotification(data, callb){
+			var self = this;
+			try{
+				send = {};
+					
+				send.type = data.type;
+				send.datajson = JSON.stringify(data.data);
+				send.user = data.user;
+				send.created_by = <?= $this->user->id; ?>;
+				
+				MV.api.create('/notifications', send, function (l){
+					callb(l);
+				});
+			}
+			catch(e){
+				console.error(e);
+				callb(e)
+			}
+		},
 		declineReport(){
 			var self = this;
+			$count = $('#count-photografics-pending-revision');
 			
 			MV.apiFG.get('/index.php', { params: {
 				controller: 'site',
@@ -652,38 +674,58 @@ var app = new Vue({
 					},
 					response: response,
 				}, function(w){
+					
+				});
+				
+				self.createNotification({
+					user: self.selected.create_by.id,
+					type: 'photographic-report-declined',
+					data: self.selected,
+				}, function(w){
 					new PNotify({
 						"title": "¡Éxito!",
-						"text": "Rechazado con éxito",
+						"text": "Se rechazo con éxito y se envio una notificacion al propietario.",
 						"styling":"bootstrap3",
 						"type":"success",
 						"icon":true,
 						"animation":"zoom",
 						"hide":true
 					});
+					$count.text(parseInt($count.text())-1);
+					//console.log(self.selected)
+					/*
+					MV.api.readList('/notifications_groups_users', {
+						filter: [
+							'group,eq,' + group_notificacions
+						],
+					},function(IdsNots){
+						
+					})*/
+					
+					/*
+					bootbox.confirm({
+						message: "Deseas enviar una notificacion por Whatsapp del rechazo?.",
+						locale: 'es',
+						buttons: {
+							confirm: {
+								label: 'Enviar',
+								className: 'btn-success'
+							},
+							cancel: {
+								label: 'Cerrar',
+								className: 'btn-default'
+							}
+						},
+						callback: function (result) {
+							if(result === true){
+								// urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.' + '%20https%3A%2F%2Fmicuenta.monteverdeltda.com' + encodeURI(self.selected.media.path_short);
+								urlWA = 'https://wa.me/57' + self.selected.create_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '%20M:%20' + self.selected.schedule.lot.microroute_name + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.';
+								window.open(urlWA,'popUpWindow','height=500,width=600,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
+							}
+						}
+					});*/
 				});
 				
-				bootbox.confirm({
-					message: "Deseas enviar una notificacion del rechazo?.",
-					locale: 'es',
-					buttons: {
-						confirm: {
-							label: 'Enviar',
-							className: 'btn-success'
-						},
-						cancel: {
-							label: 'Cerrar',
-							className: 'btn-default'
-						}
-					},
-					callback: function (result) {
-						if(result === true){
-							// urlWA = 'https://wa.me/57' + self.selected.created_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.' + '%20https%3A%2F%2Fmicuenta.monteverdeltda.com' + encodeURI(self.selected.media.path_short);
-							urlWA = 'https://wa.me/57' + self.selected.create_by.mobile + '?text=Se%20ha%20rechazado%20una%20FOTO' + '%20M:%20' + self.selected.schedule.lot.microroute_name + '.%0AIngresa%20a%20https%3A%2F%2Fmicuenta.monteverdeltda.com%20para%20gestionarla.';
-							window.open(urlWA,'popUpWindow','height=500,width=600,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');
-						}
-					}
-				});
 			}).catch(function (error) {
 				console.error(error);
 				console.log(error.response);

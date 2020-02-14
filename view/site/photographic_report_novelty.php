@@ -74,7 +74,7 @@
 							<button @click="idReport = 0; createForm.notes = ''" type="button" class="btn btn-warning">Nuevo Reporte</button>
 						</div>
 						<div :class="(idReport <= 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
-							<button @click="submitForm" type="button" class="btn btn-success">Reportar Novedad</button>
+							<button @click="submitForm" type="button" class="btn btn-success">Reportar observación</button>
 						</div>
 					</div>
 				</div>
@@ -141,6 +141,8 @@
 		</div>
 			
 			{{ createForm }}
+			<br>
+			{{ urlForm }}
 	</div>
 </div>
 
@@ -223,6 +225,28 @@ var app = new Vue({
 			var self = this;
 			url = "/index.php?action=send_file_novelty";
 			try {
+				if(self.year !== undefined && self.year > 1950){ 
+					url += "&year=" + self.year;
+				}
+				
+				if(self.createForm.date_report !== undefined && moment(self.createForm.date_report).isValid() == true){ 
+					url += "&date_report=" + self.createForm.date_report;
+				}
+				
+				period_a = self.options.emvarias_periods.find((a) => (a.id == self.createForm.period));
+				if(period_a !== undefined && period_a.name !== undefined){ 
+					url += "&period=" + (period_a.id);
+					url += "&period_name=" + btoa(period_a.name);
+				}
+				
+				group_a = self.options.emvarias_groups.find((a) => (a.id == self.createForm.group));
+				if(group_a !== undefined && group_a.name !== undefined){ 
+					url += "&group=" + (group_a.id);
+					url += "&group_name=" + btoa(group_a.name);
+				}
+				
+				url += "&lat=" + (self.geo.lat);
+				url += "&lng=" + (self.geo.lng);
 				return url;
 			} catch(e){
 				console.error(e)
@@ -286,7 +310,7 @@ var app = new Vue({
 					console.log('Agregar: ', self.createForm);
 					
 					
-					MV.api.create('/emvarias_reports_novelty', self.createForm, function(a){
+					MV.api.create('/emvarias_novelties_generals', self.createForm, function(a){
 						subDialog.modal('hide');
 						if(a > 0){
 							self.idReport = a;

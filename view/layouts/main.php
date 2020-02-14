@@ -33,23 +33,19 @@
                                 , ['navbar nav_title']
                                 , ['style' => 'border: 0;']) 
                             . PHPStrap\Util\Html::clearfix(); ?>
-                            <!-- menu profile quick info -->
-                             <?php
-                                $profile_pic = PHPStrap\Util\Html::tag('div', PHPStrap\Media::image('/public/assets/images/img.jpg', '...', ['img-circle profile_img']), ['profile_pic']);
-                                $profile_info = PHPStrap\Util\Html::tag('div', 
-                                    PHPStrap\Util\Html::tag('span', 'Bienvend@, ')
-                                    . PHPStrap\Util\Html::tag('h2', $this->user->username)
-                                , ['profile_info']);
-                            ?>
-                            <?php /* PHPStrap\Util\Html::tag('div', $profile_pic . $profile_info . PHPStrap\Util\Html::clearfix(), ['profile clearfix']); */ ?>
-                            <!-- /menu profile quick info -->
-							<br />
-							<!-- sidebar menu -->
-							<?php 
+						 <?php
+							$profile_pic = PHPStrap\Util\Html::tag('div', PHPStrap\Media::image('/public/assets/images/img.jpg', '...', ['img-circle profile_img']), ['profile_pic']);
+							$profile_info = PHPStrap\Util\Html::tag('div', 
+								PHPStrap\Util\Html::tag('span', 'Bienvend@, ')
+								. PHPStrap\Util\Html::tag('h2', $this->user->username)
+							, ['profile_info']);
+							
+							# PHPStrap\Util\Html::tag('div', $profile_pic . $profile_info . PHPStrap\Util\Html::clearfix(), ['profile clearfix']);
+							echo PHPStrap\Util\Html::tag('div', '<br>' . PHPStrap\Util\Html::clearfix(), ['profile clearfix']);
+							
 							$sidebarItems = new Menus($this->adapter);
 							$sidebarItems->setPermissions($this->user->permissions->list);
 							$sidebarItems->getBySlug("sidebar");
-							
 							// Sistema
                             $menu_section_system = PHPStrap\Util\Html::tag('div', 
 								(($this->checkPermission('system:users:manage') == true) ? PHPStrap\Util\Html::tag('h3', 'Sistema') : "")
@@ -86,7 +82,6 @@
 								$menu_section_roles = "";
 							}
 							
-							
 							// Correos - Boxes
 							$mailBoxes = $this->user->getEmailBoxes();
 							$boxes_html = [];
@@ -98,8 +93,6 @@
 										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope-o"]) . $box->label
 									, ['sub_menu'], ["title" => $box->user]);
 									
-									
-									
 									/*$boxes_html[] = FelipheGomez\Url::a(['site/my_email', ["V" => "#/{$box->id}/folder/inbox/1"]], 
 										PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope"]) . $box->label
 									, ['sub_menu'], ["title" => $box->user]);*/
@@ -108,21 +101,21 @@
 							// Mis correos
                             $menu_section_emails = ($this->checkPermission('my:webmail') == true || $this->checkPermission('my:emails') == true) ? (PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('h3', 'Correo Electronico')
-                                . PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu'])
-                                . PHPStrap\Util\Html::ul([($this->checkPermission('system:emails:manage') == true) ? 
+								
+								. ((count($mailBoxes) <= 1) ? PHPStrap\Util\Html::ul($boxes_html, ['nav side-menu']) : PHPStrap\Util\Html::ul([
+									PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope-o"]) . "Mis Correos" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
+										. PHPStrap\Util\Html::ul($boxes_html, ['nav child_menu'])
+								], ['nav side-menu']))
+								
+								. PHPStrap\Util\Html::ul([($this->checkPermission('system:emails:manage') == true) ? 
 										PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-shield"]) . "Gestionar" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
 										. PHPStrap\Util\Html::ul([
 											($this->checkPermission('emails:accounts:manage') == true) ? FelipheGomez\Url::a(['site/AdminEmailsBoxesVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-at"]) . "Cuentas") : ""
 											, ($this->checkPermission('emails:accounts_in_users:manage') == true) ? FelipheGomez\Url::a(['site/AdminEmailsBoxesInUserVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-random"]) . "Relacion usuarios") : ""
 											, ($this->checkPermission('emails:attachments:manage') == true) ? FelipheGomez\Url::a(['site/AdminEmailsAttachmentsVue'], PHPStrap\Util\Html::tag('i', ' ', ["fa fa-paperclip"]) . "Admin. Adjuntos") : ""
 										], ['nav child_menu']) : ""], ['nav side-menu'])
-                                /*
-								. PHPStrap\Util\Html::ul([
-									PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', ' ', ["fa fa-envelope-o"]) . "Mis Correos" . PHPStrap\Util\Html::tag('span', '', ["fa fa-chevron-down"]))
-										. PHPStrap\Util\Html::ul($boxes_html, ['nav child_menu'])
-								], ['nav side-menu'])*/
+                                
                             , ['menu_section'])) : "";
-							
                             echo PHPStrap\Util\Html::tag('div', 
 								$sidebarItems->menu
 								. $menu_section_emails
@@ -131,11 +124,7 @@
 								. PHPStrap\Util\Html::clearfix(), 
 							['main_menu_side hidden-print main_menu'], ['id' => 'sidebar-menu']);
 							
-							
-                        ?>
-                        <!-- /sidebar menu -->
-                        <!-- /menu footer buttons -->
-                        <?php /* PHPStrap\Util\Html::tag('div', 
+							/* PHPStrap\Util\Html::tag('div', 
                                 PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('span', "", ['glyphicon glyphicon-cog'], ['aria-hidden' => 'true']), [], [
                                     'data-toggle' => 'tooltip'
                                     , 'data-placement' => 'top'
@@ -160,7 +149,6 @@
                             , ["sidebar-footer hidden-small"]);
                             */
                         ?>
-                        <!-- /menu footer buttons -->
                     </div>
                 </div>
                 <!-- top navigation -->
@@ -197,8 +185,8 @@
 								
 								$inboxSuccess = PHPStrap\Util\Html::tag('li', 
 									FelipheGomez\Url::a(
-											'/index.php?controller=site&action=TrackingProgramming'
-											, PHPStrap\Util\Html::tag('i', '', ['fa fa-eye-slash']) . PHPStrap\Util\Html::tag('span', $total, ['total-mails-count badge bg-green'])
+											'/index.php?controller=site&action=Photographic_Report_Tinder'
+											, PHPStrap\Util\Html::tag('i', '', ['fa fa-eye-slash']) . PHPStrap\Util\Html::tag('span', $total, ['badge bg-green'], ['id' => 'count-photografics-pending-revision'])
 											, ['dropdown-toggle-not info-number']
 											, ['data-toggle' => 'dropdown-not', 'aria-expanded' => 'false']
 										)
@@ -207,6 +195,48 @@
 							}
 							
 							
+							
+							
+							$dropdownNotifications = PHPStrap\Util\Html::tag('li', 
+                                        FelipheGomez\Url::a(
+                                                'javascript:void(0)'
+                                                , PHPStrap\Util\Html::tag('i', '', ['fa fa-bell']) . PHPStrap\Util\Html::tag('span', '', ['badge bg-blue'], ['id' => 'count-notifications'])
+                                                , ['dropdown-toggle info-number']
+                                                , ['data-toggle' => 'dropdown', 'aria-expanded' => 'false']
+                                            )
+                                        . PHPStrap\Util\Html::tag('ul', 
+                                                // Item
+												
+                                                PHPStrap\Util\Html::tag('li', 
+                                                        PHPStrap\Util\Html::tag('a', 
+															PHPStrap\Util\Html::tag('i', '', ['fa fa-spinner fa-spin'])
+															. PHPStrap\Util\Html::tag('span', ' Cargando, espere...')
+													, [], [])
+												, [], [])
+												/*
+                                                PHPStrap\Util\Html::tag('li', 
+                                                        PHPStrap\Util\Html::tag('a', 
+                                                            PHPStrap\Util\Html::tag('span', PHPStrap\Media::imageClean('/public/assets/images/img.jpg', '...'), ['image'])
+                                                            . PHPStrap\Util\Html::tag('span', 
+                                                                    PHPStrap\Util\Html::tag('span', 'Feliphe Gomez')
+                                                                    . PHPStrap\Util\Html::tag('span', '3 mins ago', ['time'])
+                                                                )
+                                                            . PHPStrap\Util\Html::tag('span', 'Film festivals used to be do-or-die moments for movie makers. They were where...', ['message'])
+                                                            , [], [])
+                                                    , [], [])*/
+                                                
+                                                // Footer
+												/*
+                                                . PHPStrap\Util\Html::tag('li', 
+                                                        PHPStrap\Util\Html::tag('div', 
+                                                            PHPStrap\Util\Html::tag('a', 
+                                                                    PHPStrap\Util\Html::tag('strong', 'Ver todas las notificaciones')
+                                                                    . PHPStrap\Util\Html::tag('i', '', ['fa fa-angle-right'])
+                                                                )
+                                                            , ['text-center'], [])
+                                                    , [], [])*/
+                                            , ['dropdown-menu list-unstyled msg_list'], ['id' => 'menu-notifications-top', 'role' => 'menu'])
+                                    , ['dropdown'], ['role' => 'presentation', 'id' => 'notifications-navbar-top','@click'=>'load(false)']);
 							
 								echo PHPStrap\Util\Html::tag('nav', 
 									$navbar = PHPStrap\Util\Html::tag('div', PHPStrap\Util\Html::tag('a', PHPStrap\Util\Html::tag('i', '', ['fa fa-bars']), [], ['id' => 'menu_toggle']), ['nav toggle'])
@@ -227,6 +257,7 @@
 												]
 											, ['dropdown-menu dropdown-usermenu pull-right']) 
 										, [''])
+										. $dropdownNotifications
 										/*
 										// Icono 1
 										. PHPStrap\Util\Html::tag('li', 
