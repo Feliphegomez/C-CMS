@@ -28,7 +28,8 @@ var appNotifications = new Vue({
 					maximumAge: 0
 				},
 			},
-			myDropzone: null
+			myDropzone: null,
+			notActive: null
 		};
 	},
 	mounted(){
@@ -38,34 +39,37 @@ var appNotifications = new Vue({
 	directives: {
 	},
 	computed: {
-	},
-	methods: {
-		urlFormSendFilePhotographicReport(fileData){
-			console.log('fileData', fileData);
+		urlFormSendFilePhotographicReport(){
+			// console.log('fileData', fileData);
 			var self = this;
 			url = "/index.php?action=send_photo_schedule";
 			try {
-				if(fileData.year > 0){ url += "&year=" + fileData.year; }
-				if(fileData.period !== undefined && fileData.period.name !== undefined){ url += "&period_name=" + btoa(fileData.period.name); }
-				if(fileData.group !== undefined && fileData.group.name !== undefined){ url += "&group_name=" + btoa(fileData.group.name); }
-				if(fileData.period !== undefined && fileData.period.id !== undefined){ url += "&period=" + (fileData.period.id); }
-				if(fileData.group !== undefined && fileData.group.id !== undefined){ url += "&group=" + (fileData.group.id); }
-				if(fileData.schedule !== undefined && fileData.schedule.id !== undefined){ url += "&schedule=" + (fileData.schedule.id); }
-				if(fileData.schedule !== undefined && fileData.schedule.lot !== undefined && fileData.schedule.lot.microroute_name !== undefined){ url += "&route_name=" + btoa(fileData.schedule.lot.microroute_name); }
-				if(fileData.schedule !== undefined && fileData.schedule !== undefined && fileData.schedule.date_executed_schedule !== undefined){ url += "&date_executed=" + (fileData.schedule.date_executed_schedule); }
-				if(fileData.type !== undefined){ url += "&type=" + (fileData.type); }
-				
-				url += "&lat=" + (self.geo.lat);
-				url += "&lng=" + (self.geo.lng);
-				
-				//return url + "&type=";
-				console.log('url final: ', url);
+				if(self.notActive !== null && self.notActive.type == 'photographic-report-declined'){
+					var fileData = self.notActive.datajson;
+					if(fileData.year > 0){ url += "&year=" + fileData.year; }
+					if(fileData.period !== undefined && fileData.period.name !== undefined){ url += "&period_name=" + btoa(fileData.period.name); }
+					if(fileData.group !== undefined && fileData.group.name !== undefined){ url += "&group_name=" + btoa(fileData.group.name); }
+					if(fileData.period !== undefined && fileData.period.id !== undefined){ url += "&period=" + (fileData.period.id); }
+					if(fileData.group !== undefined && fileData.group.id !== undefined){ url += "&group=" + (fileData.group.id); }
+					if(fileData.schedule !== undefined && fileData.schedule.id !== undefined){ url += "&schedule=" + (fileData.schedule.id); }
+					if(fileData.schedule !== undefined && fileData.schedule.lot !== undefined && fileData.schedule.lot.microroute_name !== undefined){ url += "&route_name=" + btoa(fileData.schedule.lot.microroute_name); }
+					if(fileData.schedule !== undefined && fileData.schedule !== undefined && fileData.schedule.date_executed_schedule !== undefined){ url += "&date_executed=" + (fileData.schedule.date_executed_schedule); }
+					if(fileData.type !== undefined){ url += "&type=" + (fileData.type); }
+					
+					url += "&lat=" + (self.geo.lat);
+					url += "&lng=" + (self.geo.lng);
+					
+					//return url + "&type=";
+					console.log('url final: ', url);
+				}
 				return url;
 			} catch(e){
 				console.error(e)
 				return '';
 			}
 		},
+	},
+	methods: {
 		addToTask: function(){
             var self = this;
             setTimeout(self.load, 300000); // 300000 == 5 Minutos || 1Min = 60000 || 1Seg = 1000
@@ -73,6 +77,7 @@ var appNotifications = new Vue({
 		openNotificationInModal(dataNot, eljQuery){
 			var self = this;
 			try {
+				self.notActive = dataNot;
 				console.log('dataNot', dataNot);
 				console.log('datajson.id', dataNot.datajson.id);
 				
@@ -112,7 +117,7 @@ var appNotifications = new Vue({
 								)
 								
 								.append($('<div></div>')
-									.append($('<button></button>').attr('class', 'btn btn-primary start')
+									.append($('<button></button>').attr('class', 'btn btn-primary start-dropzone-notifications')
 										.append($('<i></i>').attr('class', 'glyphicon glyphicon-upload'))
 										.append($('<span></span>').append('Subir')))
 									.append($('<button></button>').attr('class', 'btn btn-danger cancel').attr('data-dz-remove', '')
@@ -136,6 +141,7 @@ var appNotifications = new Vue({
 									)
 							).append(
 								$('<div></div>').attr('class', 'col-xs-5')
+									.append($('<div></div>').attr('class', 'btn btn-default').attr('id', 'fileinput-button-modal-notifications').text('Subir otra foto/archivo'))
 									.append($('<div></div>').attr('class', 'dropzone').attr('id', 'dropzone-notifications').attr('style', 'max-height: 150px !important;'))
 									.append($previewsDropzone)
 							);
@@ -155,10 +161,11 @@ var appNotifications = new Vue({
 									}
 								},
 								noclose: {
-									label: "Subir Foto",
-									className: 'btn-warning fileinput-button',
+									label: "Subir todo",
+									className: 'btn-warning',
 									callback: function(){
 										console.log('Custom button clicked');
+										self.myDropzone.enqueueFiles(self.myDropzone.getFilesWithStatus(Dropzone.ADDED));
 										return false;
 									}
 								},
@@ -198,20 +205,20 @@ var appNotifications = new Vue({
 							
 							
 							
-							var myDropzone = $('#dropzone-notifications').dropzone({
+							var myDropzone = self.myDropzone = new Dropzone('#dropzone-notifications', {
 								// Make the whole body a dropzone
-								url: self.urlFormSendFilePhotographicReport(dataNot.datajson), // Set the url
+								url: self.urlFormSendFilePhotographicReport, // Set the url
 								thumbnailWidth: 80,
 								thumbnailHeight: 80,
 								parallelUploads: 3,
 								previewTemplate: previewTemplate,
 								autoQueue: false, // Make sure the files aren't queued until manually added
 								previewsContainer: "#previews-dropzone-notifications", // Define the container to display the previews
-								clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+								clickable: "#fileinput-button-modal-notifications", // Define the element that should be used as click trigger to select files.
 								init: function() {
 									this.on("processing", function(file) {
 										console.log('processing');
-										this.options.url = self.urlFormSendFilePhotographicReport(dataNot.datajson);
+										this.options.url = self.urlFormSendFilePhotographicReport;
 									});
 								},
 								acceptedFiles: 'image/*'
@@ -225,6 +232,7 @@ var appNotifications = new Vue({
 								}
 								*/
 							});
+
 							
 							
 							myDropzone.on("error", function(file,errorMessage,xhr){
@@ -243,7 +251,7 @@ var appNotifications = new Vue({
 							
 							myDropzone.on("addedfile", function(file) {
 							  // Hookup the start button
-							  file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+							  file.previewElement.querySelector(".start-dropzone-notifications").onclick = function() { myDropzone.enqueueFile(file); };
 							});
 							// Update the total progress bar
 							myDropzone.on("totaluploadprogress", function(progress) {
@@ -254,7 +262,7 @@ var appNotifications = new Vue({
 							  // Show the total progress bar when upload starts
 							  $("#total-progress").css('opacity', "1");
 							  // And disable the start button
-							  file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+							  file.previewElement.querySelector(".start-dropzone-notifications").setAttribute("disabled", "disabled");
 							});
 							// Hide the total progress bar when nothing's uploading anymore
 							myDropzone.on("queuecomplete", function(progress) {
@@ -262,12 +270,9 @@ var appNotifications = new Vue({
 							});
 							// Hide the total progress bar when nothing's uploading anymore
 							myDropzone.on("success", function(file, response) {
-								console.log('response', response);
-								/*
 								if(response.error == false){
 									myDropzone.removeFile(file);
 									errors = false;
-									
 									
 									$inputGroup = $(self.canvasToElementMedia(response.files[0]));
 									$inputGroup.click(function(){
@@ -277,7 +282,7 @@ var appNotifications = new Vue({
 									
 									$("#screenshots-images").append($inputGroup);
 									self.createLogSchedule({
-										schedule: self.createForm.schedule,
+										schedule: dataNot.datajson.schedule.ID,
 										action: 'new-picture',
 										data: file,
 										response: response,
@@ -288,7 +293,6 @@ var appNotifications = new Vue({
 								} else {
 									return file.previewElement.classList.add("dz-danger");
 								}
-								*/
 							});
 						});
 					})
@@ -308,6 +312,61 @@ var appNotifications = new Vue({
 			} catch (e){
 				console.error(e);
 				console.log(e);
+			}
+		},
+		canvasToElementMedia(fileResponse){
+			var self = this;
+			$htmlout = '';
+			try {
+				$htmlout += '<div class="col-md-55" data-path_short="' + fileResponse.path_short + '">';
+					$htmlout += '<div class="thumbnail">';
+						$htmlout += '<div class="image view view-first">';
+							$htmlout += '<img style="width: 100%; display: block;" src="' + fileResponse.path_short + '" alt="image" />';
+							$htmlout += '<div class="mask">';
+								$htmlout += '<p>' + fileResponse.size + '</p>';
+							$htmlout += '</div>';
+						$htmlout += '</div>';
+						$htmlout += '<div class="caption">';
+							$htmlout += '<p> ' + fileResponse.name + '</p>';
+						$htmlout += '</div>';
+					$htmlout += '</div>';
+				$htmlout += '</div>';
+				return $htmlout;
+			} catch(e) {
+				console.error(e);
+				return "$htmlout";
+			}
+		},
+		createLogSchedule(data, callb){
+			var self = this;
+			try{
+				send = {};
+				send.schedule = data.schedule;
+				send.action = data.action;
+				send.data_in = JSON.stringify(data.data);
+				send.data_out = JSON.stringify(data.response);
+				send.created_by = <?= $this->user->id; ?>;
+				// console.log('send LOG: ', send);
+				api.post('/records/emvarias_schedule_log', send)
+				.then(function (l){
+					// console.log('log', l);
+					if(l.status == 200){
+						// console.log('Registro creado con exito.');
+						callb(l);
+					} else {
+						throw new FormException('error_create_log', 'No se pudo crear el LOG.');
+					}
+				})
+				.catch(function (e) {
+					callb(e);
+					return e;
+				});
+			}
+			catch(e){
+				// console.log('Error al creado el registro.');
+				console.error(e);
+				callb(e)
+				// data
 			}
 		},
 		load(task){

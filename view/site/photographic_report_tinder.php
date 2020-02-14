@@ -602,6 +602,7 @@ var app = new Vue({
 						"styling":"bootstrap3",
 						"type":"success",
 						"icon":true,
+						delay: 1500,
 						"animation":"zoom",
 						"hide":true
 					});
@@ -689,6 +690,7 @@ var app = new Vue({
 						"type":"success",
 						"icon":true,
 						"animation":"zoom",
+						delay: 1500,
 						"hide":true
 					});
 					$count.text(parseInt($count.text())-1);
