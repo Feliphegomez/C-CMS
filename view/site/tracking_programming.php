@@ -186,7 +186,7 @@ var List = Vue.extend({
 	template: '#list',
 	data(){
 		return {
-			baseAreaCalc_m2_photos: 0.0001,
+			baseAreaCalc_m2_photos: 0.0065,
 			minPhotosSpaceSmall: 8,
 			options: {
 				emvarias_groups: [],
@@ -467,12 +467,12 @@ var List = Vue.extend({
 			ret.push(a.date_executed_schedule_end + ':F');
 			ret.push(a.lot.area_m2.toLocaleString());
 			ret.push(photosReq);
-			ret.push(porcCurA);
+			ret.push(parseInt(porcCurA));
 			ret.push('<div id="progress-A-' + a.id + '">' + self.progressHtml(porcCurA, porcColorA) + '</div>');
 			ret.push('<span data-schedule="' + a.id + '" data-type="A" data-status="0" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-blue"><i class="fa fa-circle"></i> <font id="total-pendientes-A-' + a.id + '">' + totalAntesPendientes + '</font></span>' 
 				+ '<span data-schedule="' + a.id + '" data-type="A" data-status="1" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-green"><i class="fa fa-thumbs-o-up"></i>  <font id="total-aprobadas-A-' + a.id + '">' + totalAntesAprobadas + '</font></span>' + 
 				'<span data-schedule="' + a.id + '" data-type="A" data-status="2" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-red"><i class="fa fa-thumbs-o-down"></i> <font id="total-rechazadas-A-' + a.id + '">' + totalAntesDeclinadas + '</font></span>');
-			ret.push(porcCurD);
+			ret.push(parseInt(porcCurD));
 			ret.push('<div id="progress-D-' + a.id + '">' + self.progressHtml(porcCurD, porcColorD) + '</div>');
 			ret.push('<span data-schedule="' + a.id + '" data-type="D" data-status="0" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-blue"><i class="fa fa-circle"></i> <font id="total-pendientes-D-' + a.id + '">' + totalDespuesPendientes + '</font></span>' 
 				+ '<span data-schedule="' + a.id + '" data-type="D" data-status="1" data-toggle="modal" data-target=".bs-gallery-photos-status-modal-lg" class="badge bg-green"><i class="fa fa-thumbs-o-up"></i> <font id="total-aprobadas-D-' + a.id + '">' + totalDespuesAprobadas + '</font></span>' + 
@@ -581,6 +581,7 @@ var List = Vue.extend({
 							data: ra.data.records.map(function(a){
 								return self.jsonEvent(a);
 							}),
+							rowReorder: true,
 							/*
 							"columnDefs": [
 								{ responsivePriority: 1, targets: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14] },
@@ -609,13 +610,17 @@ var List = Vue.extend({
 							initComplete: function( settings, json ) {
 								//self.loadEvents();
 								var apiTables = this.api();
-								$( ".send-to-executed" ).click(function(event){
+								
+							}
+						}).on( 'order.dt', function () {
+
+							$.each( $(".send-to-executed"), function(i,o) {
+								$(o).attr("onclick", "").unbind("click");
+								$(o).click(function(event){								
 									var schedule_obj = null;
 									var schedule = $(this).data('schedule');
 									var group_notificacions = $(this).data('group_notificacions');
 									if(schedule !== undefined && schedule > 0 && schedule !== undefined && schedule > 0){
-										
-										
 										bootbox.confirm({
 											message: "Deseas cambiar a ejecutado?.",
 											locale: 'es',
@@ -695,7 +700,10 @@ var List = Vue.extend({
 										
 									}
 								});
-							}
+							});
+
+
+							
 						});
 				} else {
 					alert("Ocurrio un error cargando la lista.");

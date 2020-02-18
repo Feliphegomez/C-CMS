@@ -78,8 +78,6 @@ var appNotifications = new Vue({
 			var self = this;
 			try {
 				self.notActive = dataNot;
-				console.log('dataNot', dataNot);
-				console.log('datajson.id', dataNot.datajson.id);
 				
 				if(dataNot.type == 'photographic-report-declined'){
 					MV.api.read('/emvarias_reports_photographic/' + dataNot.datajson.id, {}, function(img){
@@ -94,8 +92,6 @@ var appNotifications = new Vue({
 								.append(moment(dataNot.datajson.schedule.date_executed_schedule_end).subtract({ days: 1 }).format('Y-MM-DD') == dataNot.datajson.schedule.date_executed_schedule ? '' 
 									: '/' + moment(dataNot.datajson.schedule.date_executed_schedule_end).subtract({ days: 1 }).format('Y-MM-DD'))
 							);
-						
-						console.log(img);
 						
 						$previewsDropzone = $('<div></div>').attr('id', 'previews-dropzone-notifications').attr('class', 'table table-striped files')
 							.append($('<div></div>').attr('id', 'template-dropzone-notifications').attr('class', 'file-row')
@@ -152,6 +148,7 @@ var appNotifications = new Vue({
 							title: $title,
 							message: $messageTxt.html(),
 							size: 'large',
+							className: 'rubberBand animated',
 							buttons: {
 								cancel: {
 									label: "Cerrar",
@@ -194,16 +191,12 @@ var appNotifications = new Vue({
 									}
 								},
 							}
-						}).init(function (){
-							console.log('This was logged in the callback: ' );
-							
-							// Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+						})
+						.init(function (){
 							var previewNode = document.querySelector("#template-dropzone-notifications");
 							previewNode.id = "";
 							var previewTemplate = previewNode.parentNode.innerHTML;
 							previewNode.parentNode.removeChild(previewNode);
-							
-							
 							
 							var myDropzone = self.myDropzone = new Dropzone('#dropzone-notifications', {
 								// Make the whole body a dropzone
@@ -233,8 +226,6 @@ var appNotifications = new Vue({
 								*/
 							});
 
-							
-							
 							myDropzone.on("error", function(file,errorMessage,xhr){
 								console.log('log our failure so we dont accidentally complete');
 								console.log(xhr);
@@ -296,15 +287,214 @@ var appNotifications = new Vue({
 							});
 						});
 					})
-				} else if(dataNot.type == 'schedule-executed'){
+				} 
+				else if(dataNot.type == 'schedule-executed'){
+					console.log('dataNot', dataNot);
 					$title = dataNot.datajson.lot.microroute_name;
-					$parrOne = $('<p></p>').append('se ha cambiado el estado a "Ejecutado", Bien hecho!.');
+					$parrOne = $('<p></p>')
+						.append('El gestor revisó el progreso y a cambiado el estado de una programacion a "<b>Ejecutado</b>".').append($('<br />'))
+						.append($('<br />')).append('<b>Microruta: </b>' + dataNot.datajson.lot.microroute_name)
+						.append($('<br />')).append('<b>Lote: </b>' + dataNot.datajson.lot.id_ref)
+						.append($('<br />')).append('<b>Lote Direccion(es): </b>' + dataNot.datajson.lot.address_text)
+						.append($('<br />')).append('<b>Cuadrilla: </b>' + dataNot.datajson.group.name)
+						.append($('<br />')).append('<b>Periodo: </b>' + dataNot.datajson.period.name + ' ' + dataNot.datajson.year)
+						.append($('<br />')).append('<b>Fecha Programacion: </b>' + dataNot.datajson.date_executed_schedule)
+							.append(
+								((moment(dataNot.datajson.date_executed_schedule_end)
+									.subtract({ days: 1}).format('Y-MM-DD')) == dataNot.datajson.date_executed_schedule) ? '' : '/' + moment(dataNot.datajson.date_executed_schedule_end).subtract({ days: 1}).format('Y-MM-DD')
+								);
+					
+					bootbox.alert({
+						locale: 'es',
+						title: $title,
+						message: $parrOne.html(),
+						size: 'large',
+						buttons: {
+							ok: {
+								label: "Marcar como leida",
+							}
+						},
+						className: 'rubberBand animated',
+						callback: function () {
+							bootbox.confirm({
+								message: "Marcar notificacion como leida?.",
+								locale: 'es',
+								buttons: { confirm: { label: 'Marcar', }, },
+								callback: function (result) {
+									if(result === true){
+										MV.api.update('/notifications/' + dataNot.id, {
+											read: 1,
+											updated_by: <?= ($this->user->id); ?>
+										},function(xs){
+											eljQuery.remove();
+											$count.text(parseInt($count.text())-1);
+										});
+									}
+								}
+							});
+						}
+					});
+					
 					//$messageTxt.append($parrOne);
 					$create = true;
-				} else if(dataNot.type == 'novelty-execution-schedule'){
-					$title = dataNot.datajson.lot.microroute_name;
+				} 
+				else if(dataNot.type == 'novelty-execution-schedule'){
+					console.log('Parametrizando: ', 'novelty-execution-schedule');
+					console.log('dataNot', dataNot);
+					console.log('datajson.id', dataNot.datajson);
+					
+					$title = dataNot.datajson.schedule.lot.microroute_name + ' | Necesita de tu gestion.';
 					$parrOne = $('<p></p>').append('Hay una observación, gestionala para continuar la aprobación.');
-					//$messageTxt.append($parrOne);
+					$parrTwo = $('<p></p>')
+						.append($('<b></b>').append('Observacion recibida: '))
+						.append($('<br />'))
+						.append($('<pre></pre>').append($('<code></code>').append(dataNot.datajson.novelty.comment)))
+						.append($('<br />'))
+						//.append($('<pre></pre>').append($('<code></code>').append(JSON.stringify(dataNot.datajson.novelty))))
+						//.append($('<b></b>').text('Observacion recibida: ').attr('class', 'pull-right'))
+						.append($('<div></div>').attr('class', 'clearfix'));
+					
+					$bodyBox = $('<p></p>').append($parrOne).append($parrTwo);
+					
+					MV.api.read('/emvarias_schedule_execution_novelties/' + dataNot.datajson.novelty.id, {
+					}, function(noveltyLive){
+						var isEditable = noveltyLive.status == 0 ? true : false;
+						console.log('noveltyLive',noveltyLive);
+						
+						MV.api.readList('/emvarias_groups_managers', {
+							filter: [
+								'group,eq,' + dataNot.datajson.novelty.group
+							]
+						}, function(nn){
+							console.log('dataNot.datajson.novelty.group', dataNot.datajson.novelty.group);
+							console.log('nn', nn);
+							var isManager = nn.findIndex((a) => a.user === <?= $this->user->id; ?>);
+							console.log('isManager', isManager);
+							if(isEditable == false){
+								$bodyBox.append($('<p></p>').append("La novedad ya fue gestionada."));
+							}
+							
+							var buttonsEnabled = {
+								cancel: {
+									label: "Cerrar",
+									className: 'btn-danger',
+									callback: function(){
+										console.log('Custom cancel clicked');
+									}
+								},
+								ok: {
+									label: "Marcar como leida",
+									className: 'btn-default',
+									callback: function(){
+										bootbox.confirm({
+											message: "Marcar notificacion como leida?.",
+											locale: 'es',
+											buttons: { confirm: { label: 'Marcar', }, },
+											callback: function (result) {
+												if(result === true){
+													MV.api.update('/notifications/' + dataNot.id, {
+														read: 1,
+														updated_by: <?= ($this->user->id); ?>
+													},function(xs){
+														eljQuery.remove();
+														$count.text(parseInt($count.text())-1);
+													});
+												}
+											}
+										});
+									}
+								},
+							};
+							
+							if(isManager >= 0 && isEditable == true){
+								buttonsEnabled.noclose2 = {
+									label: "Subir fotos Antes",
+									className: 'btn-warning',
+									callback: function(){
+										urlOpen = ('/index.php?controller=site&action=Photographic_Report_Live_Offline&type=A');
+										// window.open(urlOpen, '_blank');
+										window.location.replace(urlOpen);
+										return false;
+									}
+								};
+								
+								
+								buttonsEnabled.noclose3 = {
+									label: "Subir fotos Despues",
+									className: 'btn-warning',
+									callback: function(){
+										urlOpen = ('/index.php?controller=site&action=Photographic_Report_Live_Offline&type=D');
+										//window.open(urlOpen, '_blank');
+										window.location.replace(urlOpen);
+										return false;
+									}
+								};
+								buttonsEnabled.noclose1 = {
+									label: "Gestionada",
+									className: 'btn-success',
+									callback: function(){
+										bootbox.confirm({
+											message: "Marcar observacion como gestionada?, se enviará una notificación al cliente para ser gestionada su aprobación.",
+											locale: 'es',
+											buttons: { confirm: { label: 'Confirmar', }, },
+											callback: function (result) {
+												if(result === true){
+													MV.api.update('/emvarias_schedule_execution_novelties/' + dataNot.datajson.novelty.id, {
+														status: 1,
+														updated_by: <?= ($this->user->id); ?>
+													},function(xs){
+														MV.api.update('/emvarias_schedule/' + dataNot.datajson.schedule.id, {
+															in_novelty: 0,
+															updated_by: <?= ($this->user->id); ?>
+														},function(xs2){
+															self.createLogSchedule({
+																schedule: dataNot.datajson.schedule.id,
+																action: 'event-out-novelty',
+																data: {
+																	in_novelty: 0,
+																	updated_by: <?= ($this->user->id); ?>
+																},
+																response: xs2,
+															}, function(w){
+																bootbox.confirm({
+																	message: "Marcar notificacion como leida?.",
+																	locale: 'es',
+																	buttons: { confirm: { label: 'Marcar', }, },
+																	callback: function (result) {
+																		if(result === true){
+																			MV.api.update('/notifications/' + dataNot.id, {
+																				read: 1,
+																				updated_by: <?= ($this->user->id); ?>
+																			},function(xs){
+																				eljQuery.remove();
+																				$count.text(parseInt($count.text())-1);
+																			});
+																		}
+																	}
+																});
+															});
+														});
+													});
+												}
+											}
+										});
+									}
+								};
+								
+							};
+							
+							var dialog = bootbox.dialog({
+								title: $title,
+								message: $bodyBox.html(),
+								size: 'large',
+								className: 'rubberBand animated',
+								buttons: buttonsEnabled
+							})
+							.init(function (){});
+						});
+						
+					});
+						
 					$create = true;
 				}
 
@@ -394,11 +584,11 @@ var appNotifications = new Vue({
 						$create = true;
 					} else if(b.type == 'schedule-executed'){
 						$title = b.datajson.lot.microroute_name;
-						$messageTxt = 'se ha cambiado el estado a "Ejecutado", Bien hecho!.';						
+						$messageTxt = 'se ha cambiado el estado a "Ejecutado".';						
 						$create = true;
 					} else if(b.type == 'novelty-execution-schedule'){
-						$title = b.datajson.lot.microroute_name;
-						$messageTxt = 'Hay una observación, gestionala para continuar la aprobación.';
+						$title = 'Hay una observación';
+						$messageTxt = b.datajson.schedule.lot.microroute_name + ' necesita gestion, gestionala para continuar la aprobación.';
 						$create = true;
 					}
 					
@@ -458,13 +648,17 @@ var appNotifications = new Vue({
 		},
 		meNotificationsPendings(call){
 			var self = this;
-			MV.api.readList('/notifications', {
-				filter: [
-					'user,eq,<?= $this->user->id; ?>',
-					'read,eq,0'
-				],
-				order: 'created,desc'
-			}, call);
+			try{
+				MV.api.readList('/notifications', {
+					filter: [
+						'user,eq,<?= $this->user->id; ?>',
+						'read,eq,0'
+					],
+					order: 'created,desc'
+				}, call);
+			} catch(e){
+				
+			}
 		},
 	}
 }).$mount('#notifications-navbar-top');

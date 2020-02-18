@@ -357,7 +357,7 @@ var app = new Vue({
 						$htmlout += '<div class="image view view-first">';
 							$htmlout += '<img style="width: 100%; display: block;" src="' + fileResponse.path_short + '" alt="image" />';
 							$htmlout += '<div class="mask">';
-								$htmlout += '<p>' + fileResponse.size + '</p>';
+								$htmlout += '<p>Click para abrir</p>';
 							$htmlout += '</div>';
 						$htmlout += '</div>';
 						$htmlout += '<div class="caption">';

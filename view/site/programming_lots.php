@@ -13,6 +13,11 @@
 .fc-license-message, .fc-timeline-event .fc-time, .fc-day-grid-event .fc-time {
 	display: none;
 }
+
+.fc-listMonth-view .fc-scroller, .fc-list-view .fc-scroller {
+	height: 500px !important;
+}
+
 </style>
 
 
@@ -83,7 +88,7 @@
 							<div class="ln_solid"></div>
 							<div class="clearfix"></div>
 						</div>
-						<div class="col-md-5 col-sm-5 col-xs-12" style="zoom:0.8;">
+						<div class="col-md-8 col-sm-8 col-xs-8" style="zoom:0.8;">
 							<div class="x_content">	
 								<!-- // 
 								<p class="text-muted font-13 m-b-30">
@@ -94,7 +99,7 @@
 								<div id="demo_info"></div>
 							</div>
 						</div>
-						<div class="col-md-7 col-sm-7 col-xs-12">
+						<div class="col-md-4 col-sm-4 col-xs-12">
 							<div class="x_content">
 								<div id='calendar-box'></div>
 							</div>
@@ -123,15 +128,10 @@
 						<p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
 						<p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
 						-->
-
-						<div class="form-group hide">
-							<label>Months</label>
-							<input type="text" id="chit_months" name="chit_months" class="form-control" />
-						</div>
 						<div class="form-group">
 							<label>Fecha de inicio</label>
 							<div class='input-group date' id='datetimepicker1'>
-								<input type='text' class="form-control" name="start_date" id="example1" v-model="formCreate.date_executed_schedule" />
+								<input type='text' class="form-control" name="start_date" id="example1" v-model="formCreate.date_executed_schedule" autocomplete="off" />
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-calendar"></span>
 								</span>
@@ -140,7 +140,7 @@
 						<div class="form-group">
 							<label>End Date</label>
 							<div class='input-group date' id='datetimepicker2'>
-								<input type='text' class="form-control" name="start_date" id="example2" />
+								<input type='text' class="form-control" name="start_date" id="example2" autocomplete="off" />
 								<span class="input-group-addon">
 									<span class="glyphicon glyphicon-calendar"></span>
 								</span>
@@ -195,40 +195,70 @@ var List = Vue.extend({
 		};
 	},
 	created: function () {},
+	computed: {
+		startDatePicket(){
+			var self = this;
+			var x = self.options.emvarias_periods.find((x) => x.id == self.formCreate.period);
+			var startDate   = moment(x.start + '/' + self.formCreate.year, "DD/MM/YYYY");
+			var endDate     = moment(x.end + '/' + self.formCreate.year, "DD/MM/YYYY");
+			var compareDate = moment();
+			result = compareDate.isBetween(startDate, endDate);
+			return new Date(startDate.format('Y'), (startDate.format('M')-1), (startDate.format('D')));
+		},
+		endDatePicket(){
+			var self = this;
+			var x = self.options.emvarias_periods.find((x) => x.id == self.formCreate.period);
+			var startDate   = moment(x.start + '/' + self.formCreate.year, "DD/MM/YYYY");
+			var endDate     = moment(x.end + '/' + self.formCreate.year, "DD/MM/YYYY");
+			var compareDate = moment();
+			result = compareDate.isBetween(startDate, endDate);
+			return new Date(endDate.format('Y'), (endDate.format('M')-1), (endDate.format('D')-1));
+		},
+	},
 	mounted: function () {
 		var self = this;
 		self.loadOptions();
 		  
 		$( ".bs-new-calendar-modal-lg" ).on('shown.bs.modal', function(){
-		});
-		$('#example1').datepicker({
-			dateFormat: "yy-mm-dd"
-		});
-		
-		$('#example2').datepicker({
-			dateFormat: "yy-mm-dd"
-		});
-		
-		$('#chit_months, #example1').change(function() {
-			self.formCreate.date_executed_schedule = $('#example1').val();
-			var months = +$('#chit_months').val() || 0, date = $('#example1').datepicker('getDate');
 			
-			if (months && date) {
-				date.setMonth(date.getMonth() + months);
-				$('#example2').datepicker('setDate', date);
-			} else {
-				$('#example2').val('');
-				self.formCreate.date_executed_schedule_end = '';
-			}
-		})
-		
-		$('#example2').change(function() {
-			self.formCreate.date_executed_schedule_end = $('#example2').val();
-		})
+		});
 	},
 	methods: {
+		changeDatesInputs(){
+			var self = this;
+			var x = self.options.emvarias_periods.find((x) => x.id == self.formCreate.period);
+			if(x.start_month && x.end_month){
+				var startDate   = moment(x.start + '/' + self.formCreate.year, "DD/MM/YYYY");
+				var endDate     = moment(x.end + '/' + self.formCreate.year, "DD/MM/YYYY");
+				var compareDate = moment();
+				result = compareDate.isBetween(startDate, endDate);
+				$('#example1').datepicker('destroy').datepicker({
+					minDate: self.startDatePicket,
+					maxDate: self.endDatePicket,
+					dateFormat: "yy-mm-dd"
+				}).change(function() {
+					self.formCreate.date_executed_schedule = $(this).val();
+					$('#example2').datepicker('destroy').datepicker({
+						minDate: $(this).val(),
+						maxDate: self.endDatePicket,
+						dateFormat: "yy-mm-dd"
+					}).change(function() {
+						self.formCreate.date_executed_schedule_end = $(this).val();
+					});
+				});
+				$('#example2').datepicker('destroy').datepicker({
+					minDate: self.startDatePicket,
+					maxDate: self.endDatePicket,
+					dateFormat: "yy-mm-dd"
+				}).change(function() {
+					self.formCreate.date_executed_schedule_end = $(this).val();
+				});
+			}
+		},
 		loadEvents(){
 			var self = this;
+			console.log('loadEvents');
+					$('#calendar-box').fullCalendar( 'removeEventSource', self.events );
 			self.events = [];
 			if(self.formCreate.year > 1950 && self.formCreate.period > 0 && self.formCreate.group > 0)
 			{
@@ -251,9 +281,10 @@ var List = Vue.extend({
 					})
 					self.events = events;
 					$('#calendar-box').fullCalendar( 'addEventSource', events );
+					$('#calendar-box').fullCalendar( 'gotoDate', self.startDatePicket );
+					
 				});				
 			}
-			
 		},
 		booleanToint(d, def){
 			def = (def !== undefined) ? def : 0;
@@ -564,6 +595,22 @@ var List = Vue.extend({
 						if(result == true){
 							self.formCreate.period = x.id;
 							// console.log('x', x); // console.log('startDate', startDate); // console.log('endDate', endDate); // console.log('compareDate', compareDate); // console.log('result', result);
+							
+							$('#example1').datepicker({
+								minDate: self.startDatePicket,
+								maxDate: self.endDatePicket,
+								dateFormat: "yy-mm-dd"
+							});
+							
+							$('#example2').datepicker({
+								minDate: self.startDatePicket,
+								maxDate: self.endDatePicket,
+								dateFormat: "yy-mm-dd"
+							});
+							
+							$('#example2').change(function() {
+								self.formCreate.date_executed_schedule_end = $('#example2').val();
+							})
 						}
 					}
 				});
@@ -656,6 +703,7 @@ var List = Vue.extend({
 									selectedId = parseInt($(tds[0]).data('lot'));
 									self.formCreate.lot = ((parseInt(selectedId)>0) ? parseInt(selectedId) : 0);
 										$('.bs-new-calendar-modal-lg').modal('show');
+									self.changeDatesInputs();
 								} );
 								
 								apiTables.$(".add-lot-in-programming").click(function() {
@@ -668,8 +716,10 @@ var List = Vue.extend({
 									}
 								});
 								dialog.modal('hide');
+
 							}
 						});
+						
 				} else {
 					alert("Ocurrio un error cargando la lista.");
 					console.log(a);

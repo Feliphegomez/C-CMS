@@ -7,9 +7,9 @@
 <link rel="icon" sizes="224x224" href="/favicon.ico">
 <meta name="theme-color" content="#6ba74c">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script src='/public/assets/build/js/apiFG.js?updd=<?= date("Ymd") ?>'></script>
 <link rel="manifest" href="/public/assets/manifest.json">
-<!-- <script src='/public/assets/build/js/apiFG.js?updd=<?= date("Ymd") ?>'></script> -->
-<script src='/public/assets/build/js/apiFG.js'></script>
+<!-- <script src='/public/assets/build/js/apiFG.js'></script> -->
 <script>
 	if ('serviceWorker' in navigator) {
 		window.addEventListener('load', function() {

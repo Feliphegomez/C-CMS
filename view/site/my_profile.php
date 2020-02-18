@@ -39,8 +39,8 @@ h1, h2, h3, h4, h5, h6{
   text-align: center;
   padding: 100px 0;
   min-height:100%;
-  border-top:1px solid #ddd;
-  border-bottom:1px solid #ddd;
+  /*border-top:1px solid #ddd;
+  border-bottom:1px solid #ddd;*/
 }
 .about .fig-profile {
   max-width: 200px;

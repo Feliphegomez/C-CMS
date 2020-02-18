@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 /* *******************************
  *
  * Developer by FelipheGomez
@@ -1972,9 +1972,6 @@ print_r($files);
 		}
 	}
 	
-	
-	
-	
 	// Reporte media - Subir Archivo en Reporte
 	public function actionSend_Photo_Schedule(){
 		$error = null;
@@ -2100,7 +2097,7 @@ print_r($files);
 					$returning->text = "no existe la carpeta. {$targetPath}";
 				}
 			}else{
-				$returning->text = "no existe la carpeta. {$targetPath}";
+				$returning->text = "no existen archivos. {$targetPath}";
 			}
 		}
 		
@@ -2111,6 +2108,8 @@ print_r($files);
 		echo json_encode($returning);
 		return json_encode($returning);
 	}
+	
+	
 	
 	
 	
@@ -2322,10 +2321,30 @@ print_r($files);
 
 	// Reporte media - Subir Archivo en Reporte
 	public function actionSend_File_Novelty(){
+		if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:offline') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+		header('Content-Type: application/json');
 		$error = null;
-        if ($this->isGuest || ($this->checkPermission('emvarias:beta:reports:offline') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
-		
 		$_get = (!empty($_GET)) ? $_GET : [];
+		$_post = (!empty($_POST)) ? $_POST : [];
+		$_files = (empty($_FILES['file'])) ? [] : ((is_array($_FILES['file']) && isset($_FILES['file'][0]) && is_array($_FILES['file'][0])) ? $_FILES['file'] : [$_FILES['file']]);
+        
+			
+		$ds          = DIRECTORY_SEPARATOR;
+		$storeFolder = 'uploads';
+		$files_detect = count($_files) > 0 ? true : false;
+		
+		$returning = (object) [
+			'error' 	=> true,
+			'message' => "Cargando..",
+			'success'    => 'error',
+			'additional' => new stdClass(),
+			//'files' => isset($_FILES['file']) ? $_FILES['file'] : [],
+			//'_get' => $_get,
+			//'_post' => $_post,
+		];
+		
+		$returning->additional->files_detect = $_files;
+		$returning->additional->files = [];
 		
 		$date_report = isset($_GET['date_report']) ? ($_GET['date_report']) : false;
 		$group = isset($_GET['group']) ? ($_GET['group']) : false;
@@ -2333,40 +2352,18 @@ print_r($files);
 		$year = (isset($_GET['year']) && (int) $_GET['year'] >= date("Y")) ? (int) $_GET['year'] : date("Y");
 		$lat = isset($_GET['lat']) ? (float) $_GET['lat'] : false;
 		$lng = isset($_GET['lng']) ? (float) $_GET['lng'] : false;
-		$notes = isset($_GET['lng']) ? (float) $_GET['lng'] : false;
+		$id_report = isset($_GET['id_report']) ? (float) $_GET['id_report'] : false;
 		
 		$group_name = isset($_GET['group_name']) ? base64_decode((string) $_GET['group_name']) : false;
 		$period_name = isset($_GET['period_name']) ? base64_decode((string) $_GET['period_name']) : false;
 		
-		
-		$type = isset($_GET['type']) ? $_GET['type'] : false;
-		$typeText = ($type !== "A") ? ($type == "D") ? 'DESPUES' : 'OTRO' : 'ANTES';
-		
-		$ds          = DIRECTORY_SEPARATOR;
-		$storeFolder = 'uploads';
-		$files_detect = !isset($_FILES['file']) ? false : true;
-		$files = !empty($_FILES) ? [$_FILES['file']] : [];
-		$returning = (object) [
-			'error' 	=> true,
-			'status'    => 'error',
-			'result' => false,
-			'files_detect' => $files_detect,
-			'files' => [],
-			'files_origin' => $files,
-			//'files' => isset($_FILES['file']) ? $_FILES['file'] : [],
-			'text' => "",
-			'_get' => $_get,
-		];
-		
 		if(
-			$route_name !== false
-			&& $schedule !== false
-			&& $group !== false
+			$group !== false
+			&& $id_report !== false
 			&& $group_name !== false
 			&& $period !== false
 			&& $period_name !== false
-			&& $date_executed !== false
-			&& $type !== false
+			&& $date_report !== false
 			&& $lat !== false
 			&& $lng !== false
 		){
@@ -2375,82 +2372,168 @@ print_r($files);
 				"{$year}",
 				"{$period_name}",
 				"{$group_name}",
-				$route_name,
-				$typeText,
-				"en-revision",
+				"observaciones",
+				$date_report,
+				"reporte-nro-" . $id_report,
 				// $date_executed
 			];
 			$targetPath = PUBLIC_PATH . $ds . implode($ds, $folderBase) . $ds;
-			$returning->text = $targetPath;
+			$returning->message = $targetPath;
 			$returning->folderBase = $folderBase;
 			
-			if (!empty($_FILES)) {
-				$isArray = is_array($files) ? true : [$files];
-				// Compruebe si la carpeta de carga si existe sino se crea la carpeta
-				if ( !file_exists($targetPath) && !is_dir($targetPath) ) { mkdir($targetPath, 0777, true); };
-				// Compruebe si la carpeta se creo o si existe
-				if ( file_exists($targetPath) && is_dir($targetPath) ) {
-					// Comprueba si podemos escribir en el directorio de destino
-					if ( is_writable($targetPath) ) {
-						// $returning->text = "multiples archivos."; //carpeta: {$targetPath}
-						$total = count($files);
-						$returning->total = $total;
-						for($i = 0; $i < $total; $i++){
-							$model = new ReportPhotographicFile($this->adapter);
-							$model->schedule = $schedule;
-							$model->year = $year;
-							$model->type = $type;
-							$model->group = $group;
-							$model->period = $period;
-							$model->lat = $lat;
-							$model->lng = $lng;
-							$model->file_name = randomString(6, $files[$i]['name']);
-							$model->file_type = $files[$i]['type'];
-							$model->file_size = $files[$i]['size'];
-							$model->file_path_short = $ds . "public" . $ds .implode($ds, $folderBase). $ds . $date_executed . "-" . $model->file_name;
-							$model->file_path_full = $targetPath . $date_executed . "-" . $model->file_name;
-							$model->create_by = $this->user->id;
+			try {
+				if (count($_files) > 0) {
+					// Compruebe si la carpeta de carga si existe sino se crea la carpeta
+					if ( !file_exists($targetPath) && !is_dir($targetPath) ) { mkdir($targetPath, 0755, true); };
+					// Compruebe si la carpeta se creo o si existe
+					if ( file_exists($targetPath) && is_dir($targetPath) ) {
+						// Comprueba si podemos escribir en el directorio de destino
+						if ( is_writable($targetPath) ) {
+							$total = count($_files);
+							$returning->total_det = $total;
+							$returning->total_up = 0;
 							
-							
-							// echo json_encode($model);
-							// return json_encode($model);
-							// Mover archivo
-							$error_up = !$model->copyFile($files[$i]['tmp_name']);
-							$returning->error = $error_up;
-								$returning->text = $error_up; // carpeta: {$targetPath}
-							if ($error_up == false) {
-								$returning->files[] = (object) [
-									"id" => $model->id,
-									"name" => $model->file_name,
-									"type" => $model->file_type,
-									"size" => $model->file_size,
-									"path_short" => $model->file_path_short,
-									"path_full" => $model->file_path_full,
-									"error" => ($model->id > 0) ? false : true,
-								];
-							} else {
-								$response = array (
-									'status' => 'error',
-									'info'   => 'No se pudo cargar el archivo solicitado :(, ocurrió un misterioso error.'
-								);
+							for($i = 0; $i < $total; $i++){
+								$model = new ReportNoveltyFile($this->adapter);
+								$model->novelty = $id_report;
+								$model->year = $year;
+								$model->group = $group;
+								$model->period = $period;
+								$model->date_report = $date_report;
+								$model->lat = $lat;
+								$model->lng = $lng;
+								$model->file_name = randomString(6, $_files[$i]['name']);
+								$model->file_type = $_files[$i]['type'];
+								$model->file_size = $_files[$i]['size'];
+								$model->file_path_short = $ds . "public" . $ds .implode($ds, $folderBase). $ds . $model->file_name;
+								$model->file_path_full = $targetPath . $model->file_name;
+								$model->created_by = $this->user->id;
+								
+								// Mover archivo
+								$error_up = !$model->copyFile($_files[$i]['tmp_name']);
+								$returning->error = $error_up;
+								if ($error_up == false) {
+									
+									
+									
+									
+									$returning->total_up++;
+									$returning->message = 'Archivo guardado correctamente.';
+									$returning->additional->files[] = (object) [
+										"id" => $model->id,
+										"name" => $model->file_name,
+										"type" => $model->file_type,
+										"size" => $model->file_size,
+										"path_short" => $model->file_path_short,
+										"path_full" => $model->file_path_full,
+										"error" => ($model->id > 0) ? false : true,
+									];
+								} else {
+									$returning->error = true;
+									$returning->message = 'No se pudo cargar el archivo solicitado :(, ocurrió un misterioso error.';
+								}
 							}
-							
+						} else {
+							$returning->error = true;
+							$returning->message = "No hay permisos en la carpeta. {$targetPath}";
 						}
-					} else {
-						$returning->text = "No hay permisos en la carpeta. {$targetPath}";
+					}else{
+						$returning->error = true;
+						$returning->message = "no existe la carpeta. {$targetPath}";
 					}
 				}else{
-					$returning->text = "no existe la carpeta. {$targetPath}";
+					$returning->error = true;
+					$returning->message = "No hay archivo(s)";
 				}
+				
+				$returning->success = $returning->error == false ? 'success' : 'error';
+				$returning->additional->files = is_object(json_decode(json_encode($returning->additional->files))) ? [$returning->additional->files] : $returning->additional->files;
+				
+
+				
+				
+				echo json_encode($returning);
+				return json_encode($returning);
+			} catch (Exception $e) {
+				$returning->error = true;
+				$returning->message = $e->getMessage();
+				echo json_encode($returning);
+				return json_encode($returning);
 			}
 		}
+
+			echo json_encode($returning);
+			return json_encode($returning);
 		
-		$returning->status = $returning->error == false ? 'status' : 'error';
-		$returning->files = is_object(json_decode(json_encode($returning->files))) ? [$returning->files] : $returning->files;
-		
-		header('Content-Type: application/json');
-		echo json_encode($returning);
-		return json_encode($returning);
 	}
 	
+	# EMVARIAS DASHBOARD BETA
+    function actionEmvariasDashboardBETA(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:dashboard:beta') !== true)){
+			header('HTTP/1.0 403 Forbidden');
+			$this->render("errors", 
+				[
+				"code"=> "403",
+				"title"=> "Acceso denegado",
+				"description" => "",
+			]); exit();	
+		}
+        $this->render("emvarias_dashboard_beta", [
+            "title" => "Informe Registro Fotografico",
+            "subtitle" => "Contrato CW72436",
+        ]);
+    }
+	
+    function actionSchedule_Emvarias_Day(){
+        if ($this->isGuest || ($this->checkPermission('emvarias:beta:dashboard:day') !== true)){ header('HTTP/1.0 403 Forbidden'); exit(); }
+
+        // $this->render("schedule_emvarias", [
+        $this->render("emvarias_dashboard_day", [
+            "title" => "Revision General",
+            "subtitle" => "Diario",
+        ]);
+    }
+
+	function actionCreateReportPDF(){
+		/*
+		# $pdf = new FelipheGomez\FPDF\FPDF('P','mm','A4');
+		$pdf = new FelipheGomez\FPDF\FPDF();
+		$pdf->AddPage();
+		$pdf->SetFont('Arial','B',16);
+		$pdf->Cell(40,10,'¡Hola, Mundo!');
+		$pdf->Cell(60,10,'Hecho con FPDF.',1,1,'C');
+		$pdf->Output();
+				*/
+		
+		// Creación del objeto de la clase heredada
+		$model = new EmvariasNoveltiesGeneralsPDF($this->adapter);
+		$pdf = new BaseReportEmvariasNoveltiesGeneralsPDF();
+		$model->getById(2);
+		
+		
+		$pdf->AliasNbPages();
+		$pdf->AddPage();
+		$pdf->SetFont('Times','',12);
+		#$pdf->Cell(0,10,utf8_decode('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'));
+		$pdf->Ln(20);
+		$pdf->SetFont('Times','B',12);
+		$pdf->Cell(0,10,utf8_decode("Fecha del reporte: "));
+		$pdf->Ln();
+		$pdf->SetFont('Times','',12);
+		$pdf->Cell(0,10,utf8_decode($model->date_report));
+		$pdf->Ln();
+		$pdf->SetFont('Times','B',12);
+		$pdf->Cell(0,10,utf8_decode("Resumen de los hechos: "));
+		$pdf->Ln();
+		$pdf->SetFont('Times','',12);
+		$pdf->MultiCell(180,8, utf8_decode($model->notes));
+		
+		$pdf->Output();
+		/*
+		// $pdf->Cell(0,10,utf8_decode("Fecha de creacion: " . $model->created));
+		$pdf->Ln(20);
+		for($i=1;$i<=25;$i++)
+			$pdf->Cell(0,7,utf8_decode('Imprimiendo línea número ').$i,0,1);
+		*/
+	}
 }

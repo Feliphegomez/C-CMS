@@ -2,7 +2,7 @@
 .tinder {
 	width: 100%;
 	min-height: 87vh;
-	overflow: hidden;
+	overflow: inherit;
 	display: flex;
 	flex-direction: column;
 	position: relative;
@@ -71,6 +71,8 @@
 	cursor: -webkit-grab;
 	cursor: -moz-grab;
 	cursor: grab;
+	
+	inline-size: 450px;
 }
 
 .moving.tinder--card {
@@ -132,11 +134,15 @@
 .fa-remove {
   color: #CDD6DD;
 }
+
+.modal {
+	z-index: 9999999999;
+}
 </style>
 <div id="reporting-app">
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 col-xs-offset-0">
 				<div class="tinder col-md-12">
 					<div class="tinder--status">
 						<i class="fa fa-remove"></i>
@@ -162,6 +168,8 @@
 					</div>
 				</div>
 			</div>
+			
+			
 			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg">
 				  <div class="modal-content">

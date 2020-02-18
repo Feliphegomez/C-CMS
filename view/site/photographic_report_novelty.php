@@ -21,128 +21,140 @@
 	</div>
 	<div class="clearfix"></div>
 	<div class="row" id="screenshot">
-		<div class="clearfix"></div>
-		
 		<div class="col-md-12 col-sm-12 col-xs-12">
-			<!-- start form for validation -->
-			<form action="javascript:return false;">
-				<div class="col-md-4 col-sm-6 col-xs-6">
-					<div class="form-group">
-						<label class="control-label col-md-12 col-sm-12 col-xs-12">Periodo</label>
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<select v-model="createForm.period" class="select2_single form-control" tabindex="-1">
-								<option value="0">Seleccione una opcion</option>
-								<option v-for="(option, i_option) in options.emvarias_periods" :value="option.id">{{ option.name }}</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-4 col-sm-6 col-xs-6">
-					<div class="form-group">
-						<label class="control-label col-md-12 col-sm-12 col-xs-12">Cuadrilla</label>
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<select v-model="createForm.group" class="select2_single form-control" tabindex="-1">
-								<option value="0">Seleccione una opcion</option>
-								<option v-for="(option, i_option) in options.emvarias_groups" :value="option.id">{{ option.name }}</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-4 col-sm-6 col-xs-6">
-					<div class="form-group">
-						<label class="control-label col-md-12 col-sm-12 col-xs-12">Reportado para el día</label>
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<input class="form-control" type="date" v-model="createForm.date_report" />
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group">
-						<label class="control-label col-md-12 col-sm-12 col-xs-12">Resumen de los hechos</label>
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<textarea class="form-control" v-model="createForm.notes" rows="5"></textarea>
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group">
-						<div :class="(idReport > 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
-							<button @click="idReport = 0; createForm.notes = ''" type="button" class="btn btn-warning">Nuevo Reporte</button>
-						</div>
-						<div :class="(idReport <= 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
-							<button @click="submitForm" type="button" class="btn btn-success">Reportar observación</button>
-						</div>
-					</div>
-				</div>
-				
-			</form>
-
-		</div>
-		
-		<div :class="(idReport > 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
-			<br />
-			<div class="col-md-12 col-sm-12 col-xs-12'">
-				<div class="form-group pull-right">
-					<a class="btn btn-md btn-default fileinput-button">
-					  <i class="fa fa-camera-retro"></i> Subir Archivo
-					</a>
-				</div>
-			</div>
 			<div class="x_panel">
 				<div class="x_content">
 					<div class="row">
-						<p>Imagenes capturadas</p>
-						<div class="product_gallery">
-							<div class="row" id="screenshots-images"></div>
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<label class="control-label col-md-12 col-sm-12 col-xs-12">Periodo</label>
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<select v-model="createForm.period" class="select2_single form-control disabled" tabindex="-1" readonly="" disabled="">
+										<option value="0">Seleccione la fecha del reporte</option>
+										<option v-for="(option, i_option) in options.emvarias_periods" :value="option.id">{{ option.name }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<fieldset>
+								<label class="control-label col-md-12 col-sm-12 col-xs-12">Fecha del suceso</label>
+								<div class="control-group">
+									<div class="controls">
+										<div class="col-md-11 xdisplay_inputx form-group has-feedback ">
+											<input v-model="createForm.date_report" type="text" class="form-control has-feedback-left" id="date-filter" placeholder="Fecha del suceso" aria-describedby="inputSuccess2Status2" />
+											<span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
+											<span id="inputSuccess2Status2" class="sr-only">(success)</span>
+										</div>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+							</fieldset>
+						</div>
+				
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div class="form-group">
+								<label class="control-label col-md-12 col-sm-12 col-xs-12">Cuadrilla</label>
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<select v-model="createForm.group" class="select2_single form-control" tabindex="-1">
+										<option value="0">Seleccione una opcion</option>
+										<option v-for="(option, i_option) in options.emvarias_groups" :value="option.id">{{ option.name }}</option>
+									</select>
+								</div>
+							</div>
+						</div>
+				
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<label class="control-label col-md-12 col-sm-12 col-xs-12">Resumen de los hechos</label>
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<textarea class="form-control" v-model="createForm.notes" rows="5"></textarea>
+								</div>
+							</div>
+						</div>
+				
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<br>
+							<div class="form-group">
+								<div :class="(idReport > 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
+									<button @click="idReport = 0; createForm.notes = ''" type="button" class="btn btn-warning">Nuevo Reporte</button>
+								</div>
+								<div :class="(idReport <= 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
+									<button @click="submitForm" type="button" class="btn btn-success pull-right">Reportar</button>
+								</div>
+							</div>
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					
-					<div class="col-xs-12 dropzone1"></div>
-					<div class="table table-striped" class="files" id="previews">
-						<div id="template" class="file-row">
-							<!-- This is used as the file preview template -->
-							<div>
-								<span class="preview"><img data-dz-thumbnail /></span>
+				</div>
+			</div>
+			<div class="x_panel">
+				<div class="x_content">						
+					<div :class="(idReport > 0) ? '' : 'hide ' + ' col-md-12 col-sm-12 col-xs-12'">
+						<br />
+						<div class="col-md-12 col-sm-12 col-xs-12'">
+							<div class="form-group pull-right">
+								<a class="btn btn-md btn-default fileinput-button">
+								  <i class="fa fa-camera-retro"></i> Subir Archivo
+								</a>
 							</div>
-							<div>
-								<p class="name" data-dz-name></p>
-								<strong class="error text-danger" data-dz-errormessage></strong>
-							</div>
-							<div>
-								<p class="size" data-dz-size></p>
-								<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-								  <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+						</div>
+						
+						<div class="x_panel">
+							<div class="x_content">
+								<div class="row">
+									<p>Imagenes capturadas</p>
+									<div class="product_gallery">
+										<div class="row" id="screenshots-images"></div>
+									</div>
+									<div class="clearfix"></div>
 								</div>
-							</div>
-							<div>
-								<button class="btn btn-primary start">
-									<i class="glyphicon glyphicon-upload"></i>
-									<span>Subir</span>
-								</button>
-								<!-- // 
-								<button data-dz-remove class="btn btn-warning cancel">
-									<i class="glyphicon glyphicon-ban-circle"></i>
-									<span>Cancelar</span>
-								</button>-->
-								<button data-dz-remove class="btn btn-danger delete ">
-									<i class="glyphicon glyphicon-trash"></i>
-									<span>Eliminar</span>
-								</button>
+								
+								<div class="col-xs-12 dropzone1"></div>
+								<div class="table table-striped" class="files" id="previews">
+									<div id="template" class="file-row">
+										<!-- This is used as the file preview template -->
+										<div>
+											<span class="preview"><img data-dz-thumbnail /></span>
+										</div>
+										<div>
+											<p class="name" data-dz-name></p>
+											<strong class="error text-danger" data-dz-errormessage></strong>
+										</div>
+										<div>
+											<p class="size" data-dz-size></p>
+											<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+											  <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+											</div>
+										</div>
+										<div>
+											<button class="btn btn-primary start">
+												<i class="glyphicon glyphicon-upload"></i>
+												<span>Subir</span>
+											</button>
+											<!-- // 
+											<button data-dz-remove class="btn btn-warning cancel">
+												<i class="glyphicon glyphicon-ban-circle"></i>
+												<span>Cancelar</span>
+											</button>-->
+											<button data-dz-remove class="btn btn-danger delete ">
+												<i class="glyphicon glyphicon-trash"></i>
+												<span>Eliminar</span>
+											</button>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+
+					<div class="clearfix"></div>					
 				</div>
 			</div>
 		</div>
+		<div class="clearfix"></div>
+		<font class="hide">{{ urlForm }}</font>
 			
-			{{ createForm }}
-			<br>
-			{{ urlForm }}
 	</div>
 </div>
 
@@ -156,7 +168,7 @@ var app = new Vue({
 				emvarias_schedule: [],
 			},
 			createForm: {
-				date_report: moment().format('Y-MM-DD'),
+				date_report: null,
 				group: 0,
 				period: 0,
 				year: moment().format('Y'),
@@ -205,6 +217,16 @@ var app = new Vue({
 				container: 'body'
 			});
 		});
+		$('#date-filter').daterangepicker({
+		  singleDatePicker: true,
+		  singleClasses: "picker_2"
+		}, function(start, end, label) {
+			// console.log(start.toISOString(), end.toISOString(), label);
+			
+			self.createForm.date_report = start.format('Y-MM-DD');
+			self.createForm.year = start.format('Y');
+			self.loadDay();
+		}).data('daterangepicker').show();
 		self.loadDropzone();
 		
 		// self.loadDropzone();
@@ -225,6 +247,9 @@ var app = new Vue({
 			var self = this;
 			url = "/index.php?action=send_file_novelty";
 			try {
+				if(self.idReport !== undefined && self.idReport > 0){ 
+					url += "&id_report=" + self.idReport;
+				}
 				if(self.year !== undefined && self.year > 1950){ 
 					url += "&year=" + self.year;
 				}
@@ -304,17 +329,17 @@ var app = new Vue({
 					&& self.createForm.group > 0
 					&& self.createForm.period > 0
 					&& self.createForm.year > 1950
+					&& self.createForm.notes.length > 10
 				){
 					console.log('Formulario correcto');
-					
 					console.log('Agregar: ', self.createForm);
-					
 					
 					MV.api.create('/emvarias_novelties_generals', self.createForm, function(a){
 						subDialog.modal('hide');
 						if(a > 0){
 							self.idReport = a;
 							
+							/*
 							bootbox.confirm({
 								message: "¿Desea agregar fotos/archivos a este reporte?",
 								locale: "es",
@@ -327,6 +352,7 @@ var app = new Vue({
 									}
 								}
 							});
+							*/
 						}
 					});
 				}else {
@@ -336,6 +362,29 @@ var app = new Vue({
 			} catch(e) {
 				console.log(e);
 				subDialog.modal('hide');
+			}
+		},
+		canvasToElementMedia(fileResponse){
+			var self = this;
+			$htmlout = '';
+			try {
+				$htmlout += '<div class="col-md-55" data-path_short="' + fileResponse.path_short + '">';
+					$htmlout += '<div class="thumbnail">';
+						$htmlout += '<div class="image view view-first">';
+							$htmlout += '<img style="width: 100%; display: block;" src="' + fileResponse.path_short + '" alt="image" />';
+							$htmlout += '<div class="mask">';
+								$htmlout += '<p>' + fileResponse.size + '</p>';
+							$htmlout += '</div>';
+						$htmlout += '</div>';
+						$htmlout += '<div class="caption">';
+								$htmlout += '<p>Click para abrir</p>';
+						$htmlout += '</div>';
+					$htmlout += '</div>';
+				$htmlout += '</div>';
+				return $htmlout;
+			} catch(e) {
+				console.error(e);
+				return "$htmlout";
 			}
 		},
 		loadDropzone(){
@@ -403,18 +452,28 @@ var app = new Vue({
 			// Hide the total progress bar when nothing's uploading anymore
 			myDropzone.on("success", function(file, response) {
 				console.log('response', response);
+				console.log(response.message);
+				console.log(response.success);
+				console.log(response.additional);
 				if(response.error == false){
 					myDropzone.removeFile(file);
 					errors = false;
 					
 					
-					$inputGroup = $(self.canvasToElementMedia(response.files[0]));
-					$inputGroup.click(function(){
-						// console.log('click');
-						self.abrir_Popup($(this).data('path_short'), 'Visor de fotos rápido');
+					response.additional.files.forEach((ac) => {
+						$inputGroup = $(self.canvasToElementMedia(ac));
+						$inputGroup.click(function(){
+							// console.log('click');
+							self.abrir_Popup($(this).data('path_short'), 'Visor de fotos rápido');
+						});
+						
+						$("#screenshots-images").append($inputGroup);
 					});
 					
-					$("#screenshots-images").append($inputGroup);
+					
+					
+					
+					
 					self.createLogSchedule({
 						schedule: self.createForm.schedule,
 						action: 'new-picture',
@@ -483,11 +542,48 @@ var app = new Vue({
 					],
 				}, function(a){
 					self.options.emvarias_periods = a;
-					a.forEach(function(b){ if((self.current.dateISO.day >= b.start_day && self.current.dateISO.day <= b.end_day) == true && b.start_month == self.current.dateISO.month){ self.createForm.period = b.id; } });					
+					//a.forEach(function(b){ if((self.current.dateISO.day >= b.start_day && self.current.dateISO.day <= b.end_day) == true && b.start_month == self.current.dateISO.month){ self.createForm.period = b.id; } });					
 				});
 				MV.api.readList('/emvarias_groups', { }, function(a){ self.options.emvarias_groups = a; });
 			} catch(e){
 				console.log('error en loadOptions');
+			}
+		},
+		resetAll(){
+			var self = this;
+			self.createForm.period = 0;
+			self.idReport = 0;
+		},
+		loadDay(){
+			var self = this;
+			var dialog = bootbox.dialog({
+				message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i> Por favor espera mientras hacemos algo...</p>',
+				closeButton: false
+			});
+			
+			try {
+				self.resetAll();
+				var Dt = moment(self.createForm.date_report);				
+				resultPeriod = self.options.emvarias_periods.filter(function(a){
+					if(a.start_month == Dt.format('M')){						
+						if(a.start_day <= Dt.format('D') && Dt.format('D') <= a.end_day){
+							console.log('Periodo AutoSelect: ', a.name);
+							self.createForm.period = a.id;
+						}
+					}
+				});
+				
+				indexPeriod = self.options.emvarias_periods.findIndex(x => x.id == self.createForm.period);
+				
+				if(indexPeriod >= 0){						
+					startDate = new Date(self.createForm.year, Number(self.options.emvarias_periods[indexPeriod].start_month)-1, self.options.emvarias_periods[indexPeriod].start_day);
+					endDate = new Date(self.createForm.year, Number(self.options.emvarias_periods[indexPeriod].end_month)-1, self.options.emvarias_periods[indexPeriod].end_day);
+					
+				}
+				dialog.modal('hide');
+			} catch(e){
+				console.error(e);
+				dialog.modal('hide');
 			}
 		},
 		
